@@ -1,266 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Add Sandstone Product | Admin Panel - Bijoliya Sandstone</title>
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3b/Sandstone_icon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Sandstone Sample | Admin Panel</title>
+<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3b/Sandstone_icon.png">
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #fff8f3;
+    color: #333;
+  }
+  header {
+    background: linear-gradient(90deg, #d16b2c, #b34700);
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+  .container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+  }
+  .logo span { color: #ffe0b3; }
+  nav { margin-top: 8px; }
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 12px;
+    font-weight: 500;
+  }
+  nav a:hover, nav a.active { text-decoration: underline; color: #ffe6cc; }
 
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      background: #fff8f3;
-      margin: 0;
-      color: #333;
-    }
+  section {
+    width: 90%;
+    max-width: 700px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    padding: 25px;
+  }
+  section h2 { color: #b34700; text-align: center; }
 
-    /* Header */
-    header {
-      background: linear-gradient(90deg, #d16b2c, #b34700);
-      color: white;
-      text-align: center;
-      padding: 15px 0;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    }
+  input, select, textarea {
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  button {
+    width: 100%;
+    background: #d16b2c;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover { background: #b34700; }
+  #msg { text-align: center; color: green; font-weight: bold; }
 
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
+  footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    font-size: 0.9rem;
+  }
+  footer a { color: #ffb366; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
 
-    header p {
-      margin: 5px 0;
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    nav {
-      margin-top: 8px;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-
-    nav a:hover,
-    nav a.active {
-      color: #ffe6cc;
-      text-decoration: underline;
-    }
-
-    /* Main Section */
-    section {
-      background: white;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      color: #b34700;
-      text-align: center;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 15px;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      background: #d16b2c;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background: #b34700;
-    }
-
-    #msg {
-      text-align: center;
-      color: green;
-      font-weight: 600;
-    }
-
-    #lock {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    #lock input {
-      width: 200px;
-      text-align: center;
-    }
-
-    /* Footer */
-    footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 40px;
-      font-size: 14px;
-    }
-
-    footer a {
-      color: #ffb366;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  .hidden { display: none; }
+</style>
 </head>
-
 <body>
-  <!-- Header -->
-  <header>
-    <h1>Bijoliya Sandstone</h1>
-    <p>Rajasthan’s Trusted Sandstone Factory Hub</p>
+
+<!-- Header -->
+<header>
+  <div class="container">
+    <div class="logo">Bijoliya<span>Sandstone</span></div>
     <nav>
       <a href="index.html">Home</a>
       <a href="products.html">Products</a>
-      <a href="add-sample.html" class="active">Add Product</a>
+      <a href="add-sample.html" class="active">Add Sample</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <!-- Admin Lock -->
-  <section id="lock">
-    <h2>🔒 Admin Access Required</h2>
-    <input type="password" id="pinInput" placeholder="Enter Admin PIN (0686)">
-    <button onclick="checkPin()">Unlock</button>
-  </section>
+<!-- Admin Form -->
+<section id="adminSection" class="hidden">
+  <h2>🪨 Add New Sandstone Product</h2>
+  <form id="sampleForm">
+    <input type="text" id="name" placeholder="Stone Name" required>
+    <input type="text" id="factory" placeholder="Factory Name" required>
+    <input type="text" id="type" placeholder="Stone Type (e.g. Tile, Block)" required>
+    <input type="text" id="category" placeholder="Main Category (e.g. Brown, Blue, Red)" required>
+    <input type="text" id="subcategory" placeholder="Subcategory (Optional)">
+    <input type="number" id="price" placeholder="Price ₹" required>
+    <input type="text" id="contact" placeholder="Contact Number" required>
+    <textarea id="description" placeholder="Description"></textarea>
+    <input type="file" id="imageFile" accept="image/*" required>
+    <button type="submit">Add Product</button>
+    <p id="msg"></p>
+  </form>
+</section>
 
-  <!-- Admin Product Upload -->
-  <section id="adminForm" style="display:none;">
-    <h2>🧱 Add New Sandstone Product</h2>
-    <form id="sampleForm">
-      <input type="text" id="name" placeholder="Stone Name" required>
-      <input type="text" id="factory" placeholder="Factory Name" required>
-      <select id="type" required>
-        <option value="">Select Stone Type</option>
-        <option value="Red Sandstone">Red Sandstone</option>
-        <option value="Dholpur Stone">Dholpur Stone</option>
-        <option value="Kota Stone">Kota Stone</option>
-        <option value="Other">Other</option>
-      </select>
-      <input type="number" id="price" placeholder="Price ₹" required>
-      <input type="text" id="contact" placeholder="Contact Number" required>
-      <textarea id="description" placeholder="Description" rows="3"></textarea>
-      <input type="file" id="imageFile" accept="image/*" required>
-      <button type="submit">Add Product</button>
-      <p id="msg"></p>
-    </form>
-  </section>
+<!-- Public Form -->
+<section id="userForm">
+  <h2>📩 Send Your Product for Listing</h2>
+  <form id="suggestForm">
+    <input type="text" id="uname" placeholder="Your Name" required>
+    <input type="text" id="ufactory" placeholder="Factory Name" required>
+    <input type="text" id="utype" placeholder="Stone Type" required>
+    <input type="text" id="ucategory" placeholder="Category" required>
+    <input type="number" id="uprice" placeholder="Expected Price ₹" required>
+    <input type="text" id="ucontact" placeholder="Your Contact" required>
+    <textarea id="udescription" placeholder="Product Description"></textarea>
+    <input type="file" id="uimage" accept="image/*" required>
+    <button type="button" onclick="sendToAdmin()">Send to Admin</button>
+  </form>
+</section>
 
-  <!-- User Request Form -->
-  <section id="userForm">
-    <h2>📩 Suggest Your Product</h2>
-    <p style="text-align:center;">If you are a factory owner and want your product listed, fill this form.  
-    We’ll contact you soon via WhatsApp or Email.</p>
-    <form onsubmit="sendToAdmin(event)">
-      <input type="text" id="uname" placeholder="Your Name" required>
-      <input type="text" id="ufactory" placeholder="Factory Name" required>
-      <input type="text" id="uproduct" placeholder="Product Type" required>
-      <input type="number" id="uprice" placeholder="Expected Price ₹" required>
-      <input type="tel" id="ucontact" placeholder="Your Contact Number" required>
-      <textarea id="umessage" placeholder="Message or Description"></textarea>
-      <button type="submit">📤 Send to Admin</button>
-    </form>
-  </section>
+<footer>
+  © 2025 Bijoliya Sandstone | Developed by <a href="#">RJ Services</a><br>
+  <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms</a> | <a href="about.html">About</a>
+</footer>
 
-  <!-- Footer -->
-  <footer>
-    © 2025 Bijoliya Sandstone | Powered by <a href="#">RJ Services</a><br>
-    <a href="privacy.html">Privacy Policy</a> | 
-    <a href="terms.html">Terms</a> | 
-    <a href="about.html">About</a>
-  </footer>
+<script type="module">
+  import { db, collection, addDoc } from "./firebase-config.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
-  <!-- Firebase & JS -->
-  <script type="module">
-    import { db, collection, addDoc } from "./firebase-config.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
+  // 🔐 Hidden PIN access for admin
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "0" && e.ctrlKey) {  // ctrl + 0 to unlock
+      const pin = prompt("Enter Admin PIN:");
+      if(pin === "0686"){
+        document.getElementById("adminSection").classList.remove("hidden");
+        alert("✅ Admin Access Granted");
+      } else alert("❌ Wrong PIN");
+    }
+  });
 
-    const storage = getStorage();
-    const msg = document.getElementById("msg");
+  const msg = document.getElementById("msg");
+  const storage = getStorage();
 
-    window.checkPin = function () {
-      const input = document.getElementById("pinInput").value.trim();
-      if (input === "0686") {
-        document.getElementById("lock").style.display = "none";
-        document.getElementById("adminForm").style.display = "block";
-      } else {
-        alert("❌ Wrong PIN! Access Denied.");
-      }
-    };
-
-    document.getElementById("sampleForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("name").value;
-      const factory = document.getElementById("factory").value;
-      const type = document.getElementById("type").value;
-      const price = document.getElementById("price").value;
-      const contact = document.getElementById("contact").value;
-      const description = document.getElementById("description").value;
-      const image = document.getElementById("imageFile").files[0];
-
-      msg.textContent = "⏳ Uploading...";
-
-      try {
-        const imageRef = ref(storage, `sandstoneImages/${Date.now()}_${image.name}`);
-        await uploadBytes(imageRef, image);
-        const url = await getDownloadURL(imageRef);
-
-        await addDoc(collection(db, "sandstoneProducts"), {
-          name, factory, type, price, contact, description, imageUrl: url,
-          createdAt: new Date().toISOString()
-        });
-        msg.textContent = "✅ Product added successfully!";
-      } catch (err) {
-        msg.textContent = "❌ " + err.message;
-      }
+  // 🪨 Admin Product Add
+  document.getElementById("sampleForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    msg.textContent = "Uploading...";
+    const image = document.getElementById("imageFile").files[0];
+    const imageRef = ref(storage, `sandstoneImages/${Date.now()}_${image.name}`);
+    await uploadBytes(imageRef, image);
+    const url = await getDownloadURL(imageRef);
+    await addDoc(collection(db, "sandstoneSamples"), {
+      name: name.value,
+      factory: factory.value,
+      type: type.value,
+      category: category.value,
+      subcategory: subcategory.value || "",
+      price: price.value,
+      contact: contact.value,
+      description: description.value,
+      imageURL: url,
+      createdAt: new Date().toISOString()
     });
+    msg.textContent = "✅ Product Added Successfully!";
+    e.target.reset();
+  });
 
-    // Send to Admin via WhatsApp & Email
-    window.sendToAdmin = function (e) {
-      e.preventDefault();
-      const name = document.getElementById("uname").value;
-      const factory = document.getElementById("ufactory").value;
-      const product = document.getElementById("uproduct").value;
-      const price = document.getElementById("uprice").value;
-      const contact = document.getElementById("ucontact").value;
-      const message = document.getElementById("umessage").value;
+  // 📩 Public Send to Admin
+  window.sendToAdmin = ()=>{
+    const uname = document.getElementById("uname").value;
+    const ufactory = document.getElementById("ufactory").value;
+    const utype = document.getElementById("utype").value;
+    const ucategory = document.getElementById("ucategory").value;
+    const uprice = document.getElementById("uprice").value;
+    const ucontact = document.getElementById("ucontact").value;
+    const udescription = document.getElementById("udescription").value;
+    const msg = `New Product Suggestion:\nName: ${uname}\nFactory: ${ufactory}\nType: ${utype}\nCategory: ${ucategory}\nPrice: ₹${uprice}\nContact: ${ucontact}\nDescription: ${udescription}`;
 
-      const fullMsg = `New Product Suggestion:%0A🧱 Factory: ${factory}%0A🔸 Product: ${product}%0A💰 Price: ₹${price}%0A📞 Contact: ${contact}%0A📩 Message: ${message}%0A👤 Name: ${name}`;
+    // WhatsApp & Email links
+    const whatsapp = `https://wa.me/917737740207?text=${encodeURIComponent(msg)}`;
+    const email = `mailto:ravijain236129@gmail.com?subject=New Product Suggestion&body=${encodeURIComponent(msg)}`;
+    if(confirm("Send via WhatsApp?")) window.open(whatsapp, "_blank");
+    else window.open(email, "_blank");
+  }
+</script>
 
-      // Send to WhatsApp
-      window.open(`https://wa.me/917737740207?text=${fullMsg}`, "_blank");
-
-      // Send to Email
-      window.open(`mailto:ravijain236129@gmail.com?subject=New Sandstone Product Suggestion&body=${fullMsg}`, "_blank");
-    };
-  </script>
 </body>
 </html>
