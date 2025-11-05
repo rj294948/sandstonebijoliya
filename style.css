@@ -1,0 +1,105 @@
+:root {
+  --primary: #b89a74;
+  --dark: #2c2c2c;
+  --light: #fff;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  color: var(--dark);
+  background-color: #faf7f3;
+}
+
+/* Header */
+.header {
+  background: var(--primary);
+  color: var(--light);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: auto;
+}
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+.logo span { color: #f9f5f0; }
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+nav a:hover, nav a.active { text-decoration: underline; }
+
+/* Hero */
+.hero {
+  background: url("https://i.ibb.co/PMXjvRn/sandstone-bg.jpg") center/cover no-repeat;
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+}
+.hero h2 { font-size: 2.5rem; }
+.hero span { color: #ffde9f; }
+.hero p { margin-top: 10px; font-size: 1.2rem; }
+.btn {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 10px 25px;
+  border-radius: 25px;
+  margin-top: 20px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.btn:hover { background: #9c7e57; }
+
+/* Featured Section */
+.featured { padding: 60px 20px; text-align: center; }
+.featured h2 { font-size: 2rem; margin-bottom: 30px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  width: 90%;
+  margin: auto;
+}
+.card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+.card:hover { transform: scale(1.03); }
+.card img { width: 100%; height: 200px; object-fit: cover; }
+.card h3 { margin: 15px 0 5px; color: var(--primary); }
+.card p { padding: 0 15px 15px; font-size: 0.95rem; }
+
+/* CTA */
+.cta {
+  background: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 60px 20px;
+}
+.cta h2 { font-size: 2rem; margin-bottom: 15px; }
+
+/* Footer */
+footer {
+  background: #2c2c2c;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 0.9rem;
+}
