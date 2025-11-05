@@ -1,161 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rajasthan SandStone Hub - Bijoliya Stone Factories</title>
-  <meta name="description" content="Discover Bijoliya's sandstone factories, products, and dealers. Explore sandstone samples, prices, and factory details from Rajasthan's stone hub." />
-  <meta name="keywords" content="Bijoliya sandstone, Rajasthan stone, sandstone factory, red stone, pink stone, natural stone India" />
-  <meta name="author" content="RJ Services" />
-
-  <!-- ✅ Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8089328615109878"
-     crossorigin="anonymous"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Sandstone Sample | Admin</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      background: #f6f6f6;
-      color: #333;
-      text-align: center;
-    }
-    header {
-      background: #c49a6c;
-      color: #fff;
-      padding: 20px;
-    }
-    header h1 { margin: 5px 0; font-size: 28px; }
-    header p { font-size: 16px; margin: 0; }
-    .search-box {
-      margin: 15px auto;
-    }
-    .search-box input {
-      width: 85%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      outline: none;
-    }
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-      padding: 20px;
-    }
-    .product-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 15px;
-      transition: transform 0.2s;
-    }
-    .product-card:hover { transform: scale(1.02); }
-    .product-card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-    .ads-section {
-      margin: 30px 0;
-    }
-    footer {
-      background: #333;
-      color: #fff;
-      padding: 10px;
-      font-size: 14px;
-    }
+    body { font-family:sans-serif; background:#f0f0f0; padding:20px; }
+    form { max-width:450px; margin:auto; background:#fff; padding:20px; border-radius:10px; }
+    input, textarea { width:100%; margin:8px 0; padding:10px; border:1px solid #ccc; border-radius:6px; }
+    button { width:100%; background:#c49a6c; color:white; border:none; padding:10px; border-radius:6px; cursor:pointer; }
+    #lock { text-align:center; margin-bottom:15px; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🪨 Rajasthan SandStone Hub</h1>
-    <p>Explore Bijoliya's top sandstone factories & samples</p>
-  </header>
+  <div id="lock">
+    <h3>🔒 Enter PIN to Access Admin Panel</h3>
+    <input type="password" id="pinInput" placeholder="Enter PIN (e.g. 0686)">
+    <button onclick="checkPin()">Unlock</button>
+  </div>
 
-  <section class="search-box">
-    <input type="text" id="searchInput" placeholder="Search sandstone or factory...">
-  </section>
+  <form id="sampleForm" style="display:none;">
+    <h2>Add New Sample</h2>
+    <input type="text" id="name" placeholder="Stone Name" required>
+    <input type="text" id="factory" placeholder="Factory Name" required>
+    <input type="text" id="type" placeholder="Stone Type" required>
+    <input type="number" id="price" placeholder="Price ₹" required>
+    <input type="text" id="contact" placeholder="Contact Number" required>
+    <textarea id="description" placeholder="Description"></textarea>
+    <input type="file" id="imageFile" accept="image/*" required>
+    <button type="submit">Add Sample</button>
+    <p id="msg"></p>
+  </form>
 
-  <section id="productList" class="product-grid">
-    <p>Loading sandstone samples...</p>
-  </section>
-
-  <!-- ✅ AdSense Ad Section -->
-  <section class="ads-section">
-    <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-8089328615109878"
-        data-ad-slot="1234567890"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </section>
-
-  <footer>
-    <p>© 2025 Rajasthan SandStone Hub | Powered by RJ Services</p>
-  </footer>
-
-  <!-- ✅ Firebase Config + Firestore Integration -->
   <script type="module">
+    import { db, collection, addDoc } from "./firebase-config.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-    import { 
-      getFirestore, collection, getDocs 
-    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDIXyjs57ztJDN6_4-JIIyZpK3BtacVtMw",
-      authDomain: "automobilix-2af84.firebaseapp.com",
-      projectId: "automobilix-2af84",
-      storageBucket: "automobilix-2af84.firebasestorage.app",
-      messagingSenderId: "536651887423",
-      appId: "1:536651887423:web:4f5065327e7cb155fa198a",
-      measurementId: "G-EKFWGHZHQ7"
-    };
+    const storage = getStorage();
+    const msg = document.getElementById("msg");
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function loadSandstone() {
-      const container = document.getElementById("productList");
-      container.innerHTML = "";
-      try {
-        const snapshot = await getDocs(collection(db, "sandstoneSamples"));
-        if (snapshot.empty) {
-          container.innerHTML = "<p>No sandstone samples added yet.</p>";
-          return;
-        }
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const card = `
-            <div class="product-card">
-              <img src="${data.imageURL}" alt="${data.name}" />
-              <h3>${data.name}</h3>
-              <p><b>Factory:</b> ${data.factory}</p>
-              <p><b>Type:</b> ${data.type}</p>
-              <p><b>Price:</b> ₹${data.price}/sq.ft</p>
-              <p>${data.description || ""}</p>
-            </div>
-          `;
-          container.innerHTML += card;
-        });
-      } catch (err) {
-        container.innerHTML = `<p>Error loading data: ${err.message}</p>`;
-      }
+    function checkPin() {
+      const input = document.getElementById("pinInput").value;
+      if(input === "0686") {
+        document.getElementById("lock").style.display = "none";
+        document.getElementById("sampleForm").style.display = "block";
+      } else alert("❌ Wrong PIN");
     }
 
-    document.addEventListener("DOMContentLoaded", loadSandstone);
+    document.getElementById("sampleForm").addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      const name=document.getElementById("name").value;
+      const factory=document.getElementById("factory").value;
+      const type=document.getElementById("type").value;
+      const price=document.getElementById("price").value;
+      const contact=document.getElementById("contact").value;
+      const description=document.getElementById("description").value;
+      const image=document.getElementById("imageFile").files[0];
 
-    // ✅ Search Functionality
-    document.getElementById("searchInput").addEventListener("input", function () {
-      const query = this.value.toLowerCase();
-      const cards = document.querySelectorAll(".product-card");
-      cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(query) ? "" : "none";
-      });
+      msg.textContent="⏳ Uploading...";
+
+      try {
+        const imageRef=ref(storage,`sandstoneImages/${Date.now()}_${image.name}`);
+        await uploadBytes(imageRef,image);
+        const url=await getDownloadURL(imageRef);
+
+        await addDoc(collection(db,"sandstoneSamples"),{
+          name,factory,type,price,contact,description,imageURL:url,createdAt:new Date().toISOString()
+        });
+        msg.textContent="✅ Added successfully!";
+      } catch(err){ msg.textContent="❌ "+err.message; }
     });
   </script>
 </body>
