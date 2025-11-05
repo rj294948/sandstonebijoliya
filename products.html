@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sandstone Products - Bijoliya Sandstone</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module">
+    import { db, collection, getDocs } from './firebase-config.js';
+
+    async function loadProducts() {
+      const container = document.getElementById("product-list");
+      const querySnapshot = await getDocs(collection(db, "sandstone_products"));
+      container.innerHTML = "";
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        container.innerHTML += `
+          <div class="card">
+            <img src="${data.imageUrl}" alt="${data.name}">
+            <h3>${data.name}</h3>
+            <p>${data.description}</p>
+            <p><b>Contact:</b> ${data.contact}</p>
+          </div>`;
+      });
+    }
+
+    loadProducts();
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Our Sandstone Products</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <div id="product-list" class="grid"></div>
+</body>
+</html>
