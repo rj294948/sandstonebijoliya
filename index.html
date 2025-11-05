@@ -42,15 +42,31 @@ nav a:hover{background:#c49a6c;color:#fff;}
 /* ===== Hero Section ===== */
 .hero{
   background:url('https://images.unsplash.com/photo-1581091870623-8c6b3d14f4b5?auto=format&fit=crop&w=1400&q=70') no-repeat center/cover;
-  height:300px;
+  height:280px;
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
   color:#fff;
   text-shadow:1px 1px 3px rgba(0,0,0,0.6);
-  font-size:1.8em;
+  font-size:1.6em;
   text-align:center;
   padding:10px;
+}
+.hero button{
+  margin-top:15px;
+  padding:10px 20px;
+  background:#fff;
+  color:#c49a6c;
+  border:none;
+  border-radius:8px;
+  font-size:1em;
+  cursor:pointer;
+  font-weight:600;
+}
+.hero button:hover{
+  background:#c49a6c;
+  color:#fff;
 }
 
 /* ===== Section General ===== */
@@ -63,40 +79,56 @@ section{
   box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* ===== Product Grid ===== */
-.products{
+/* ===== Categories ===== */
+.categories{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
   gap:20px;
   margin-top:20px;
 }
-.product{
+.category{
   background:#fff;
   border:1px solid #ddd;
   border-radius:10px;
   overflow:hidden;
+  text-align:center;
   transition:transform 0.3s, box-shadow 0.3s;
 }
-.product:hover{
+.category:hover{
   transform:translateY(-5px);
   box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
-.product img{
+.category img{
   width:100%;
-  height:180px;
+  height:140px;
   object-fit:cover;
 }
-.product .info{
-  padding:10px 15px;
-}
-.product .info h3{
+.category h3{
   color:#c49a6c;
-  margin-bottom:8px;
+  padding:10px 0;
 }
-.product .info p{
-  font-size:0.9em;
-  color:#555;
+
+/* ===== Add Product Form ===== */
+#productForm{
+  display:none;
+  margin-top:30px;
 }
+#productForm input, #productForm textarea, #productForm select{
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+#productForm button{
+  background:#c49a6c;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:6px;
+  cursor:pointer;
+}
+#productForm button:hover{background:#a67b5b;}
 
 /* ===== Footer ===== */
 footer{
@@ -106,12 +138,6 @@ footer{
   padding:15px 5px;
   font-size:0.9em;
   margin-top:40px;
-}
-
-/* ===== Responsive ===== */
-@media(max-width:700px){
-  nav a{padding:10px;font-size:0.9em;}
-  .hero{font-size:1.3em;height:200px;}
 }
 </style>
 </head>
@@ -134,47 +160,100 @@ footer{
 
 <div class="hero">
   Rajasthan’s Finest Sandstone Collection
+  <button onclick="document.getElementById('productForm').scrollIntoView({behavior:'smooth'})">Add Your Product</button>
 </div>
 
 <section>
-  <h2>Explore Our Sandstone Types</h2>
-  <p>Browse our premium range of sandstone available from Bijoliya and across Rajasthan. Every product includes verified details and direct contact options.</p>
-
-  <div class="products">
-    <div class="product">
-      <img src="https://images.unsplash.com/photo-1603052875225-0022e3f9e1a9?auto=format&fit=crop&w=600&q=70" alt="Bijoliya Brown Sandstone">
-      <div class="info">
-        <h3>Bijoliya Brown Sandstone</h3>
-        <p>Durable & elegant, perfect for flooring and exterior cladding.</p>
-      </div>
-    </div>
-    <div class="product">
-      <img src="https://images.unsplash.com/photo-1567430558697-ccf0d4d1dfed?auto=format&fit=crop&w=600&q=70" alt="Dholpur Pink Sandstone">
-      <div class="info">
-        <h3>Dholpur Pink Sandstone</h3>
-        <p>Soft pink tone with smooth finish for modern architecture.</p>
-      </div>
-    </div>
-    <div class="product">
-      <img src="https://images.unsplash.com/photo-1516398810545-5a9bfa2c63e5?auto=format&fit=crop&w=600&q=70" alt="Kota Stone">
-      <div class="info">
-        <h3>Kota Stone</h3>
-        <p>Popular for its strength and shine, ideal for heavy-duty flooring.</p>
-      </div>
-    </div>
-    <div class="product">
-      <img src="https://images.unsplash.com/photo-1505845772341-22b9e32f7a2e?auto=format&fit=crop&w=600&q=70" alt="Agra Red Sandstone">
-      <div class="info">
-        <h3>Agra Red Sandstone</h3>
-        <p>Rich red hue used in heritage buildings and sculptures.</p>
-      </div>
-    </div>
+  <h2>Explore Sandstone Categories</h2>
+  <p>Discover various sandstone types from verified suppliers. Click a category to view detailed products.</p>
+  
+  <div class="categories" id="categoryContainer">
+    <!-- Firebase categories will appear here dynamically -->
   </div>
+</section>
+
+<section id="productForm">
+  <h2>Add Your Product</h2>
+  <p>Companies can submit their product details below. Admin will verify and publish them.</p>
+  
+  <form id="sendForm">
+    <input type="text" id="company" placeholder="Company Name" required>
+    <input type="text" id="productName" placeholder="Product Name" required>
+    <select id="category">
+      <option value="">Select Category</option>
+      <option value="Brown">Brown Sandstone</option>
+      <option value="Red">Red Sandstone</option>
+      <option value="Pink">Pink Sandstone</option>
+      <option value="Blue">Blue Sandstone</option>
+      <option value="Others">Others</option>
+    </select>
+    <textarea id="description" placeholder="Product Description" required></textarea>
+    <input type="file" id="image" accept="image/*" required>
+    <input type="tel" id="phone" placeholder="Contact Number" required>
+    <button type="submit">Send to Admin</button>
+    <p id="msg"></p>
+  </form>
 </section>
 
 <footer>
   © 2025 Rajasthan SandStone Hub | Designed by RJ Services
 </footer>
+
+<!-- ===== Firebase & Script ===== -->
+<script type="module">
+import { db, storage, collection, addDoc, getDocs, ref, uploadBytes, getDownloadURL } from './firebase-config.js';
+
+const msg = document.getElementById('msg');
+const catContainer = document.getElementById('categoryContainer');
+
+// ===== Fetch Categories Automatically from Firebase =====
+async function loadCategories() {
+  const querySnap = await getDocs(collection(db, "sandstoneSamples"));
+  const cats = {};
+  querySnap.forEach(doc => {
+    const data = doc.data();
+    if(!cats[data.type]) cats[data.type] = data.imageURL;
+  });
+
+  catContainer.innerHTML = Object.keys(cats).map(cat => `
+    <div class="category" onclick="window.location='products.html?cat=${cat}'">
+      <img src="${cats[cat]}" alt="${cat}">
+      <h3>${cat}</h3>
+    </div>
+  `).join('');
+}
+loadCategories();
+
+// ===== Send Product Request (Email + WhatsApp Notify) =====
+document.getElementById("sendForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  const file=document.getElementById("image").files[0];
+  const refPath=ref(storage,`requests/${Date.now()}_${file.name}`);
+  msg.textContent="Uploading...";
+  await uploadBytes(refPath,file);
+  const imageURL=await getDownloadURL(refPath);
+
+  // Firebase me store karo
+  await addDoc(collection(db,"productRequests"),{
+    company:company.value,
+    name:productName.value,
+    category:category.value,
+    description:description.value,
+    phone:phone.value,
+    imageURL,
+    createdAt:new Date().toISOString()
+  });
+
+  // WhatsApp + Email link
+  const text = `New Product Request:%0ACompany: ${company.value}%0AProduct: ${productName.value}%0ACategory: ${category.value}%0ADescription: ${description.value}%0AContact: ${phone.value}`;
+  const waURL = `https://wa.me/917737740207?text=${text}`;
+  const mailURL = `mailto:ravijain236129@gmail.com?subject=New Product Request&body=${decodeURIComponent(text)}%0AImage: ${imageURL}`;
+
+  msg.innerHTML = `✅ Sent Successfully! <br>
+  <a href="${waURL}" target="_blank">Send via WhatsApp</a> |
+  <a href="${mailURL}" target="_blank">Send via Email</a>`;
+});
+</script>
 
 </body>
 </html>
