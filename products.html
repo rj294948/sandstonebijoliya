@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sandstone Products - Rajasthan SandStone Hub</title>
-<meta name="description" content="Explore sandstone products from Bijoliya and Rajasthan directly listed by verified suppliers.">
+<title>Products - Rajasthan SandStone Hub</title>
+<meta name="description" content="Browse all sandstone products from Rajasthan with search and filter options.">
+
 <style>
-/* ===== Reset & Layout ===== */
+/* ===== Reset & Basics ===== */
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#fafafa;color:#333;}
 
@@ -18,8 +19,8 @@ header{
   padding:20px 10px;
   box-shadow:0 2px 5px rgba(0,0,0,0.15);
 }
-header h1{font-size:1.8em;margin-bottom:5px;}
-header p{font-size:0.9em;}
+header h1{font-size:1.8em;}
+header p{font-size:0.9em;margin-top:5px;}
 
 /* ===== Navbar ===== */
 nav{
@@ -39,40 +40,112 @@ nav a{
 }
 nav a:hover{background:#c49a6c;color:#fff;}
 
-/* ===== Product Grid ===== */
-#product-list{
+/* ===== Search & Filter Section ===== */
+.search-filter{
   max-width:1100px;
-  margin:30px auto;
+  margin:20px auto;
   padding:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-}
-.card{
   background:#fff;
   border-radius:10px;
-  overflow:hidden;
-  border:1px solid #ddd;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
-  transition:transform 0.3s,box-shadow 0.3s;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
-.card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+.search-box{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
 }
-.card img{
+.search-box input{
+  flex:1;
+  padding:12px;
+  border:2px solid #c49a6c;
+  border-radius:25px;
+  font-size:1em;
+}
+.search-box button{
+  background:#c49a6c;
+  color:#fff;
+  border:none;
+  padding:12px 25px;
+  border-radius:25px;
+  cursor:pointer;
+  font-weight:600;
+}
+.filters{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+}
+.filter-group select{
   width:100%;
-  height:180px;
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:5px;
+  background:#fff;
+}
+
+/* ===== Products Grid ===== */
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+  margin:20px auto;
+  max-width:1100px;
+  padding:20px;
+}
+.product{
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:10px;
+  overflow:hidden;
+  transition:transform 0.3s, box-shadow 0.3s;
+}
+.product:hover{
+  transform:translateY(-5px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+.product img{
+  width:100%;
+  height:200px;
   object-fit:cover;
 }
-.card h3{
-  color:#c49a6c;
-  margin:10px 15px 5px;
+.product .info{
+  padding:15px;
 }
-.card p{
+.product .info h3{
+  color:#c49a6c;
+  margin-bottom:10px;
+}
+.product .info p{
+  margin:5px 0;
+  color:#555;
+}
+
+/* ===== Contact Seller ===== */
+.contact-seller{
+  background:#f8f8f8;
+  padding:12px;
+  border-radius:8px;
+  margin-top:10px;
+  text-align:center;
+}
+.contact-btn{
+  display:inline-block;
+  background:#25D366;
+  color:#fff;
+  padding:8px 12px;
+  border-radius:5px;
+  text-decoration:none;
+  font-weight:600;
+  margin:3px;
   font-size:0.9em;
-  margin:5px 15px 10px;
-  line-height:1.5;
+  transition:0.3s;
+}
+.contact-btn.whatsapp{background:#25D366;}
+.contact-btn.facebook{background:#1877F2;}
+.contact-btn.email{background:#EA4335;}
+.contact-btn:hover{
+  opacity:0.9;
+  transform:scale(1.05);
 }
 
 /* ===== Footer ===== */
@@ -88,67 +161,205 @@ footer{
 /* ===== Responsive ===== */
 @media(max-width:700px){
   nav a{padding:10px;font-size:0.9em;}
-  header h1{font-size:1.4em;}
+  .search-box{flex-direction:column;}
+  .filters{grid-template-columns:1fr;}
 }
 </style>
-
-<script type="module">
-  import { db, collection, getDocs } from './firebase-config.js';
-
-  async function loadProducts() {
-    const container = document.getElementById("product-list");
-    container.innerHTML = "<p style='text-align:center;'>Loading sandstone products...</p>";
-
-    try {
-      const querySnapshot = await getDocs(collection(db, "sandstone_products"));
-      container.innerHTML = "";
-
-      if (querySnapshot.empty) {
-        container.innerHTML = "<p style='text-align:center;'>No products available yet.</p>";
-        return;
-      }
-
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        container.innerHTML += `
-          <div class="card">
-            <img src="${data.imageUrl || 'https://via.placeholder.com/400x200?text=Sandstone+Image'}" alt="${data.name || 'Sandstone'}">
-            <h3>${data.name || 'Unnamed Stone'}</h3>
-            <p>${data.description || 'No description available.'}</p>
-            <p><b>Contact:</b> ${data.contact || 'Not provided'}</p>
-          </div>`;
-      });
-    } catch (error) {
-      console.error("Error loading products:", error);
-      container.innerHTML = "<p style='color:red;text-align:center;'>Failed to load products. Check console for details.</p>";
-    }
-  }
-
-  window.addEventListener('DOMContentLoaded', loadProducts);
-</script>
 </head>
 <body>
 
 <header>
-  <h1>Our Sandstone Products</h1>
-  <p>Explore authentic stones from Bijoliya & Rajasthan suppliers</p>
+  <h1>Our Stone Products</h1>
+  <p>Browse and filter through our extensive collection</p>
 </header>
 
 <nav>
   <a href="index.html">Home</a>
   <a href="products.html">Products</a>
-  <a href="add-sample.html">Add Sample</a>
-  <a href="about.html">About</a>
+  <a href="admin.html">Add Product</a>
   <a href="contact.html">Contact</a>
-  <a href="privacy.html">Privacy Policy</a>
-  <a href="terms.html">Terms</a>
 </nav>
 
-<div id="product-list"></div>
+<!-- ===== Search & Filter ===== -->
+<div class="search-filter">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search products by name, factory, or description...">
+    <button onclick="filterProducts()">Search</button>
+  </div>
+  <div class="filters">
+    <div class="filter-group">
+      <select id="categoryFilter" onchange="filterProducts()">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <select id="subCategoryFilter" onchange="filterProducts()">
+        <option value="">All Sub-Categories</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <select id="priceFilter" onchange="filterProducts()">
+        <option value="">Any Price</option>
+        <option value="0-1000">Under ₹1000</option>
+        <option value="1000-5000">₹1000 - ₹5000</option>
+        <option value="5000-10000">₹5000 - ₹10000</option>
+        <option value="10000+">Above ₹10000</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Products Grid ===== -->
+<div id="productsContainer" class="products">
+  <p style="text-align:center;grid-column:1/-1;">Loading products...</p>
+</div>
 
 <footer>
-  © 2025 Rajasthan SandStone Hub | Powered by RJ Services
+  © 2025 Rajasthan SandStone Hub | Designed by RJ Services
 </footer>
+
+<script>
+let allProducts = [];
+let allCategories = [];
+
+// Load data from GitHub
+async function loadData() {
+  try {
+    // Load products
+    const productsResponse = await fetch('https://rj294948.github.io/data/products.json');
+    allProducts = await productsResponse.json();
+    
+    // Load categories for filter
+    const categoriesResponse = await fetch('https://rj294948.github.io/data/categories.json');
+    allCategories = await categoriesResponse.json();
+    
+    populateFilters();
+    filterProducts();
+    
+  } catch (error) {
+    console.error('Error loading data:', error);
+    document.getElementById('productsContainer').innerHTML = 
+      '<p style="text-align:center;color:red;">Error loading products. Please try again later.</p>';
+  }
+}
+
+// Populate filter dropdowns
+function populateFilters() {
+  const categoryFilter = document.getElementById('categoryFilter');
+  const subCategoryFilter = document.getElementById('subCategoryFilter');
+  
+  // Get unique categories and subcategories
+  const categories = [...new Set(allProducts.map(p => p.category))];
+  const subCategories = [...new Set(allProducts.map(p => p.subCategory))];
+  
+  categories.forEach(cat => {
+    if (cat) {
+      const option = document.createElement('option');
+      option.value = cat;
+      option.textContent = cat;
+      categoryFilter.appendChild(option);
+    }
+  });
+  
+  subCategories.forEach(subCat => {
+    if (subCat) {
+      const option = document.createElement('option');
+      option.value = subCat;
+      option.textContent = subCat;
+      subCategoryFilter.appendChild(option);
+    }
+  });
+  
+  // Check URL for category filter
+  const urlParams = new URLSearchParams(window.location.search);
+  const categoryParam = urlParams.get('category');
+  if (categoryParam) {
+    categoryFilter.value = categoryParam;
+  }
+}
+
+// Filter products based on search and filters
+function filterProducts() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const category = document.getElementById('categoryFilter').value;
+  const subCategory = document.getElementById('subCategoryFilter').value;
+  const priceRange = document.getElementById('priceFilter').value;
+  
+  let filteredProducts = allProducts.filter(product => {
+    // Search filter
+    const matchesSearch = !searchTerm || 
+      product.name.toLowerCase().includes(searchTerm) ||
+      product.factory.toLowerCase().includes(searchTerm) ||
+      product.description.toLowerCase().includes(searchTerm);
+    
+    // Category filters
+    const matchesCategory = !category || product.category === category;
+    const matchesSubCategory = !subCategory || product.subCategory === subCategory;
+    
+    // Price filter
+    let matchesPrice = true;
+    if (priceRange) {
+      const price = product.price;
+      switch(priceRange) {
+        case '0-1000': matchesPrice = price <= 1000; break;
+        case '1000-5000': matchesPrice = price > 1000 && price <= 5000; break;
+        case '5000-10000': matchesPrice = price > 5000 && price <= 10000; break;
+        case '10000+': matchesPrice = price > 10000; break;
+      }
+    }
+    
+    return matchesSearch && matchesCategory && matchesSubCategory && matchesPrice;
+  });
+  
+  displayProducts(filteredProducts);
+}
+
+// Display products
+function displayProducts(products) {
+  const container = document.getElementById('productsContainer');
+  
+  if (products.length === 0) {
+    container.innerHTML = '<p style="text-align:center;grid-column:1/-1;">No products found matching your criteria.</p>';
+    return;
+  }
+  
+  container.innerHTML = '';
+  
+  products.forEach(product => {
+    const productCard = document.createElement('div');
+    productCard.className = 'product';
+    productCard.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <div class="info">
+        <h3>${product.name}</h3>
+        <p><strong>Category:</strong> ${product.category} - ${product.subCategory}</p>
+        <p><strong>Price:</strong> ₹${product.price}</p>
+        <p><strong>Factory:</strong> ${product.factory}</p>
+        <p><strong>Contact:</strong> ${product.contact}</p>
+        <p>${product.description}</p>
+        <div class="contact-seller">
+          <a href="https://wa.me/91${product.contact}?text=Hi, I'm interested in ${product.name} (₹${product.price}) - ${product.factory}" 
+             class="contact-btn whatsapp" target="_blank">WhatsApp</a>
+          <a href="tel:${product.contact}" class="contact-btn facebook">Call</a>
+          <a href="mailto:?subject=Inquiry about ${product.name}&body=Product: ${product.name}%0D%0APrice: ₹${product.price}%0D%0AFactory: ${product.factory}%0D%0AContact: ${product.contact}%0D%0ADescription: ${product.description}" 
+             class="contact-btn email">Email</a>
+        </div>
+      </div>
+    `;
+    container.appendChild(productCard);
+  });
+}
+
+// Search on Enter key
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    filterProducts();
+  }
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', loadData);
+</script>
 
 </body>
 </html>
