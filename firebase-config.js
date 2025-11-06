@@ -7,20 +7,22 @@
   import { 
     getStorage, ref, uploadBytes, getDownloadURL, deleteObject 
   } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
 
-  // ✅ Your Firebase Configuration
+  // ✅ Your Firebase Configuration (sandstonebijoliya project)
   const firebaseConfig = {
-    apiKey: "AIzaSyDIXyjs57ztJDN6_4-JIIyZpK3BtacVtMw",
-    authDomain: "automobilix-2af84.firebaseapp.com",
-    projectId: "automobilix-2af84",
-    storageBucket: "automobilix-2af84.firebasestorage.app",
-    messagingSenderId: "536651887423",
-    appId: "1:536651887423:web:4f5065327e7cb155fa198a",
-    measurementId: "G-EKFWGHZHQ7"
+    apiKey: "AIzaSyBtps5uPVUqIj-TNDV8nSvhdyCNgahCJts",
+    authDomain: "sandstonebijoliya.firebaseapp.com",
+    projectId: "sandstonebijoliya",
+    storageBucket: "sandstonebijoliya.firebasestorage.app",
+    messagingSenderId: "1043710716267",
+    appId: "1:1043710716267:web:a366d53cd08e0b90c9042e",
+    measurementId: "G-ZS66QQ7D7Z"
   };
 
   // ✅ Initialize Firebase
   const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 
   // ✅ Initialize Firestore & Storage
   const db = getFirestore(app);
