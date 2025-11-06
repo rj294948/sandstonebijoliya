@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Teak Brown Sandstone",
+    "factory": "Raj Stones",
+    "category": "sandstone",
+    "subCategory": "brown",
+    "price": 1200,
+    "contact": "9876543210",
+    "description": "Premium quality teak brown sandstone with natural finish",
+    "image": "https://images.unsplash.com/photo-1581091870623-8c6b3d14f4b5?w=400",
+    "addedDate": "2025-01-15"
+  },
+  {
+    "id": 2,
+    "name": "White Marble Slabs",
+    "factory": "Marble World",
+    "category": "marble",
+    "subCategory": "white",
+    "price": 2500,
+    "contact": "9876543211",
+    "description": "Pure white marble slabs for flooring and walls",
+    "image": "https://images.unsplash.com/photo-1545568101-6bb10ce8465d?w=400",
+    "addedDate": "2025-01-14"
+  }
+]
