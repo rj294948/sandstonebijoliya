@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Add Products</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#333;}
+
+.admin-container{
+  max-width:600px;
+  margin:20px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.admin-header{
+  text-align:center;
+  margin-bottom:30px;
+  padding-bottom:20px;
+  border-bottom:2px solid #c49a6c;
+}
+
+.admin-header h1{
+  color:#c49a6c;
+  margin-bottom:10px;
+}
+
+.form-group{
+  margin-bottom:20px;
+}
+
+.form-group label{
+  display:block;
+  margin-bottom:5px;
+  font-weight:600;
+  color:#555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  padding:12px;
+  border:2px solid #ddd;
+  border-radius:5px;
+  font-size:1em;
+  transition:border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:#c49a6c;
+  outline:none;
+}
+
+.form-group textarea{
+  height:100px;
+  resize:vertical;
+}
+
+.submit-btn{
+  width:100%;
+  background:#c49a6c;
+  color:#fff;
+  padding:15px;
+  border:none;
+  border-radius:5px;
+  font-size:1.1em;
+  font-weight:600;
+  cursor:pointer;
+  transition:background 0.3s;
+}
+
+.submit-btn:hover{
+  background:#b35f4a;
+}
+
+.message{
+  margin-top:15px;
+  padding:10px;
+  border-radius:5px;
+  text-align:center;
+  font-weight:600;
+}
+
+.message.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+.message.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+
+.back-link{
+  text-align:center;
+  margin-top:20px;
+}
+
+.back-link a{
+  color:#c49a6c;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.back-link a:hover{
+  text-decoration:underline;
+}
+</style>
+</head>
+<body>
+
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>📦 Add New Product</h1>
+    <p>Admin Panel - Add products to your website</p>
+  </div>
+
+  <form id="adminForm">
+    <div class="form-group">
+      <label for="productName">Product Name *</label>
+      <input type="text" id="productName" required placeholder="e.g., Teak Brown Sandstone">
+    </div>
+
+    <div class="form-group">
+      <label for="factoryName">Factory Name *</label>
+      <input type="text" id="factoryName" required placeholder="e.g., Raj Stones">
+    </div>
+
+    <div class="form-group">
+      <label for="mainCategory">Main Category *</label>
+      <select id="mainCategory" required>
+        <option value="">Select Category</option>
+        <option value="sandstone">Sandstone</option>
+        <option value="marble">Marble</option>
+        <option value="granite">Granite</option>
+        <option value="limestone">Limestone</option>
+        <option value="kota-stone">Kota Stone</option>
+        <option value="slate">Slate</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="subCategory">Sub Category *</label>
+      <select id="subCategory" required>
+        <option value="">Select Sub-Category</option>
+        <option value="brown">Brown</option>
+        <option value="red">Red</option>
+        <option value="white">White</option>
+        <option value="black">Black</option>
+        <option value="green">Green</option>
+        <option value="yellow">Yellow</option>
+        <option value="multicolor">Multicolor</option>
+        <option value="natural">Natural</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price (₹) *</label>
+      <input type="number" id="price" required placeholder="e.g., 1500">
+    </div>
+
+    <div class="form-group">
+      <label for="contact">Contact Number *</label>
+      <input type="text" id="contact" required placeholder="e.g., 9876543210">
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" placeholder="Product description..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="imageURL">Image URL *</label>
+      <input type="text" id="imageURL" required placeholder="https://example.com/image.jpg">
+      <small style="color:#666;">Provide direct image URL</small>
+    </div>
+
+    <button type="submit" class="submit-btn">Add Product</button>
+    <div id="message" class="message"></div>
+  </form>
+
+  <div class="back-link">
+    <a href="index.html">← Back to Home</a>
+  </div>
+</div>
+
+<script>
+document.getElementById('adminForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const messageDiv = document.getElementById('message');
+  messageDiv.textContent = 'Adding product...';
+  messageDiv.className = 'message';
+  
+  // Get form data
+  const productData = {
+    name: document.getElementById('productName').value,
+    factory: document.getElementById('factoryName').value,
+    category: document.getElementById('mainCategory').value,
+    subCategory: document.getElementById('subCategory').value,
+    price: parseInt(document.getElementById('price').value),
+    contact: document.getElementById('contact').value,
+    description: document.getElementById('description').value,
+    image: document.getElementById('imageURL').value,
+    addedDate: new Date().toISOString()
+  };
+  
+  try {
+    // Here you would typically send this data to your backend
+    // For GitHub Pages, we'll store in localStorage and you can manually add to JSON files
+    saveToLocalStorage(productData);
+    
+    messageDiv.textContent = '✅ Product added successfully! Data saved locally.';
+    messageDiv.className = 'message success';
+    
+    // Reset form
+    document.getElementById('adminForm').reset();
+    
+  } catch (error) {
+    messageDiv.textContent = '❌ Error: ' + error.message;
+    messageDiv.className = 'message error';
+  }
+});
+
+function saveToLocalStorage(productData) {
+  // Get existing products from localStorage
+  let products = JSON.parse(localStorage.getItem('adminProducts') || '[]');
+  
+  // Add new product
+  products.push(productData);
+  
+  // Save back to localStorage
+  localStorage.setItem('adminProducts', JSON.stringify(products));
+  
+  console.log('Product saved locally:', productData);
+  console.log('All local products:', products);
+  
+  // You can copy this data and add to your GitHub JSON files
+  alert('Product data saved locally. Check console for JSON data to add to your GitHub repository.');
+}
+</script>
+
+</body>
+</html>
