@@ -1,0 +1,20 @@
+[
+  {
+    "id": "sandstone",
+    "name": "Sandstone",
+    "description": "Natural sandstone in various colors and textures",
+    "image": "https://images.unsplash.com/photo-1581091870623-8c6b3d14f4b5?w=400"
+  },
+  {
+    "id": "marble",
+    "name": "Marble",
+    "description": "Premium quality marble stones",
+    "image": "https://images.unsplash.com/photo-1545568101-6bb10ce8465d?w=400"
+  },
+  {
+    "id": "granite",
+    "name": "Granite",
+    "description": "Durable granite stones for various applications",
+    "image": "https://images.unsplash.com/photo-1565789277064-c6c5f9b6f6b5?w=400"
+  }
+]
