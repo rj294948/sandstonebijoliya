@@ -1,149 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sandstone Admin Panel | RJ Services</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      background: #c66;
-      color: white;
-      padding: 15px;
-      border-radius: 10px;
-    }
-    form {
-      background: #fff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-top: 20px;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background: #c66;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
-    button:hover {
-      background: #a44;
-    }
-    #output {
-      margin-top: 20px;
-      background: #272822;
-      color: #eee;
-      padding: 15px;
-      border-radius: 10px;
-      white-space: pre-wrap;
-      font-family: monospace;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add New Product | Rajasthan SandStone Hub</title>
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f6f4ef;
+  color: #333;
+  padding: 20px;
+}
+h1 {
+  text-align: center;
+  color: #b35f4a;
+}
+form {
+  max-width: 600px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin-top: 10px;
+}
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+button {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: #b35f4a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+}
+button:hover {
+  background: #c49a6c;
+}
+.success {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  display: none;
+}
+</style>
 </head>
 <body>
 
-  <h1>🧱 Sandstone Admin Panel</h1>
+<h1>📦 Add New Product</h1>
 
-  <form id="adminForm">
-    <h2>Add New Category or Product</h2>
+<form id="productForm">
+  <label>Product Name:</label>
+  <input type="text" id="name" required>
 
-    <label>Category ID (no spaces):</label>
-    <input type="text" id="categoryId" placeholder="e.g. pink-sandstone" required>
+  <label>Category:</label>
+  <input type="text" id="category" required>
 
-    <label>Category Name:</label>
-    <input type="text" id="categoryName" placeholder="e.g. Pink Sandstone" required>
+  <label>Sub Category:</label>
+  <input type="text" id="subCategory">
 
-    <label>Category Image URL:</label>
-    <input type="url" id="categoryImage" placeholder="https://example.com/pink.jpg" required>
+  <label>Price (₹):</label>
+  <input type="number" id="price" required>
 
-    <hr>
+  <label>Factory Name:</label>
+  <input type="text" id="factory">
 
-    <h3>Product Details (optional)</h3>
+  <label>Contact Number (without +91):</label>
+  <input type="text" id="contact" required>
 
-    <label>Product ID:</label>
-    <input type="text" id="productId" placeholder="e.g. p1">
+  <label>Image URL:</label>
+  <input type="url" id="image" required>
 
-    <label>Product Name:</label>
-    <input type="text" id="productName" placeholder="e.g. Dholpur Pink Tile">
+  <button type="submit">Generate JSON & Download</button>
 
-    <label>Product Image URL:</label>
-    <input type="url" id="productImage" placeholder="https://example.com/tile1.jpg">
+  <div class="success" id="successMsg">✅ JSON file created successfully!</div>
+</form>
 
-    <label>Product Price:</label>
-    <input type="text" id="productPrice" placeholder="₹350/sqft">
+<script>
+document.getElementById('productForm').addEventListener('submit', async function(e){
+  e.preventDefault();
 
-    <label>Product Description:</label>
-    <textarea id="productDesc" placeholder="Smooth finish natural sandstone..."></textarea>
+  const newProduct = {
+    id: Date.now(),
+    name: document.getElementById('name').value,
+    category: document.getElementById('category').value,
+    subCategory: document.getElementById('subCategory').value,
+    price: document.getElementById('price').value,
+    factory: document.getElementById('factory').value,
+    contact: document.getElementById('contact').value,
+    image: document.getElementById('image').value
+  };
 
-    <button type="submit">Generate JSON Code</button>
-  </form>
+  // Fetch existing data
+  const response = await fetch('https://rj294948.github.io/data/products.json');
+  let products = [];
+  try {
+    products = await response.json();
+  } catch {
+    products = [];
+  }
 
-  <div id="output"></div>
+  products.unshift(newProduct); // Add new product to top
 
-  <script>
-    const form = document.getElementById('adminForm');
-    const output = document.getElementById('output');
+  // Convert to JSON blob
+  const blob = new Blob([JSON.stringify(products, null, 2)], { type: 'application/json' });
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+  // Download file
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'products.json';
+  a.click();
+  URL.revokeObjectURL(url);
 
-      const category = {
-        id: form.categoryId.value.trim(),
-        name: form.categoryName.value.trim(),
-        image: form.categoryImage.value.trim(),
-        products: []
-      };
-
-      // Add product if provided
-      if (form.productId.value.trim()) {
-        const product = {
-          id: form.productId.value.trim(),
-          name: form.productName.value.trim(),
-          image: form.productImage.value.trim(),
-          price: form.productPrice.value.trim(),
-          description: form.productDesc.value.trim()
-        };
-        category.products.push(product);
-      }
-
-      // Output JSON snippet ready for GitHub file
-      const jsonSnippet = JSON.stringify(category, null, 2);
-      output.innerHTML = 
-`✅ Copy this and paste inside your GitHub "data.json" file under "categories" array:
-
----------------------------
-{
-${jsonSnippet.slice(1, -1)}
-}
----------------------------
-
-📌 Tip:
-- If the category already exists, just add this "product" inside that category's "products" array.
-`;
-
-      output.style.display = 'block';
-    });
-  </script>
+  document.getElementById('successMsg').style.display = 'block';
+  setTimeout(()=> document.getElementById('successMsg').style.display = 'none', 3000);
+});
+</script>
 
 </body>
 </html>
