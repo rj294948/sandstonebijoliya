@@ -3,68 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Auto Products - Rajasthan SandStone Hub</title>
+<title>Auto Product List from Google Form</title>
 <style>
-body { font-family: Arial, sans-serif; background:#fafafa; padding:20px; }
-h2 { text-align:center; color:#333; }
-#products { 
-  display:grid; 
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-  gap:20px; 
-  margin-top:20px; 
-}
-.card { 
-  background:white; 
-  padding:15px; 
-  border-radius:10px; 
-  box-shadow:0 0 10px rgba(0,0,0,0.1); 
-}
-.card img { 
-  width:100%; 
-  height:180px; 
-  object-fit:cover; 
-  border-radius:8px; 
-}
+  .product-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px;
+    width: 250px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+  }
+  img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
 </style>
 </head>
 <body>
-
-<h2>🪨 Latest Stone Submissions</h2>
-<div id="products"><p>Loading...</p></div>
+<h2>🪨 Latest Stone Products</h2>
+<div id="product-list"></div>
 
 <script>
-const sheetID = "1M9M8FP9PR6_G0bkMu02NOMxzHZyc6S8UdsOwBA_3BFY";
-const sheetName = "Form Responses 1"; // 👈 Change if needed
-const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
+const sheetURL = "https://opensheet.elk.sh/1ob32T2NWQVZnxC07hBHT9neCEFFBP3neq0S30zV9-1A/Form%20Responses%201";
 
-fetch(url)
-  .then(res => res.json())
-  .then(data => {
-    const container = document.getElementById("products");
+async function loadProducts() {
+  try {
+    const res = await fetch(sheetURL);
+    const data = await res.json();
+
+    const container = document.getElementById('product-list');
     container.innerHTML = "";
-    data.forEach(row => {
-      const img = row['UPLOAD SAMPLE IMAGE'] || '';
-      const cat = row['STONE CATAGORY'] || '';
-      const sub = row['STONE SUB CATAGORY'] || '';
-      const desc = row['DESCRIPTION'] || '';
-      const addr = row['ADDRESS'] || '';
-      const contact = row['CONTACT'] || '';
 
-      container.innerHTML += `
-        <div class="card">
-          <img src="${img}" alt="${cat}">
-          <h3>${cat}</h3>
-          <p><b>Sub Category:</b> ${sub}</p>
-          <p>${desc}</p>
-          <p><b>Address:</b> ${addr}</p>
-          <p><b>Contact:</b> ${contact}</p>
-        </div>`;
+    data.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'product-card';
+      div.innerHTML = `
+        <img src="${item['UPLOAD SAMPLE IMAGE'] || 'https://via.placeholder.com/250'}" alt="Stone Image">
+        <h3>${item['STONE CATAGORY'] || 'Unknown'}</h3>
+        <p><b>Sub Category:</b> ${item['STONE SUB CATAGORY'] || ''}</p>
+        <p>${item['DESCRIPTION'] || ''}</p>
+        <p><b>Address:</b> ${item['ADDRESS'] || ''}</p>
+        <p><b>Contact:</b> ${item['CONTACT'] || ''}</p>
+      `;
+      container.appendChild(div);
     });
-  })
-  .catch(err => {
-    document.getElementById("products").innerHTML = `<p style="color:red;">❌ Failed to load data. Check Sheet access.</p>`;
-    console.error(err);
-  });
+  } catch (error) {
+    console.error('Error loading data:', error);
+  }
+}
+
+loadProducts();
 </script>
 </body>
 </html>
