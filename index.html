@@ -12,6 +12,7 @@
   }
   h2 {
     text-align: center;
+    color: #333;
   }
   table {
     width: 100%;
@@ -68,16 +69,26 @@ fetch(url)
     tbody.innerHTML = "";
 
     data.forEach(row => {
+      // Trim all key names (remove spaces)
+      const clean = {};
+      Object.keys(row).forEach(k => clean[k.trim()] = row[k]);
+
+      const timestamp = clean["Timestamp"] || "";
+      const category = clean["STONE CATAGORY"] || "";
+      const subcategory = clean["STONE SUB CATAGORY"] || "";
+      const desc = clean["DESCRIPTION"] || "";
+      const address = clean["ADDRESS"] || "";
+      const contact = clean["CONTACT"] || "";
+      const imageLink = clean["UPLOAD SAMPLE IMAGE"] || "";
+
+      // Convert Google Drive share link to direct image
+      let directImg = "";
+      if (imageLink.includes("id=")) {
+        const id = imageLink.split("id=")[1];
+        directImg = `https://drive.google.com/uc?export=view&id=${id}`;
+      }
+
       const tr = document.createElement("tr");
-
-      const timestamp = row["Timestamp"] || "";
-      const category = row["STONE CATAGORY"] || "";
-      const subcategory = row["STONE SUB CATAGORY"] || "";
-      const desc = row["DESCRIPTION"] || "";
-      const address = row["ADDRESS"] || "";
-      const contact = row["CONTACT"] || "";
-      const imageLink = row["UPLOAD SAMPLE IMAGE"] || "";
-
       tr.innerHTML = `
         <td>${timestamp}</td>
         <td>${category}</td>
@@ -85,7 +96,7 @@ fetch(url)
         <td>${desc}</td>
         <td>${address}</td>
         <td>${contact}</td>
-        <td>${imageLink ? `<img src="${imageLink}" alt="Image">` : "No Image"}</td>
+        <td>${directImg ? `<img src="${directImg}" alt="Sample Image">` : "No Image"}</td>
       `;
       tbody.appendChild(tr);
     });
