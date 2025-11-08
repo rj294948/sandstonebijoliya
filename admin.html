@@ -3,161 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add New Product | Rajasthan SandStone Hub</title>
+<title>Add Product | Rajasthan Sandstone Hub</title>
 <style>
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f6f4ef;
-  color: #333;
-  padding: 20px;
+  background: #f9f9f9;
+  margin: 0;
+  padding: 0;
 }
-h1 {
-  text-align: center;
-  color: #b35f4a;
-}
-form {
-  max-width: 600px;
-  margin: 30px auto;
+.container {
+  max-width: 650px;
+  margin: 40px auto;
   background: #fff;
-  padding: 20px;
+  padding: 30px;
   border-radius: 12px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
-label {
-  display: block;
-  font-weight: 600;
-  margin-top: 10px;
+h2 {
+  text-align: center;
+  color: #b35f4a;
+  margin-bottom: 25px;
 }
-input, textarea, select {
+label {
+  font-weight: 600;
+  display: block;
+  margin: 12px 0 6px;
+}
+input, select, textarea {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
+  padding: 12px;
   border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  outline: none;
+}
+input:focus, textarea:focus {
+  border-color: #b35f4a;
 }
 button {
-  margin-top: 15px;
-  padding: 12px 20px;
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
   background: #b35f4a;
   color: #fff;
+  font-weight: bold;
   border: none;
   border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
-  font-size: 1em;
-  font-weight: 600;
+  transition: 0.3s;
 }
 button:hover {
-  background: #c49a6c;
+  background: #c08067;
 }
 .success {
+  display: none;
   background: #d4edda;
   color: #155724;
-  padding: 10px;
-  margin-top: 10px;
+  padding: 12px;
   border-radius: 6px;
-  display: none;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 600;
 }
 </style>
 </head>
 <body>
 
-<h1>📦 Add New Product</h1>
+<div class="container">
+  <h2>🧱 Add New Product</h2>
 
-<form id="productForm">
-  <label>Product Name:</label>
-  <input type="text" id="name" required>
+  <form id="productForm">
+    <label>Product Name</label>
+    <input type="text" id="name" required>
 
-  <label>Category:</label>
-  <input type="text" id="category" required>
+    <label>Category</label>
+    <input type="text" id="category" required>
 
-  <label>Sub Category:</label>
-  <input type="text" id="subCategory">
+    <label>Sub Category</label>
+    <input type="text" id="subCategory">
 
-  <label>Price (₹):</label>
-  <input type="number" id="price" required>
+    <label>Price (₹)</label>
+    <input type="number" id="price" required>
 
-  <label>Factory Name:</label>
-  <input type="text" id="factory">
+    <label>Factory Name</label>
+    <input type="text" id="factory">
 
-  <label>Contact Number (without +91):</label>
-  <input type="text" id="contact" required>
+    <label>Contact Number (without +91)</label>
+    <input type="text" id="contact" required>
 
-  <label>Upload Product Image:</label>
-  <input type="file" id="image" accept="image/*" required>
+    <label>Upload Product Image</label>
+    <input type="file" id="image" accept="image/*" required>
 
-  <button type="submit">Upload Product</button>
+    <button type="submit">Submit Product</button>
 
-  <div class="success" id="successMsg">✅ Product uploaded successfully to Google Drive!</div>
-</form>
+    <div id="successMsg" class="success">✅ Product submitted successfully!</div>
+  </form>
+</div>
 
 <script>
 const ENDPOINT = "https://script.google.com/macros/s/AKfycby779RFVipYYtlyASrsibg1TDStcT8LrpTFjKYjzmzJXua1mKO3xm5pNqUGXEWpDdYyjA/exec";
-const SIMPLE_SECRET = "rj129";
+const SECRET = "rj129";
 
-document.getElementById('productForm').addEventListener('submit', async function(e){
+document.getElementById('productForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const fileInput = document.getElementById('image');
-  const file = fileInput.files && fileInput.files[0];
+  const file = document.getElementById('image').files[0];
+  const reader = new FileReader();
 
-  let imageBase64 = null, imageName = null, imageType = null;
+  reader.onload = async function() {
+    const base64Data = reader.result.split(',')[1];
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = async function() {
-      const base64Str = reader.result.split(',')[1];
-      imageBase64 = base64Str;
-      imageName = file.name;
-      imageType = file.type;
-      await uploadProduct(imageBase64, imageName, imageType);
+    const productData = {
+      secret: SECRET,
+      name: document.getElementById('name').value,
+      category: document.getElementById('category').value,
+      subCategory: document.getElementById('subCategory').value,
+      price: document.getElementById('price').value,
+      factory: document.getElementById('factory').value,
+      contact: document.getElementById('contact').value,
+      imageName: file.name,
+      imageType: file.type,
+      imageBase64: base64Data
     };
-    reader.readAsDataURL(file);
-  } else {
-    await uploadProduct(null, null, null);
-  }
-});
 
-async function uploadProduct(imageBase64, imageName, imageType) {
-  const newProduct = {
-    secret: SIMPLE_SECRET,
-    name: document.getElementById('name').value,
-    category: document.getElementById('category').value,
-    subCategory: document.getElementById('subCategory').value,
-    price: document.getElementById('price').value,
-    factory: document.getElementById('factory').value,
-    contact: document.getElementById('contact').value,
-    imageUrl: '',
-    imageBase64,
-    imageName,
-    imageType
-  };
+    try {
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        body: JSON.stringify(productData),
+        headers: { 'Content-Type': 'application/json' }
+      });
 
-  try {
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newProduct)
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      document.getElementById('successMsg').style.display = 'block';
-      console.log("✅ Product uploaded:", data.product);
-    } else {
-      alert("❌ Upload failed: " + JSON.stringify(data.error));
+      const result = await res.json();
+      if (result.success) {
+        document.getElementById('successMsg').style.display = 'block';
+        e.target.reset();
+        setTimeout(() => document.getElementById('successMsg').style.display = 'none', 3000);
+      } else {
+        alert('❌ Error: ' + (result.error || 'Something went wrong.'));
+      }
+    } catch (err) {
+      alert('⚠️ Failed to connect: ' + err.message);
     }
-
-    setTimeout(() => {
-      document.getElementById('successMsg').style.display = 'none';
-      document.getElementById('productForm').reset();
-    }, 3000);
-
-  } catch (err) {
-    alert("⚠️ Error: " + err.message);
-    console.error(err);
-  }
-}
+  };
+  reader.readAsDataURL(file);
+});
 </script>
 
 </body>
