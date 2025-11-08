@@ -1,26 +1,18 @@
 [
   {
-    "id": 1,
-    "name": "Teak Brown Sandstone",
-    "factory": "Raj Stones",
-    "category": "sandstone",
-    "subCategory": "brown",
-    "price": 1200,
-    "contact": "9876543210",
-    "description": "Premium quality teak brown sandstone with natural finish",
-    "image": "https://images.unsplash.com/photo-1581091870623-8c6b3d14f4b5?w=400",
-    "addedDate": "2025-01-15"
+    "image": "https://via.placeholder.com/300x180?text=Sample+Image",
+    "category": "Sandstone",
+    "subcategory": "Red Dholpur",
+    "description": "Beautiful red sandstone for flooring and walls.",
+    "address": "Bijoliya, Rajasthan",
+    "contact": "+91 9876543210"
   },
   {
-    "id": 2,
-    "name": "White Marble Slabs",
-    "factory": "Marble World",
-    "category": "marble",
-    "subCategory": "white",
-    "price": 2500,
-    "contact": "9876543211",
-    "description": "Pure white marble slabs for flooring and walls",
-    "image": "https://images.unsplash.com/photo-1545568101-6bb10ce8465d?w=400",
-    "addedDate": "2025-01-14"
+    "image": "https://via.placeholder.com/300x180?text=Another+Image",
+    "category": "Marble",
+    "subcategory": "White Makrana",
+    "description": "Premium white marble from Makrana region.",
+    "address": "Kishangarh, Rajasthan",
+    "contact": "+91 8765432109"
   }
 ]
