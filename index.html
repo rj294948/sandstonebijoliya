@@ -3,134 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rajasthan SandStone Hub - Products</title>
+<title>Rajasthan Stone Products</title>
 <style>
   body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f5f5f5;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f4f9;
     margin: 0;
-    padding: 0;
+    padding: 20px;
   }
-
   h1 {
     text-align: center;
-    background-color: #c45e00;
-    color: white;
-    padding: 15px;
-    margin: 0;
+    color: #333;
   }
-
-  #products {
+  .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
     padding: 20px;
   }
-
   .product-card {
-    background: white;
+    background: #fff;
     border-radius: 12px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     overflow: hidden;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: 0.3s;
   }
-
   .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    transform: scale(1.02);
   }
-
-  .product-img {
+  .product-card img {
     width: 100%;
     height: 200px;
     object-fit: cover;
   }
-
-  .product-card h3 {
-    margin: 10px 0 5px;
+  .product-info {
+    padding: 15px;
+  }
+  .product-info h3 {
+    margin: 0;
     color: #333;
   }
-
-  .product-card p {
-    margin: 5px;
-    font-size: 14px;
+  .product-info p {
+    margin: 5px 0;
     color: #555;
+    font-size: 14px;
   }
-
-  .price {
-    color: green;
+  .contact {
     font-weight: bold;
-  }
-
-  footer {
-    text-align: center;
-    padding: 15px;
-    background-color: #333;
-    color: white;
+    color: #007bff;
   }
 </style>
 </head>
 <body>
 
-<h1>🪨 Rajasthan SandStone Hub</h1>
-
-<div id="products">Loading products...</div>
-
-<footer>© 2025 Rajasthan SandStone Hub | All Rights Reserved</footer>
+<h1>🪨 Rajasthan Stone Products</h1>
+<div id="product-list" class="product-grid"></div>
 
 <script>
-// === CONFIG ===
-const SHEET_ID = "1ob32T2NWQVZnxC07hBHT9neCEFFBP3neq0S30zV9-1A";
-const SHEET_NAME = "Form Responses 1";
-const API_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+const sheetURL = "https://rjservices.github.io/products.json"; // <-- tumhara JSON yahan rakho
 
-// offline fallback image (base64 transparent)
-const fallbackImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAADwCAMAAAC7GKtPAAAAGFBMVEXMzMyWlpazs7PFxcW+vr6xsbG3t7fW1tawWyO7AAABYUlEQVR4nO3aMQ6DMAxFUaz//5tXxJAMxO3rZJbQ82YJH+UwDRRZIkSZIkSZIkSZIkSZIkSZIkSZLkJg/tj6wRzj/N7sgQh8Dk+MKx7h8ZvvVuqbBzDwPkVbcKfZ8OQ+irWjqYMXIXtcvY2EvNHauTmxvEba/cI5mxpL7HY8hc+PwS+2/tW6myXPc1/XeH7te38MnUXtd9r1pxNuv5xXcW7Wc1frvIyf3eLnd9lU7PtP3/E7O7QeeL8/1yze74d6xOeF5Q/HIkmSJEmSJEmSJEmSJEmSJEmSJEmS9E/wCUXSRgBksp/oAAAAASUVORK5CYII=";
+// Google Drive open?id=... ko viewable link me convert karne wala function
+function convertDriveLink(url) {
+  if (!url || !url.includes("open?id=")) return "";
+  const id = url.split("open?id=")[1];
+  return `https://drive.google.com/uc?export=view&id=${id}`;
+}
 
-async function loadProducts() {
-  const container = document.getElementById("products");
-  container.innerHTML = "⏳ Loading...";
-
-  try {
-    const response = await fetch(API_URL);
-    const data = await response.json();
-
-    if (!Array.isArray(data)) {
-      container.innerHTML = "<p>⚠️ No data found in the sheet.</p>";
-      return;
-    }
-
+fetch(sheetURL)
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("product-list");
     container.innerHTML = "";
 
     data.forEach(item => {
-      // Google Drive direct link converter
-      let imgLink = item["UPLOAD SAMPLE IMAGE"] || "";
-      if (imgLink.includes("drive.google.com")) {
-        const match = imgLink.match(/[-\w]{25,}/);
-        if (match) imgLink = `https://drive.google.com/uc?export=view&id=${match[0]}`;
-      }
-
-      const card = `
-        <div class="product-card">
-          <img src="${imgLink}" class="product-img" onerror="this.src='${fallbackImage}'"/>
-          <h3>${item["STONE CATAGORY "] || "Unknown Stone"}</h3>
-          <p>Type: ${item["STONE SUB CATAGORY "] || "N/A"}</p>
-          <p>${item["DESCRIPTION "] || ""}</p>
-          <p><b>📍 ${item["ADDRESS"] || "Not Given"}</b></p>
-          <p>📞 ${item["CONTACT "] || ""}</p>
+      const image = convertDriveLink(item["UPLOAD SAMPLE IMAGE"]);
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img src="${image}" alt="${item["STONE CATAGORY "] || 'Stone'}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+        <div class="product-info">
+          <h3>${item["STONE CATAGORY "] || "Unknown Category"}</h3>
+          <p><b>Sub Category:</b> ${item["STONE SUB CATAGORY "] || "N/A"}</p>
+          <p><b>Description:</b> ${item["DESCRIPTION "] || "No details"}</p>
+          <p><b>Address:</b> ${item["ADDRESS"] || "Unknown"}</p>
+          <p class="contact">📞 ${item["CONTACT "] || ""}</p>
         </div>
       `;
-      container.innerHTML += card;
+      container.appendChild(card);
     });
-
-  } catch (error) {
-    console.error("Error loading data:", error);
-    container.innerHTML = "<p>❌ Error loading products. Please try again later.</p>";
-  }
-}
-
-loadProducts();
+  })
+  .catch(err => {
+    console.error("Error loading data:", err);
+    document.getElementById("product-list").innerHTML = "<p>Failed to load data.</p>";
+  });
 </script>
 
 </body>
