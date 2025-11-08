@@ -222,7 +222,7 @@ footer{
 
 <nav>
   <a href="index.html">Home</a>
-  <a href="products.html">Products</a>
+  <a href="#featured">Products</a>
   <a href="#categories">Categories</a>
   <a href="#featured">Featured</a>
   <a href="contact.html">Contact</a>
@@ -250,9 +250,9 @@ footer{
   </div>
 </section>
 
-<!-- ===== Admin Link ===== -->
+<!-- ===== Add Product Link ===== -->
 <div class="admin-link">
-  <a href="admin.html">📦 Add Your Product (For Suppliers)</a>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfT8Cw_Q8U7PR5X2xZV6EnQq0jC5asdpQ3q0sZyQtZ9oDUO4w/viewform" target="_blank">📦 Add Your Product (For Suppliers)</a>
 </div>
 
 <footer>
@@ -261,88 +261,48 @@ footer{
 
 <!-- ===== JavaScript ===== -->
 <script>
-// Load categories and products from GitHub JSON files
-async function loadData() {
+const sheetID = "1ob32T2NWQVZnxC07hBHT9neCEFFBP3neq0S30zV9-1A";
+const sheetName = "Form Responses 1";
+const sheetURL = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
+
+// Load product data from Google Sheet
+async function loadProducts() {
+  const container = document.getElementById("featuredProducts");
   try {
-    const [categoriesRes, productsRes] = await Promise.all([
-      fetch('https://rj294948.github.io/data/categories.json'),
-      fetch('https://rj294948.github.io/data/products.json')
-    ]);
-    
-    const categories = await categoriesRes.json();
-    const products = await productsRes.json();
-    
-    displayCategories(categories);
-    displayFeaturedProducts(products);
-  } catch (error) {
-    console.error('Error loading data:', error);
-    document.getElementById('categoriesContainer').innerHTML = 
-      '<p style="text-align:center;color:red;">Error loading data. Please try again later.</p>';
-  }
-}
+    const res = await fetch(sheetURL);
+    const data = await res.json();
 
-// Display categories
-function displayCategories(categories) {
-  const container = document.getElementById('categoriesContainer');
-  container.innerHTML = '';
-  
-  if (!categories.length) {
-    container.innerHTML = '<p style="text-align:center;">No categories available.</p>';
-    return;
-  }
+    if (!data.length) {
+      container.innerHTML = "<p style='text-align:center;'>No products available yet.</p>";
+      return;
+    }
 
-  categories.forEach(cat => {
-    const div = document.createElement('div');
-    div.className = 'category-card';
-    div.innerHTML = `
-      <img src="${cat.image}" alt="${cat.name}">
-      <div class="info">
-        <h3>${cat.name}</h3>
-        <p>${cat.description || ''}</p>
-        <a href="products.html?category=${cat.name}" class="btn">View Products</a>
-      </div>
-    `;
-    container.appendChild(div);
-  });
-}
-
-// Display featured (latest) products
-function displayFeaturedProducts(products) {
-  const container = document.getElementById('featuredProducts');
-  container.innerHTML = '';
-  
-  if (!products.length) {
-    container.innerHTML = '<p style="text-align:center;">No products added yet.</p>';
-    return;
-  }
-
-  const featured = products.slice(-6).reverse();
-  
-  featured.forEach(prod => {
-    const div = document.createElement('div');
-    div.className = 'product';
-    div.innerHTML = `
-      <img src="${prod.image}" alt="${prod.name}">
-      <div class="info">
-        <h3>${prod.name}</h3>
-        <p><strong>Category:</strong> ${prod.category} - ${prod.subCategory}</p>
-        <p><strong>Price:</strong> ₹${prod.price}</p>
-        <p><strong>Factory:</strong> ${prod.factory}</p>
-        <div class="contact-seller">
-          <p><strong>Contact Seller:</strong></p>
-          <a href="https://wa.me/91${prod.contact}?text=Hi, I'm interested in ${prod.name} (₹${prod.price})" 
-             class="contact-btn whatsapp" target="_blank">WhatsApp</a>
-          <a href="mailto:?subject=Inquiry about ${prod.name}&body=Product: ${prod.name}%0D%0APrice: ₹${prod.price}%0D%0AFactory: ${prod.factory}%0D%0AContact: ${prod.contact}" 
-             class="contact-btn email">Email</a>
+    container.innerHTML = data.slice(-6).reverse().map(row => `
+      <div class="product">
+        <img src="${row["Image URL"] || 'https://via.placeholder.com/300x180?text=No+Image'}" alt="${row["Product Name"]}">
+        <div class="info">
+          <h3>${row["Product Name"] || "Unnamed Product"}</h3>
+          <p><strong>Company:</strong> ${row["Company Name"] || "-"}</p>
+          <p><strong>Category:</strong> ${row["Category"] || ""} ${row["SubCategory"] ? "- " + row["SubCategory"] : ""}</p>
+          <p><strong>Price:</strong> ₹${row["Price"] || "-"}</p>
+          <p><strong>Description:</strong> ${row["Description"] || "No details"}</p>
+          <div class="contact-seller">
+            <p><strong>Contact Seller:</strong></p>
+            <a href="https://wa.me/91${row["Contact"]}?text=Hi, I'm interested in ${row["Product Name"]}" 
+               class="contact-btn whatsapp" target="_blank">WhatsApp</a>
+            <a href="mailto:?subject=Inquiry about ${row["Product Name"]}&body=Hello, I saw your product on Rajasthan Sandstone Hub.%0D%0AProduct: ${row["Product Name"]}%0D%0APrice: ₹${row["Price"]}%0D%0AContact: ${row["Contact"]}" 
+               class="contact-btn email">Email</a>
+          </div>
         </div>
       </div>
-    `;
-    container.appendChild(div);
-  });
+    `).join("");
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = "<p style='color:red;text-align:center;'>Error loading products.</p>";
+  }
 }
 
-// Initialize
-document.addEventListener('DOMContentLoaded', loadData);
+document.addEventListener("DOMContentLoaded", loadProducts);
 </script>
 
 </body>
