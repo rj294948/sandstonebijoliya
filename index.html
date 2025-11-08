@@ -3,59 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stone Form Data - Rajasthan SandStone Hub</title>
+<title>Rajasthan SandStone Hub - Latest Stone Submissions</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
-    background: #fafafa;
+    font-family: 'Poppins', sans-serif;
+    background: #f8f8f8;
+    margin: 0;
     padding: 20px;
   }
   h2 {
     text-align: center;
+    margin-bottom: 20px;
     color: #333;
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    margin-top: 20px;
-  }
-  th, td {
-    border: 1px solid #ddd;
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
     padding: 10px;
-    text-align: left;
   }
-  th {
-    background: #f4f4f4;
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  img {
-    width: 100px;
-    height: auto;
-    border-radius: 5px;
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  .card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  .card-content {
+    padding: 15px;
+  }
+  .card-content h3 {
+    font-size: 1.1rem;
+    color: #222;
+    margin: 0 0 8px;
+  }
+  .card-content p {
+    margin: 3px 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .contact {
+    color: #007bff;
+    font-weight: bold;
+  }
+  .address {
+    color: #333;
+    font-size: 0.9rem;
   }
 </style>
 </head>
 <body>
 
-<h2>Latest Stone Submissions</h2>
+<h2>🪨 Latest Stone Submissions</h2>
 
-<table id="formDataTable">
-  <thead>
-    <tr>
-      <th>Timestamp</th>
-      <th>Stone Category</th>
-      <th>Stone Sub Category</th>
-      <th>Description</th>
-      <th>Address</th>
-      <th>Contact</th>
-      <th>Sample Image</th>
-    </tr>
-  </thead>
-  <tbody id="tableBody">
-    <tr><td colspan="7" style="text-align:center;">Loading data...</td></tr>
-  </tbody>
-</table>
+<div id="productGrid" class="grid">
+  <p style="text-align:center;width:100%;">Loading products...</p>
+</div>
 
 <script>
 const sheetID = "1ob32T2NWQVZnxC07hBHT9neCEFFBP3neq0S30zV9-1A";
@@ -65,11 +77,11 @@ const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
 fetch(url)
   .then(response => response.json())
   .then(data => {
-    const tbody = document.getElementById("tableBody");
-    tbody.innerHTML = "";
+    const grid = document.getElementById("productGrid");
+    grid.innerHTML = "";
 
     data.forEach(row => {
-      // Trim all key names (remove spaces)
+      // Trim spaces in key names
       const clean = {};
       Object.keys(row).forEach(k => clean[k.trim()] = row[k]);
 
@@ -81,30 +93,33 @@ fetch(url)
       const contact = clean["CONTACT"] || "";
       const imageLink = clean["UPLOAD SAMPLE IMAGE"] || "";
 
-      // Convert Google Drive share link to direct image
+      // Convert Google Drive link to direct view
       let directImg = "";
       if (imageLink.includes("id=")) {
         const id = imageLink.split("id=")[1];
         directImg = `https://drive.google.com/uc?export=view&id=${id}`;
       }
 
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${timestamp}</td>
-        <td>${category}</td>
-        <td>${subcategory}</td>
-        <td>${desc}</td>
-        <td>${address}</td>
-        <td>${contact}</td>
-        <td>${directImg ? `<img src="${directImg}" alt="Sample Image">` : "No Image"}</td>
+      const card = document.createElement("div");
+      card.classList.add("card");
+
+      card.innerHTML = `
+        <img src="${directImg || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${category}">
+        <div class="card-content">
+          <h3>${category} - ${subcategory}</h3>
+          <p><strong>Description:</strong> ${desc}</p>
+          <p class="address"><strong>Address:</strong> ${address}</p>
+          <p class="contact"><strong>Contact:</strong> ${contact}</p>
+        </div>
       `;
-      tbody.appendChild(tr);
+
+      grid.appendChild(card);
     });
   })
   .catch(err => {
     console.error(err);
-    document.getElementById("tableBody").innerHTML =
-      `<tr><td colspan="7" style="text-align:center;color:red;">Failed to load data.</td></tr>`;
+    document.getElementById("productGrid").innerHTML =
+      `<p style="color:red;text-align:center;width:100%;">Failed to load data.</p>`;
   });
 </script>
 
