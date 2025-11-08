@@ -82,54 +82,82 @@ button:hover {
   <label>Contact Number (without +91):</label>
   <input type="text" id="contact" required>
 
-  <label>Image URL:</label>
-  <input type="url" id="image" required>
+  <label>Upload Product Image:</label>
+  <input type="file" id="image" accept="image/*" required>
 
-  <button type="submit">Generate JSON & Download</button>
+  <button type="submit">Upload Product</button>
 
-  <div class="success" id="successMsg">✅ JSON file created successfully!</div>
+  <div class="success" id="successMsg">✅ Product uploaded successfully to Google Drive!</div>
 </form>
 
 <script>
+const ENDPOINT = "https://script.google.com/macros/s/AKfycby779RFVipYYtlyASrsibg1TDStcT8LrpTFjKYjzmzJXua1mKO3xm5pNqUGXEWpDdYyjA/exec";
+const SIMPLE_SECRET = "rj129";
+
 document.getElementById('productForm').addEventListener('submit', async function(e){
   e.preventDefault();
 
+  const fileInput = document.getElementById('image');
+  const file = fileInput.files && fileInput.files[0];
+
+  let imageBase64 = null, imageName = null, imageType = null;
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = async function() {
+      const base64Str = reader.result.split(',')[1];
+      imageBase64 = base64Str;
+      imageName = file.name;
+      imageType = file.type;
+      await uploadProduct(imageBase64, imageName, imageType);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    await uploadProduct(null, null, null);
+  }
+});
+
+async function uploadProduct(imageBase64, imageName, imageType) {
   const newProduct = {
-    id: Date.now(),
+    secret: SIMPLE_SECRET,
     name: document.getElementById('name').value,
     category: document.getElementById('category').value,
     subCategory: document.getElementById('subCategory').value,
     price: document.getElementById('price').value,
     factory: document.getElementById('factory').value,
     contact: document.getElementById('contact').value,
-    image: document.getElementById('image').value
+    imageUrl: '',
+    imageBase64,
+    imageName,
+    imageType
   };
 
-  // Fetch existing data
-  const response = await fetch('https://rj294948.github.io/data/products.json');
-  let products = [];
   try {
-    products = await response.json();
-  } catch {
-    products = [];
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newProduct)
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      document.getElementById('successMsg').style.display = 'block';
+      console.log("✅ Product uploaded:", data.product);
+    } else {
+      alert("❌ Upload failed: " + JSON.stringify(data.error));
+    }
+
+    setTimeout(() => {
+      document.getElementById('successMsg').style.display = 'none';
+      document.getElementById('productForm').reset();
+    }, 3000);
+
+  } catch (err) {
+    alert("⚠️ Error: " + err.message);
+    console.error(err);
   }
-
-  products.unshift(newProduct); // Add new product to top
-
-  // Convert to JSON blob
-  const blob = new Blob([JSON.stringify(products, null, 2)], { type: 'application/json' });
-
-  // Download file
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'products.json';
-  a.click();
-  URL.revokeObjectURL(url);
-
-  document.getElementById('successMsg').style.display = 'block';
-  setTimeout(()=> document.getElementById('successMsg').style.display = 'none', 3000);
-});
+}
 </script>
 
 </body>
