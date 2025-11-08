@@ -67,7 +67,7 @@ footer{background:#333;color:#fff;text-align:center;padding:15px 5px;font-size:0
 <script>
 async function loadProducts() {
   try {
-    const res = await fetch('https://rj294948.github.io/products.json');
+    const res = await fetch('https://rj294948.github.io/data/products.json');
     const products = await res.json();
     displayProducts(products);
   } catch (error) {
