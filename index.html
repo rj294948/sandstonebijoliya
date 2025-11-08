@@ -67,12 +67,13 @@ footer{background:#333;color:#fff;text-align:center;padding:15px 5px;font-size:0
 <script>
 async function loadProducts() {
   try {
-    const res = await fetch('https://github.com/rj294948/sandstonebijoliya/blob/main/products.json');
+    const res = await fetch('https://raw.githubusercontent.com/rj294948/sandstonebijoliya/main/products.json');
     const products = await res.json();
     displayProducts(products);
   } catch (error) {
     console.error('Error loading products:', error);
-    document.getElementById('featuredProducts').innerHTML = '<p style="color:red;text-align:center;">Error loading data. Please try again later.</p>';
+    document.getElementById('featuredProducts').innerHTML =
+      '<p style="color:red;text-align:center;">Error loading data. Please try again later.</p>';
   }
 }
 
@@ -85,19 +86,18 @@ function displayProducts(products) {
     return;
   }
 
-  // Reverse order to show latest first
   products.slice().reverse().forEach(prod => {
     const div = document.createElement('div');
     div.className = 'product';
     div.innerHTML = `
-      <img src="${prod['Upload Sample Image'] || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${prod['Stone Category']}">
+      <img src="${prod['Upload Sample Image'] || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${prod['STONE CATAGORY']}">
       <div class="info">
-        <h3>${prod['Stone Category'] || 'Unnamed Stone'}</h3>
-        <p><strong>Sub Category:</strong> ${prod['Stone Sub Category'] || 'N/A'}</p>
-        <p><strong>Description:</strong> ${prod['Description'] || 'No details provided'}</p>
-        <p><strong>Address:</strong> ${prod['Address'] || 'N/A'}</p>
-        <p><strong>Contact:</strong> ${prod['Contact'] || 'N/A'}</p>
-        <a href="https://wa.me/91${prod['Contact'] || ''}?text=Hi, I’m interested in your ${prod['Stone Category']} stone." class="contact-btn" target="_blank">WhatsApp</a>
+        <h3>${prod['STONE CATAGORY'] || 'Unnamed Stone'}</h3>
+        <p><strong>Sub Category:</strong> ${prod['STONE SUB CATAGORY'] || 'N/A'}</p>
+        <p><strong>Description:</strong> ${prod['DESCRIPTION'] || 'No details provided'}</p>
+        <p><strong>Address:</strong> ${prod['ADDRESS'] || 'N/A'}</p>
+        <p><strong>Contact:</strong> ${prod['CONTACT'] || 'N/A'}</p>
+        <a href="https://wa.me/91${prod['CONTACT'] || ''}?text=Hi, I’m interested in your ${prod['STONE CATAGORY']} stone." class="contact-btn" target="_blank">WhatsApp</a>
       </div>
     `;
     container.appendChild(div);
