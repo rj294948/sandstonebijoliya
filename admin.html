@@ -1,171 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add New Product | RJ SandstoneBijoliya</title>
-<style>
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f6f4ef;
-  color: #333;
-  padding: 20px;
-}
-h1 {
-  text-align: center;
-  color: #b35f4a;
-}
-form {
-  max-width: 650px;
-  margin: 30px auto;
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-label {
-  display: block;
-  font-weight: 600;
-  margin-top: 12px;
-}
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-}
-textarea {
-  resize: vertical;
-}
-button {
-  margin-top: 18px;
-  padding: 12px 22px;
-  background: #b35f4a;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: 600;
-  width: 100%;
-}
-button:hover {
-  background: #c49a6c;
-}
-.success {
-  background: #d4edda;
-  color: #155724;
-  padding: 10px;
-  margin-top: 15px;
-  border-radius: 6px;
-  display: none;
-  text-align: center;
-}
-.error {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  margin-top: 15px;
-  border-radius: 6px;
-  display: none;
-  text-align: center;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - RJ Services</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .msg {
+      margin-top: 12px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Admin Data Entry</h2>
+    <form id="adminForm">
+      <label>Name:</label>
+      <input type="text" id="name" required>
+      
+      <label>Email:</label>
+      <input type="email" id="email" required>
+      
+      <label>Message:</label>
+      <textarea id="message" rows="4"></textarea>
+      
+      <button type="submit">Submit</button>
+      <p class="msg" id="msg"></p>
+    </form>
+  </div>
 
-<h1>📦 Add New Product - RJ SandstoneBijoliya</h1>
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbw6qBWJmymWyaYl7b5mzjnNFG0kMEhQznR7XZhZvoiGOOl47IiKRuY0ji62s2xW_ptSIg/exec";
 
-<form id="productForm">
-  <label>Company Name:</label>
-  <input type="text" id="companyName" placeholder="Enter your company name" required>
+    document.getElementById("adminForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-  <label>Product Name:</label>
-  <input type="text" id="productName" placeholder="Enter product name" required>
+      const msg = document.getElementById("msg");
+      msg.innerHTML = "Submitting...";
 
-  <label>Category:</label>
-  <input type="text" id="category" placeholder="e.g. Sandstone, Marble" required>
+      const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        message: document.getElementById("message").value
+      };
 
-  <label>Sub Category:</label>
-  <input type="text" id="subCategory" placeholder="e.g. Dholpur Pink, Agra Red">
+      try {
+        const res = await fetch(scriptURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
 
-  <label>Description:</label>
-  <textarea id="description" rows="3" placeholder="Enter short description about the product"></textarea>
-
-  <label>Price (₹):</label>
-  <input type="number" id="price" placeholder="Enter product price">
-
-  <label>Image URL:</label>
-  <input type="url" id="imageURL" placeholder="Paste product image link" required>
-
-  <label>Contact Number:</label>
-  <input type="text" id="contact" placeholder="Without +91" required>
-
-  <label>Address / Location:</label>
-  <textarea id="address" rows="2" placeholder="Factory / Office address"></textarea>
-
-  <label>Extra Info (if any):</label>
-  <textarea id="extra" rows="2" placeholder="Any special notes or extra details"></textarea>
-
-  <button type="submit">📤 Submit Product</button>
-
-  <div class="success" id="successMsg">✅ Product details saved successfully!</div>
-  <div class="error" id="errorMsg">❌ Something went wrong! Please try again.</div>
-</form>
-
-<script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbyZPNQbppyXoWD4o0v5kBwgtc0RxMyZngagcKbphmXgt5A8B3pnJRThvGC_lhNwruz0/exec"; // Replace this with your deployed Apps Script URL
-
-document.getElementById('productForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const data = {
-    companyName: document.getElementById('companyName').value.trim(),
-    productName: document.getElementById('productName').value.trim(),
-    category: document.getElementById('category').value.trim(),
-    subCategory: document.getElementById('subCategory').value.trim(),
-    description: document.getElementById('description').value.trim(),
-    price: document.getElementById('price').value.trim(),
-    imageURL: document.getElementById('imageURL').value.trim(),
-    contact: document.getElementById('contact').value.trim(),
-    address: document.getElementById('address').value.trim(),
-    extra: document.getElementById('extra').value.trim()
-  };
-
-  try {
-    const response = await fetch(scriptURL, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data)
+        const result = await res.json();
+        if (result.success) {
+          msg.style.color = "green";
+          msg.innerHTML = "✅ Data successfully saved to Google Sheet!";
+          document.getElementById("adminForm").reset();
+        } else {
+          msg.style.color = "red";
+          msg.innerHTML = "❌ Error: " + result.error;
+        }
+      } catch (err) {
+        msg.style.color = "red";
+        msg.innerHTML = "⚠️ Network or CORS error: " + err.message;
+      }
     });
-
-    const result = await response.json();
-
-    if (result.success) {
-      document.getElementById('successMsg').style.display = "block";
-      document.getElementById('errorMsg').style.display = "none";
-      document.getElementById('productForm').reset();
-    } else {
-      throw new Error(result.error || "Unknown error");
-    }
-
-  } catch (err) {
-    console.error("Error:", err);
-    document.getElementById('errorMsg').style.display = "block";
-    document.getElementById('successMsg').style.display = "none";
-  }
-
-  setTimeout(() => {
-    document.getElementById('successMsg').style.display = "none";
-    document.getElementById('errorMsg').style.display = "none";
-  }, 4000);
-});
-</script>
-
+  </script>
 </body>
 </html>
