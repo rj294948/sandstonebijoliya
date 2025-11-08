@@ -5,131 +5,165 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Add New Product | RJ SandstoneBijoliya</title>
 <style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f6f4ef;
-    color: #333;
-    padding: 20px;
-  }
-  h1 {
-    text-align: center;
-    color: #b35f4a;
-  }
-  form {
-    max-width: 600px;
-    margin: 30px auto;
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  }
-  label {
-    font-weight: 600;
-    margin-top: 10px;
-    display: block;
-  }
-  input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  button {
-    margin-top: 20px;
-    padding: 12px 20px;
-    background: #b35f4a;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1em;
-  }
-  button:hover { background: #c49a6c; }
-  .success {
-    text-align: center;
-    background: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border-radius: 6px;
-    display: none;
-  }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f6f4ef;
+  color: #333;
+  padding: 20px;
+}
+h1 {
+  text-align: center;
+  color: #b35f4a;
+}
+form {
+  max-width: 650px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin-top: 12px;
+}
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+textarea {
+  resize: vertical;
+}
+button {
+  margin-top: 18px;
+  padding: 12px 22px;
+  background: #b35f4a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  width: 100%;
+}
+button:hover {
+  background: #c49a6c;
+}
+.success {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 6px;
+  display: none;
+  text-align: center;
+}
+.error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 6px;
+  display: none;
+  text-align: center;
+}
 </style>
 </head>
 <body>
 
-<h1>🪨 Rajasthan Sandstone Hub - Product Upload</h1>
+<h1>📦 Add New Product - RJ SandstoneBijoliya</h1>
 
 <form id="productForm">
-  <label>🏢 Company Name:</label>
-  <input type="text" id="companyName" required>
+  <label>Company Name:</label>
+  <input type="text" id="companyName" placeholder="Enter your company name" required>
 
-  <label>📦 Product Name:</label>
-  <input type="text" id="productName" required>
+  <label>Product Name:</label>
+  <input type="text" id="productName" placeholder="Enter product name" required>
 
-  <label>📂 Category:</label>
-  <input type="text" id="category" required>
+  <label>Category:</label>
+  <input type="text" id="category" placeholder="e.g. Sandstone, Marble" required>
 
-  <label>📁 Sub Category:</label>
-  <input type="text" id="subCategory">
+  <label>Sub Category:</label>
+  <input type="text" id="subCategory" placeholder="e.g. Dholpur Pink, Agra Red">
 
-  <label>📝 Product Description:</label>
-  <textarea id="description" rows="3"></textarea>
+  <label>Description:</label>
+  <textarea id="description" rows="3" placeholder="Enter short description about the product"></textarea>
 
-  <label>💰 Price (₹):</label>
-  <input type="number" id="price">
+  <label>Price (₹):</label>
+  <input type="number" id="price" placeholder="Enter product price">
 
-  <label>🖼️ Image URL:</label>
-  <input type="url" id="imageURL">
+  <label>Image URL:</label>
+  <input type="url" id="imageURL" placeholder="Paste product image link" required>
 
-  <label>📞 Contact Number:</label>
-  <input type="text" id="contact">
+  <label>Contact Number:</label>
+  <input type="text" id="contact" placeholder="Without +91" required>
 
-  <label>📍 Address / Location:</label>
-  <input type="text" id="address">
+  <label>Address / Location:</label>
+  <textarea id="address" rows="2" placeholder="Factory / Office address"></textarea>
 
-  <label>ℹ️ Additional Info (optional):</label>
-  <textarea id="extra" rows="2"></textarea>
+  <label>Extra Info (if any):</label>
+  <textarea id="extra" rows="2" placeholder="Any special notes or extra details"></textarea>
 
-  <button type="submit">Submit Product</button>
-  <div class="success" id="successMsg">✅ Product submitted successfully!</div>
+  <button type="submit">📤 Submit Product</button>
+
+  <div class="success" id="successMsg">✅ Product details saved successfully!</div>
+  <div class="error" id="errorMsg">❌ Something went wrong! Please try again.</div>
 </form>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvquz8X-YKzw9UAKjVZK_YsJHd8Lti2lHmkHGwneXNjVWWc72ITrtQ5u46zQmnc27mwA/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbyZPNQbppyXoWD4o0v5kBwgtc0RxMyZngagcKbphmXgt5A8B3pnJRThvGC_lhNwruz0/exec"; // Replace this with your deployed Apps Script URL
 
-document.getElementById("productForm").addEventListener("submit", async (e) => {
+document.getElementById('productForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  const formData = {
-    companyName: document.getElementById("companyName").value,
-    productName: document.getElementById("productName").value,
-    category: document.getElementById("category").value,
-    subCategory: document.getElementById("subCategory").value,
-    description: document.getElementById("description").value,
-    price: document.getElementById("price").value,
-    imageURL: document.getElementById("imageURL").value,
-    contact: document.getElementById("contact").value,
-    address: document.getElementById("address").value,
-    extra: document.getElementById("extra").value
+  const data = {
+    companyName: document.getElementById('companyName').value.trim(),
+    productName: document.getElementById('productName').value.trim(),
+    category: document.getElementById('category').value.trim(),
+    subCategory: document.getElementById('subCategory').value.trim(),
+    description: document.getElementById('description').value.trim(),
+    price: document.getElementById('price').value.trim(),
+    imageURL: document.getElementById('imageURL').value.trim(),
+    contact: document.getElementById('contact').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    extra: document.getElementById('extra').value.trim()
   };
 
   try {
-    const res = await fetch(SCRIPT_URL, {
+    const response = await fetch(scriptURL, {
       method: "POST",
       mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData)
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data)
     });
 
-    const result = await res.json();
-    document.getElementById("successMsg").innerText = result.message;
-    document.getElementById("successMsg").style.display = "block";
-    setTimeout(() => document.getElementById("successMsg").style.display = "none", 3000);
-    document.getElementById("productForm").reset();
+    const result = await response.json();
+
+    if (result.success) {
+      document.getElementById('successMsg').style.display = "block";
+      document.getElementById('errorMsg').style.display = "none";
+      document.getElementById('productForm').reset();
+    } else {
+      throw new Error(result.error || "Unknown error");
+    }
+
   } catch (err) {
-    alert("Error: " + err.message);
+    console.error("Error:", err);
+    document.getElementById('errorMsg').style.display = "block";
+    document.getElementById('successMsg').style.display = "none";
   }
+
+  setTimeout(() => {
+    document.getElementById('successMsg').style.display = "none";
+    document.getElementById('errorMsg').style.display = "none";
+  }, 4000);
 });
 </script>
 
