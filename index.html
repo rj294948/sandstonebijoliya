@@ -3,110 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rajasthan SandStone Hub - Bijoliya & Rajasthan Natural Stones</title>
-<meta name="description" content="Explore Rajasthan's best sandstone varieties from Bijoliya and nearby regions. Connect directly with verified suppliers and factories.">
-
+<title>Rajasthan SandStone Hub - Add Product</title>
 <style>
-/* ===== Basic Styling ===== */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#fafafa;color:#333;}
-header{background:#c49a6c;color:#fff;text-align:center;padding:20px 10px;box-shadow:0 2px 5px rgba(0,0,0,0.15);}
-header h1{font-size:1.8em;}
-nav{background:#fff;display:flex;justify-content:center;flex-wrap:wrap;border-bottom:2px solid #e0e0e0;}
-nav a{text-decoration:none;color:#333;padding:12px 16px;display:block;font-weight:600;transition:0.3s;}
-nav a:hover{background:#c49a6c;color:#fff;}
-.hero{background:url('https://images.unsplash.com/photo-1581091870623-8c6b3d14f4b5?auto=format&fit=crop&w=1400&q=70') no-repeat center/cover;height:280px;display:flex;align-items:center;justify-content:center;color:#fff;text-shadow:1px 1px 3px rgba(0,0,0,0.6);font-size:1.8em;text-align:center;}
-section{max-width:1100px;margin:40px auto;padding:20px;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
-.product{background:#fff;border:1px solid #ddd;border-radius:10px;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;}
-.product:hover{transform:translateY(-5px);box-shadow:0 4px 12px rgba(0,0,0,0.15);}
-.product img{width:100%;height:200px;object-fit:cover;}
-.product .info{padding:15px;}
-.product .info h3{color:#c49a6c;margin-bottom:8px;}
-.product .info p{font-size:0.9em;color:#555;margin:5px 0;}
-.contact-btn{display:inline-block;background:#25D366;color:#fff;padding:8px 12px;border-radius:5px;text-decoration:none;font-weight:600;margin-top:8px;}
-.contact-btn:hover{opacity:0.9;}
-.admin-link{text-align:center;margin:30px 0;}
-.admin-link a{background:#b35f4a;color:#fff;padding:12px 25px;border-radius:25px;text-decoration:none;font-weight:600;transition:0.3s;}
-.admin-link a:hover{background:#c49a6c;transform:scale(1.05);}
-footer{background:#333;color:#fff;text-align:center;padding:15px 5px;font-size:0.9em;margin-top:40px;}
+body { font-family: Arial, sans-serif; background: #fafafa; color: #333; padding: 20px; }
+h1 { color: #c49a6c; text-align: center; }
+form { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);}
+label { display: block; margin-top: 15px; font-weight: bold; }
+input, textarea { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+button { background: #c49a6c; color: #fff; padding: 12px 20px; border: none; border-radius: 25px; cursor: pointer; margin-top: 15px; }
+button:hover { background: #b35f4a; }
+.success { color: green; margin-top: 15px; text-align: center; }
+.error { color: red; margin-top: 15px; text-align: center; }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Rajasthan SandStone Hub</h1>
-  <p>Trusted Source for Bijoliya & Rajasthan Natural Stones</p>
-</header>
+<h1>Add Your Stone Product</h1>
 
-<nav>
-  <a href="index.html">Home</a>
-  <a href="products.html">Products</a>
-  <a href="contact.html">Contact</a>
-</nav>
+<form id="productForm">
+  <label>Upload Sample Image (URL)</label>
+  <input type="text" name="image" required>
 
-<div class="hero">Rajasthan’s Finest Stone Collection</div>
+  <label>Stone Category</label>
+  <input type="text" name="category" required>
 
-<section id="featured">
-  <h2>Latest Stone Products</h2>
-  <p>Recently added by verified suppliers</p>
-  <div id="featuredProducts" class="products">
-    <p style="text-align:center;">Loading products...</p>
-  </div>
-</section>
+  <label>Stone Sub Category</label>
+  <input type="text" name="subCategory" required>
 
-<!-- ✅ Add Product via Google Form -->
-<div class="admin-link">
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSeGNtufUg93L60kH7ClYIX_0U3cRbnFNBjWo0RZkHsrqwdhYg/viewform?usp=header" target="_blank">
-    📦 Add Your Product (Google Form)
-  </a>
-</div>
+  <label>Description</label>
+  <textarea name="description" rows="4" required></textarea>
 
-<footer>© 2025 Rajasthan SandStone Hub | Designed by RJ Services</footer>
+  <label>Address</label>
+  <input type="text" name="address" required>
+
+  <label>Contact</label>
+  <input type="text" name="contact" required>
+
+  <button type="submit">Submit Product</button>
+</form>
+
+<p class="success" id="successMsg"></p>
+<p class="error" id="errorMsg"></p>
 
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyndSU8CVipGWSUgVD6v64hRewIYKqNoNtpBHTiW_MwQPE9NllRlTwW-TB5v_6piO-Y/exec'; // ← यहाँ अपना Apps Script Web App URL डालो
+const form = document.getElementById("productForm");
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-async function loadProducts() {
-  try {
-    const res = await fetch(WEB_APP_URL);
-    const products = await res.json();
-    displayProducts(products);
-  } catch (error) {
-    console.error('Error loading products:', error);
-    document.getElementById('featuredProducts').innerHTML =
-      '<p style="color:red;text-align:center;">Error loading data. Please try again later.</p>';
-  }
-}
+    const formData = new FormData(form);
+    const data = {
+        "Upload Sample Image": formData.get("image"),
+        "STONE CATAGORY": formData.get("category"),
+        "STONE SUB CATAGORY": formData.get("subCategory"),
+        "DESCRIPTION": formData.get("description"),
+        "ADDRESS": formData.get("address"),
+        "CONTACT": formData.get("contact")
+    };
 
-function displayProducts(products) {
-  const container = document.getElementById('featuredProducts');
-  container.innerHTML = '';
-
-  if (!products.length) {
-    container.innerHTML = '<p style="text-align:center;">No products available.</p>';
-    return;
-  }
-
-  products.slice().reverse().forEach(prod => {
-    const div = document.createElement('div');
-    div.className = 'product';
-    div.innerHTML = `
-      <img src="${prod['UPLOAD SAMPLE IMAGE'] || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${prod['STONE CATAGORY']}">
-      <div class="info">
-        <h3>${prod['STONE CATAGORY'] || 'Unnamed Stone'}</h3>
-        <p><strong>Sub Category:</strong> ${prod['STONE SUB CATAGORY'] || 'N/A'}</p>
-        <p><strong>Description:</strong> ${prod['DESCRIPTION'] || 'No details provided'}</p>
-        <p><strong>Address:</strong> ${prod['ADDRESS'] || 'N/A'}</p>
-        <p><strong>Contact:</strong> ${prod['CONTACT'] || 'N/A'}</p>
-        <a href="https://wa.me/91${prod['CONTACT'] || ''}?text=Hi, I’m interested in your ${prod['STONE CATAGORY']} stone." class="contact-btn" target="_blank">WhatsApp</a>
-      </div>
-    `;
-    container.appendChild(div);
-  });
-}
-
-document.addEventListener('DOMContentLoaded', loadProducts);
+    try {
+        const res = await fetch("https://your-python-server.com/add_product", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if(result.success){
+            document.getElementById("successMsg").innerText = "✅ Product submitted successfully!";
+            form.reset();
+        } else {
+            document.getElementById("errorMsg").innerText = "❌ Error submitting product!";
+        }
+    } catch (err) {
+        document.getElementById("errorMsg").innerText = "❌ Server error. Try again later.";
+        console.error(err);
+    }
+});
 </script>
 
 </body>
