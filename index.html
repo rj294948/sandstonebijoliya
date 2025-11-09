@@ -109,13 +109,15 @@ async function loadProducts() {
     container.innerHTML = "";
 
     data.forEach(item => {
-      let imgLink = item["UPLOAD SAMPLE IMAGE"] || "";
+     let imgLink = item["UPLOAD SAMPLE IMAGE"] || item["UPLOAD SAMPLE IMAGE "] || "";
 
-      // Convert Google Drive share link to direct view link
-      if (imgLink.includes("drive.google.com")) {
-        const match = imgLink.match(/[-\w]{25,}/);
-        if (match) imgLink = `https://drive.google.com/uc?export=view&id=${match[0]}`;
-      }
+if (imgLink.includes("drive.google.com")) {
+  const match = imgLink.match(/[-\w]{25,}/);
+  if (match) {
+    imgLink = `https://lh3.googleusercontent.com/d/${match[0]}=s800`;
+  }
+}
+
 
       const cardHTML = `
         <div class="product-card">
