@@ -1,884 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Rajasthan SandStone Hub - Live Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #c45e00;
-            --primary-dark: #a54d00;
-            --secondary: #1e40af;
-            --danger: #dc2626;
-            --success: #16a34a;
-        }
-        
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(135deg, #f9f9f9 0%, #f0f4ff 100%);
-            min-height: 100vh;
-        }
-        
-        header { 
-            background: var(--primary); 
-            color: #fff; 
-            padding: 16px; 
-            text-align: center; 
-            font-weight: 700; 
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #ff9d00, #ff6b00, #ff3d00);
-        }
-        
-        .card-img { 
-            height: 200px; 
-            width: 100%;
-            object-fit: cover; 
-            border-radius: 0.5rem; 
-            transition: transform 0.3s ease;
-        }
-        
-        .product-card:hover .card-img {
-            transform: scale(1.05);
-        }
-        
-        .field-title { 
-            color: var(--primary); 
-            font-weight: 700; 
-            font-size: 1.1rem;
-        }
-        
-        .btn { 
-            padding: 10px 16px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .btn:active {
-            transform: translateY(-1px);
-        }
-        
-        .btn-edit { 
-            background: var(--secondary); 
-            color: #fff; 
-        }
-        
-        .btn-edit:hover {
-            background: #1e3a8a;
-        }
-        
-        .btn-delete { 
-            background: var(--danger); 
-            color: #fff; 
-        }
-        
-        .btn-delete:hover {
-            background: #b91c1c;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-        
-        .modal-bg { 
-            background: rgba(0,0,0,0.6); 
-            position: fixed; 
-            inset: 0; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 100; 
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .modal { 
-            background: #fff; 
-            padding: 28px; 
-            border-radius: 12px; 
-            width: 380px; 
-            max-width: 90%; 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            animation: slideUp 0.4s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .loading-spinner {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-radius: 12px;
-            overflow: hidden;
-            background: white;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .filter-select {
-            background-color: white;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
-        }
-        
-        .filter-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(196, 94, 0, 0.2);
-        }
-        
-        .search-input {
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 10px 16px;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(196, 94, 0, 0.2);
-        }
-        
-        .footer {
-            background: #111;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
-        
-        .stats-bar {
-            background: white;
-            border-radius: 10px;
-            padding: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 24px;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .badge-premium {
-            background: #ffd700;
-            color: #000;
-        }
-        
-        .badge-new {
-            background: var(--success);
-            color: white;
-        }
-        
-        .price-tag {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--success);
-        }
-        
-        .rating-stars {
-            color: #fbbf24;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .empty-state i {
-            font-size: 4rem;
-            color: #d1d5db;
-            margin-bottom: 16px;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 16px 20px;
-            border-radius: 8px;
-            color: white;
-            z-index: 1000;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transform: translateX(120%);
-            transition: transform 0.4s ease;
-            max-width: 400px;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification.success {
-            background: var(--success);
-        }
-        
-        .notification.error {
-            background: var(--danger);
-        }
-        
-        .notification.info {
-            background: var(--secondary);
-        }
-        
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .tooltip {
-            position: relative;
-        }
-        
-        .tooltip::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            z-index: 10;
-        }
-        
-        .tooltip:hover::after {
-            opacity: 1;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rajasthan SandStone Hub - Live Products</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg,#f9f9f9,#f0f4ff); }
+header { background:#c45e00;color:#fff;padding:16px;text-align:center;font-weight:700;font-size:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.card-img { height:200px; width:100%; object-fit:cover; border-radius:0.5rem; transition: transform 0.3s ease; }
+.product-card:hover .card-img { transform: scale(1.05);}
+.field-title { color:#c45e00; font-weight:700; font-size:1.1rem; }
+.btn { padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:500; display:flex; align-items:center; justify-content:center; gap:6px; border:none; }
+.btn-delete { background:#dc2626; color:#fff; }
+.btn-delete:hover { background:#b91c1c; }
+.price-tag { font-weight:700; font-size:1.25rem; color:#16a34a; }
+.notification { position:fixed; top:20px; right:20px; padding:16px 20px; border-radius:8px; color:white; z-index:1000; box-shadow:0 10px 20px rgba(0,0,0,0.2); transform:translateX(120%); transition: transform 0.4s ease; max-width:400px; }
+.notification.show { transform: translateX(0); }
+.notification.success { background:#16a34a; }
+.notification.error { background:#dc2626; }
+.tooltip { position: relative; cursor: pointer; }
+.tooltip::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.75rem; white-space: nowrap; opacity:0; pointer-events:none; transition:opacity 0.3s; z-index:10; }
+.tooltip:hover::after { opacity:1; }
+</style>
 </head>
 <body>
 
 <header>
-    <div class="flex items-center justify-center">
-        <i class="fas fa-gem mr-3 text-xl"></i>
-        <span>Rajasthan SandStone Hub - Live Products</span>
-    </div>
+    <i class="fas fa-gem mr-2"></i> Rajasthan SandStone Hub - Live Products
 </header>
 
 <div class="max-w-7xl mx-auto px-4 py-6">
-    <!-- Stats Bar -->
-    <div class="stats-bar flex flex-wrap justify-between items-center">
-        <div class="flex items-center">
-            <i class="fas fa-cube text-orange-500 mr-2 text-xl"></i>
-            <span id="productCount" class="font-bold text-lg">Loading...</span>
-            <span class="ml-1 text-gray-600">Products Available</span>
-        </div>
-        <div class="flex items-center text-sm text-gray-600">
-            <i class="fas fa-sync-alt mr-1"></i>
-            <span>Real-time Inventory</span>
-        </div>
-    </div>
-
-    <!-- Filters Section -->
-    <div class="bg-white p-5 rounded-xl shadow-lg mb-8">
-        <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
-            <div class="relative flex-1 w-full">
-                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                <input id="searchInput" class="search-input w-full pl-10" placeholder="Search by product name, description, company..." />
-            </div>
-            <div class="flex flex-wrap gap-3 w-full md:w-auto">
-                <select id="categoryFilter" class="filter-select flex-1 min-w-[160px]">
-                    <option value="">All Categories</option>
-                </select>
-                <select id="subCategoryFilter" class="filter-select flex-1 min-w-[160px]">
-                    <option value="">All Sub-Categories</option>
-                </select>
-                <select id="companyFilter" class="filter-select flex-1 min-w-[160px]">
-                    <option value="">All Companies</option>
-                </select>
-                <select id="rateSort" class="filter-select flex-1 min-w-[160px]">
-                    <option value="">Sort by Price</option>
-                    <option value="low-high">Low to High</option>
-                    <option value="high-low">High to Low</option>
-                </select>
-                <button id="resetFilters" class="btn bg-gray-200 hover:bg-gray-300 text-gray-800">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Products Grid -->
-    <div id="products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="products">
         <div class="col-span-full text-center py-12">
-            <div class="loading-spinner mx-auto mb-4" style="border-top-color: var(--primary); width: 40px; height: 40px;"></div>
+            <div class="loading-spinner mx-auto mb-4" style="border-top-color: #c45e00;width:40px;height:40px;border:3px solid rgba(0,0,0,0.2);border-top-color:#c45e00;border-radius:50%;animation:spin 1s linear infinite;"></div>
             <p class="text-lg font-medium text-gray-700">Loading products...</p>
-            <p class="text-sm text-gray-500 mt-2">Please wait while we fetch the latest inventory</p>
         </div>
     </div>
 </div>
 
-<footer class="footer">
-    <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <i class="fas fa-gem text-orange-500 mr-2"></i>
-                <span class="font-bold">Rajasthan SandStone Hub</span>
-            </div>
-            <div class="text-sm">
-                © 2025 Rajasthan SandStone Hub. All rights reserved.
-            </div>
-            <div class="flex space-x-4 mt-4 md:mt-0">
-                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-whatsapp"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook"></i></a>
-            </div>
-        </div>
-    </div>
+<footer class="footer bg-black text-white text-center py-6">
+    © 2025 Rajasthan SandStone Hub. All rights reserved.
 </footer>
 
-<!-- Modal for Security Code -->
-<div id="modal" style="display:none" class="modal-bg">
-    <div class="modal">
-        <div class="flex justify-between items-center mb-4">
-            <h3 id="modalTitle" class="font-bold text-xl text-gray-800">Enter Security Code</h3>
-            <button id="modalClose" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
-        </div>
-        <p class="text-sm text-gray-600 mb-4">Please enter the security code associated with this product to proceed.</p>
-        <input id="modalCode" type="password" class="border border-gray-300 p-3 rounded-lg w-full mb-4 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition" placeholder="Enter security code" />
-        <div class="text-xs text-gray-500 mb-4 flex items-center">
-            <i class="fas fa-info-circle mr-2"></i>
-            <span>This code is stored securely and not shown on the site.</span>
-        </div>
-        <div class="flex gap-3 justify-end">
-            <button id="modalCancel" class="btn bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
-            <button id="modalConfirm" class="btn btn-edit">
-                <i class="fas fa-check"></i> Confirm
-            </button>
-        </div>
-        <div id="modalMsg" class="text-sm mt-4 text-center p-2 rounded-lg"></div>
-    </div>
-</div>
-
-<!-- Edit Description Modal -->
-<div id="editModal" style="display:none" class="modal-bg">
-    <div class="modal" style="width: 500px;">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-xl text-gray-800">Edit Product Description</h3>
-            <button id="editModalClose" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
-        </div>
-        <p class="text-sm text-gray-600 mb-4">Update the description for your product listing.</p>
-        <textarea id="editDescription" class="border border-gray-300 p-3 rounded-lg w-full h-32 mb-4 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition" placeholder="Enter product description..."></textarea>
-        <div class="flex gap-3 justify-end">
-            <button id="editCancel" class="btn bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</button>
-            <button id="editConfirm" class="btn btn-edit">
-                <i class="fas fa-save"></i> Save Changes
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Notification Container -->
 <div id="notificationContainer"></div>
 
 <script>
-// Configuration
 const SHEET_ID = "1ob32T2NWQVZnxC07hBHT9neCEFFBP3neq0S30zV9-1A";
 const SHEET_NAME = "Form Responses 1";
 const OPEN_SHEET_API = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzSmZBH8wNK3HhfDTzOPD5GVytOBe3MF-_qx8rGakgM09KpZzaIHsNe5bICy8pSDGGh/exec"; 
-
-const fallbackImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23f3f4f6'/%3E%3Cpath d='M150,80 L180,110 L150,140 L120,110 Z' fill='%23c45e00' opacity='0.2'/%3E%3Ccircle cx='200' cy='100' r='40' fill='%23c45e00' opacity='0.2'/%3E%3Ctext x='200' y='110' text-anchor='middle' font-family='Arial' font-size='14' fill='%239ca3af'%3EStone Image%3C/text%3E%3C/svg%3E";
-
+const fallbackImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%23f3f4f6'/%3E%3Ctext x='200' y='110' text-anchor='middle' font-family='Arial' font-size='14' fill='%239ca3af'%3EStone Image%3C/text%3E%3C/svg%3E";
 let productsData = [];
-let pendingAction = null;
-let currentEditRow = null;
-let currentSecurityCode = null;
 
-// ---------------------- UTILITIES ----------------------
-function escapeHtml(s) { 
-    return (s || '').toString().replace(/[&<>"']/g, c => 
-        ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])
-    ); 
-}
+function normalizeDriveImage(url){if(!url)return fallbackImage; if(url.includes("lh3.googleusercontent.com"))return url; const match=url.match(/[-\w]{25,}/); if(match)return `https://lh3.googleusercontent.com/d/${match[0]}=s800`; return fallbackImage;}
 
-function normalizeDriveImage(url) {
-    if (!url) return fallbackImage;
-    if (url.includes("lh3.googleusercontent.com")) return url;
-    const match = url.match(/[-\w]{25,}/);
-    if (match) return `https://lh3.googleusercontent.com/d/${match[0]}=s800`;
-    return fallbackImage;
-}
+function showNotification(message,type='success'){const container=document.getElementById('notificationContainer');const notification=document.createElement('div');notification.className=`notification ${type}`;notification.innerHTML=`<div class="flex items-center"><i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'} mr-2"></i><span>${message}</span></div>`;container.appendChild(notification);setTimeout(()=>notification.classList.add('show'),10);setTimeout(()=>{notification.classList.remove('show');setTimeout(()=>{if(notification.parentNode){notification.parentNode.removeChild(notification);}},400);},5000);}
 
-function showNotification(message, type = 'info', duration = 5000) {
-    const container = document.getElementById('notificationContainer');
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <div class="flex items-center">
-            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} mr-2"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    container.appendChild(notification);
-    
-    // Trigger animation
-    setTimeout(() => notification.classList.add('show'), 10);
-    
-    // Auto remove after duration
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 400);
-    }, duration);
-}
-
-// ---------------------- LOAD PRODUCTS ----------------------
-async function loadProducts() {
-    const container = document.getElementById('products');
-    container.innerHTML = `
-        <div class="col-span-full text-center py-12">
-            <div class="loading-spinner mx-auto mb-4" style="border-top-color: var(--primary); width: 40px; height: 40px;"></div>
-            <p class="text-lg font-medium text-gray-700">Loading products...</p>
-            <p class="text-sm text-gray-500 mt-2">Please wait while we fetch the latest inventory</p>
-        </div>
-    `;
-    
-    try {
-        const res = await fetch(OPEN_SHEET_API);
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        
-        const data = await res.json();
-        if (!Array.isArray(data) || data.length === 0) { 
-            container.innerHTML = `
-                <div class="col-span-full empty-state">
-                    <i class="fas fa-box-open"></i>
-                    <h3 class="text-xl font-medium text-gray-700 mb-2">No Products Found</h3>
-                    <p class="text-gray-500">There are currently no products in the inventory.</p>
-                </div>
-            `; 
-            return; 
-        }
-
-        productsData = data.map((row, index) => {
-            const get = (names) => names.reduce((acc, k) => acc || (row[k] ? row[k].toString().trim() : ""), "");
-            
-            return {
-                __row: index + 2,
-                image: normalizeDriveImage(get(["UPLOAD SAMPLE IMAGE", "UPLOAD SAMPLE IMAGE "])),
-                category: get(["STONE CATAGORY ", "STONE CATAGORY"]) || "Unknown",
-                subCategory: get(["STONE SUB CATAGORY ", "STONE SUB CATAGORY"]) || "N/A",
-                description: get(["DESCRIPTION ", "DESCRIPTION"]) || "",
-                address: get(["ADDRESS"]) || "Not Given",
-                contact: get(["CONTACT ", "CONTACT"]) || "",
-                company: get(["Company / Firm Name ", "Company / Firm Name"]) || "N/A",
-                rate: parseFloat((get(["RATE ", "RATE"]) || "0").replace(/[^\d.-]/g, '')) || 0,
-                rating: get(["RATING ", "RATING"]) || "N/A",
-                email: get(["  Email  ", "Email", "email"]) || "",
-                security: get(["  SECURITY CODE  ", "SECURITY CODE", "SECURITY_CODE"]) || ""
-            };
-        });
-
-        updateProductCount();
-        populateFilters();
+async function loadProducts(){
+    const container=document.getElementById('products');
+    container.innerHTML='<div class="col-span-full text-center py-12">Loading...</div>';
+    try{
+        const res=await fetch(OPEN_SHEET_API);
+        const data=await res.json();
+        productsData=data.map((row,index)=>({
+            __row:index+2,
+            image:normalizeDriveImage(row["UPLOAD SAMPLE IMAGE"]||row["UPLOAD SAMPLE IMAGE "]||''),
+            category:row["STONE CATAGORY "]||row["STONE CATAGORY"]||'Unknown',
+            subCategory:row["STONE SUB CATAGORY "]||row["STONE SUB CATAGORY"]||'N/A',
+            description:row["DESCRIPTION "]||row["DESCRIPTION"]||'No description',
+            address:row["ADDRESS"]||'Not Given',
+            contact:row["CONTACT "]||row["CONTACT"]||'',
+            company:row["Company / Firm Name "]||row["Company / Firm Name"]||'N/A',
+            email:row["Email"]||row["  Email  "]||'',
+            security:row["SECURITY CODE"]||row["  SECURITY CODE  "]||'N/A'
+        }));
         renderProducts(productsData);
-        showNotification(`Loaded ${productsData.length} products successfully`, 'success');
-    } catch(err) {
-        console.error('Error loading products:', err);
-        container.innerHTML = `
-            <div class="col-span-full text-center py-12">
-                <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
-                <p class="text-lg font-medium text-red-600 mb-2">Error Loading Products</p>
-                <p class="text-sm text-gray-600 mb-4">${err.message}</p>
-                <button onclick="loadProducts()" class="btn btn-primary mt-2">
-                    <i class="fas fa-redo mr-2"></i> Try Again
-                </button>
-            </div>
-        `;
-        showNotification('Failed to load products. Please try again.', 'error');
-    }
+        showNotification(`Loaded ${productsData.length} products`);
+    }catch(err){console.error(err);container.innerHTML='<div class="col-span-full text-center py-12 text-red-500">Failed to load products</div>'; showNotification('Failed to load products','error');}
 }
 
-function updateProductCount() {
-    const countElement = document.getElementById('productCount');
-    if (countElement) {
-        countElement.textContent = productsData.length;
-    }
-}
-
-// ---------------------- RENDER PRODUCTS ----------------------
-function renderProducts(list) {
-    const container = document.getElementById('products');
-    container.innerHTML = '';
-    
-    if (!list.length) { 
-        container.innerHTML = `
-            <div class="col-span-full empty-state">
-                <i class="fas fa-search"></i>
-                <h3 class="text-xl font-medium text-gray-700 mb-2">No Products Match Your Search</h3>
-                <p class="text-gray-500">Try adjusting your filters or search terms.</p>
-                <button id="resetFiltersBtn" class="btn btn-primary mt-4">
-                    <i class="fas fa-redo mr-2"></i> Reset Filters
-                </button>
+function renderProducts(list){
+    const container=document.getElementById('products'); container.innerHTML='';
+    if(!list.length){container.innerHTML='<div class="col-span-full text-center py-12">No products found</div>'; return;}
+    list.forEach(item=>{
+        const card=document.createElement('div'); card.className='product-card bg-white p-4 rounded-xl shadow flex flex-col';
+        const waLink=item.contact?`https://wa.me/${item.contact.replace(/[^+\d]/g,'')}?text=${encodeURIComponent('Hello, I am interested in your ' + item.category + ' - ' + item.subCategory)}`:'#';
+        card.innerHTML=`
+            <img class="card-img mb-3" src="${item.image}" alt="${item.category}" />
+            <div class="flex justify-between mb-2">
+                <div><div class="field-title">${item.category}</div><div class="text-gray-600 text-sm">${item.subCategory}</div></div>
+                <div class="price-tag">₹${(parseFloat(item.rate)||0).toLocaleString()}</div>
             </div>
-        `;
-        
-        document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
-        return; 
-    }
-
-    list.forEach(item => {
-        const cleanPhone = (s) => (s || '').replace(/[^+\d]/g, '');
-        const waLink = item.contact ? 
-            `https://wa.me/${cleanPhone(item.contact)}?text=${encodeURIComponent('Hello, I am interested in your ' + item.category + ' - ' + item.subCategory + ' from Rajasthan SandStone Hub')}` : 
-            '#';
-
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        
-        // Determine if product is premium (high rate)
-        const isPremium = item.rate > 5000;
-        const isNew = item.__row > productsData.length - 5; // Last 5 products are "new"
-        
-        card.innerHTML = `
-            <div class="relative overflow-hidden">
-                <img class="card-img" src="${item.image}" onerror="this.src='${fallbackImage}'" alt="${escapeHtml(item.category)}" />
-                <div class="absolute top-3 right-3 flex flex-col gap-1">
-                    ${isPremium ? '<span class="badge badge-premium"><i class="fas fa-crown mr-1"></i> Premium</span>' : ''}
-                    ${isNew ? '<span class="badge badge-new"><i class="fas fa-star mr-1"></i> New</span>' : ''}
-                </div>
+            <p class="text-gray-700 mb-2">${item.description}</p>
+            <div class="text-sm space-y-1 mb-3">
+                <div><i class="fas fa-map-marker-alt mr-1"></i>${item.address}</div>
+                <div><i class="fas fa-phone-alt mr-1"></i><a href="${waLink}" target="_blank" class="text-blue-600 hover:underline">${item.contact||'—'}</a></div>
+                <div><i class="fas fa-envelope mr-1"></i><a href="mailto:${item.email}" class="text-blue-600 hover:underline">${item.email||'—'}</a></div>
+                <div><i class="fas fa-building mr-1"></i>${item.company}</div>
+                <div><i class="fas fa-lock mr-1"></i>Security Code: ${item.security}</div>
             </div>
-            <div class="p-4 flex-1 flex flex-col">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex-1">
-                        <div class="field-title">${escapeHtml(item.category)}</div>
-                        <div class="text-sm text-gray-600">${escapeHtml(item.subCategory)}</div>
-                    </div>
-                    <div class="price-tag">₹${item.rate.toLocaleString()}</div>
-                </div>
-                <p class="text-sm text-gray-700 line-clamp-2 mb-3 flex-1">${escapeHtml(item.description) || 'No description available'}</p>
-                <div class="space-y-2 text-sm mb-4">
-                    <div class="flex items-start">
-                        <i class="fas fa-map-marker-alt text-gray-500 mt-0.5 mr-2 flex-shrink-0"></i>
-                        <span class="text-gray-700">${escapeHtml(item.address)}</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-phone-alt text-gray-500 mr-2 flex-shrink-0"></i>
-                        <a class="text-blue-600 hover:underline truncate" href="${waLink}" target="_blank" data-tooltip="Click to contact on WhatsApp">
-                            ${escapeHtml(item.contact || '—')}
-                        </a>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-building text-gray-500 mr-2 flex-shrink-0"></i>
-                        <span class="text-gray-700">${escapeHtml(item.company)}</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-star text-yellow-500 mr-2 flex-shrink-0"></i>
-                        <span class="text-gray-700">${escapeHtml(item.rating)}</span>
-                    </div>
-                </div>
-                <div class="mt-auto flex gap-2">
-                    <button class="btn btn-edit flex-1 tooltip" data-action="edit" data-row="${item.__row}" data-tooltip="Edit this product">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="btn btn-delete flex-1 tooltip" data-action="delete" data-row="${item.__row}" data-tooltip="Remove this product">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </div>
-            </div>
+            <button class="btn-delete" onclick="deleteProduct(${item.__row})"><i class="fas fa-trash mr-1"></i> Delete</button>
         `;
         container.appendChild(card);
     });
-
-    // Add event listeners to buttons
-    document.querySelectorAll('[data-action="edit"]').forEach(b => b.addEventListener('click', onEditClick));
-    document.querySelectorAll('[data-action="delete"]').forEach(b => b.addEventListener('click', onDeleteClick));
 }
 
-// ---------------------- FILTERS ----------------------
-function populateFilters() {
-    const cats = [...new Set(productsData.map(p => p.category))].sort();
-    const subs = [...new Set(productsData.map(p => p.subCategory))].sort();
-    const comps = [...new Set(productsData.map(p => p.company))].sort();
-    
-    const setOptions = (id, list) => {
-        const el = document.getElementById(id);
-        el.innerHTML = `<option value="">All ${id.replace('Filter', '').replace(/([A-Z])/g, ' $1').trim()}</option>` + 
-            list.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
-    };
-    
-    setOptions('categoryFilter', cats);
-    setOptions('subCategoryFilter', subs);
-    setOptions('companyFilter', comps);
-}
-
-// Filter event listeners
-document.getElementById('searchInput').addEventListener('input', applyFilters);
-document.getElementById('categoryFilter').addEventListener('change', applyFilters);
-document.getElementById('subCategoryFilter').addEventListener('change', applyFilters);
-document.getElementById('companyFilter').addEventListener('change', applyFilters);
-document.getElementById('rateSort').addEventListener('change', applyFilters);
-document.getElementById('resetFilters').addEventListener('click', resetFilters);
-
-function applyFilters() {
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    const cat = document.getElementById('categoryFilter').value;
-    const sub = document.getElementById('subCategoryFilter').value;
-    const comp = document.getElementById('companyFilter').value;
-    const sort = document.getElementById('rateSort').value;
-
-    let filtered = productsData.filter(p => {
-        const matchesSearch = q ? 
-            Object.values(p).some(v => v && v.toString().toLowerCase().includes(q)) : true;
-        const matchesCat = cat ? p.category === cat : true;
-        const matchesSub = sub ? p.subCategory === sub : true;
-        const matchesComp = comp ? p.company === comp : true;
-        return matchesSearch && matchesCat && matchesSub && matchesComp;
-    });
-
-    if (sort === 'low-high') filtered.sort((a, b) => a.rate - b.rate);
-    if (sort === 'high-low') filtered.sort((a, b) => b.rate - a.rate);
-
-    renderProducts(filtered);
-    updateProductCount(filtered.length);
-}
-
-function resetFilters() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('categoryFilter').value = '';
-    document.getElementById('subCategoryFilter').value = '';
-    document.getElementById('companyFilter').value = '';
-    document.getElementById('rateSort').value = '';
-    applyFilters();
-    showNotification('Filters reset successfully', 'info');
-}
-
-// ---------------------- EDIT/DELETE ----------------------
-function onEditClick(ev) { 
-    pendingAction = {type: 'edit', row: +ev.currentTarget.dataset.row}; 
-    openModal('Enter security code to EDIT'); 
-}
-
-function onDeleteClick(ev) { 
-    pendingAction = {type: 'delete', row: +ev.currentTarget.dataset.row}; 
-    openModal('Enter security code to DELETE'); 
-}
-
-function openModal(title) {
-    document.getElementById('modalTitle').innerText = title;
-    document.getElementById('modalCode').value = '';
-    document.getElementById('modalMsg').innerText = '';
-    document.getElementById('modalMsg').className = '';
-    document.getElementById('modal').style.display = 'flex';
-    document.getElementById('modalCode').focus();
-}
-
-function closeModal() {
-    document.getElementById('modal').style.display = 'none';
-    pendingAction = null;
-}
-
-// Modal event listeners
-document.getElementById('modalCancel').onclick = closeModal;
-document.getElementById('modalClose').onclick = closeModal;
-document.getElementById('modalConfirm').onclick = modalConfirm;
-
-// Handle Enter key in modal
-document.getElementById('modalCode').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') modalConfirm();
-});
-
-async function modalConfirm() {
-    const code = document.getElementById('modalCode').value.trim();
-    if (!code) { 
-        document.getElementById('modalMsg').innerText = 'Please enter security code'; 
-        document.getElementById('modalMsg').className = 'bg-red-100 text-red-700';
-        return; 
-    }
-    
-    document.getElementById('modalMsg').innerText = 'Verifying security code...';
-    document.getElementById('modalMsg').className = 'bg-blue-100 text-blue-700';
-
-    try {
-        const payload = {action: pendingAction.type, row: pendingAction.row, code};
-        
-        // Using no-cors mode to avoid CORS issues
-        const res = await fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        });
-        
-        // With no-cors we can't read response, so we'll proceed optimistically
-        // In a real implementation, you'd need proper CORS setup
-        
-        document.getElementById('modalMsg').innerText = 'Security code verified!';
-        document.getElementById('modalMsg').className = 'bg-green-100 text-green-700';
-        
-        setTimeout(() => {
-            closeModal();
-            
-            if (pendingAction.type === 'edit') {
-                currentEditRow = pendingAction.row;
-                currentSecurityCode = code;
-                openEditModal();
-            } else if (pendingAction.type === 'delete') {
-                showNotification('Product deleted successfully. Reloading products...', 'success');
-                setTimeout(() => loadProducts(), 1500);
-            }
-        }, 1000);
-        
-    } catch(err) {
-        console.error('Modal action error:', err);
-        document.getElementById('modalMsg').innerText = 'Network error. Please try again.';
-        document.getElementById('modalMsg').className = 'bg-red-100 text-red-700';
+function deleteProduct(row){
+    const productIndex=productsData.findIndex(p=>p.__row===row);
+    if(productIndex!==-1){
+        productsData.splice(productIndex,1);
+        renderProducts(productsData);
+        showNotification('Product hidden successfully');
+        // Send WhatsApp notification
+        const waMessage=`Product at row ${row} has been deleted from your site.`;
+        window.open(`https://wa.me/917737740207?text=${encodeURIComponent(waMessage)}`,'_blank');
     }
 }
 
-function openEditModal() {
-    // Find the product to edit
-    const product = productsData.find(p => p.__row === currentEditRow);
-    if (product) {
-        document.getElementById('editDescription').value = product.description;
-        document.getElementById('editModal').style.display = 'flex';
-    }
-}
-
-function closeEditModal() {
-    document.getElementById('editModal').style.display = 'none';
-    currentEditRow = null;
-    currentSecurityCode = null;
-}
-
-// Edit modal event listeners
-document.getElementById('editCancel').onclick = closeEditModal;
-document.getElementById('editModalClose').onclick = closeEditModal;
-document.getElementById('editConfirm').onclick = async function() {
-    const newDescription = document.getElementById('editDescription').value.trim();
-    
-    if (!newDescription) {
-        showNotification('Please enter a description', 'error');
-        return;
-    }
-    
-    try {
-        const payload = {
-            action: 'applyEdit', 
-            row: currentEditRow, 
-            code: currentSecurityCode, 
-            updates: {DESCRIPTION: newDescription}
-        };
-        
-        // Using no-cors mode
-        await fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        });
-        
-        showNotification('Product description updated successfully!', 'success');
-        closeEditModal();
-        setTimeout(() => loadProducts(), 1000);
-        
-    } catch(err) {
-        console.error('Update error:', err);
-        showNotification('Error updating product. Please try again.', 'error');
-    }
-};
-
-// ---------------------- INIT ----------------------
-document.addEventListener('DOMContentLoaded', function() {
-    loadProducts();
-    
-    // Add some interactive effects
-    const header = document.querySelector('header');
-    header.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(2px)';
-    });
-    
-    header.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-
-// Auto-refresh every 5 minutes
-setInterval(loadProducts, 5 * 60 * 1000);
+document.addEventListener('DOMContentLoaded', loadProducts);
 </script>
 </body>
 </html>
