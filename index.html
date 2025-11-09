@@ -1,263 +1,464 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Rajasthan SandStone Hub - Live Products</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<style>
-  body { font-family: 'Poppins', sans-serif; background:#f9f9f9; }
-  header { background:#c45e00; color:#fff; padding:14px; text-align:center; font-weight:700; }
-  .card-img { height:200px; object-fit:cover; border-radius:0.5rem; }
-  .field-title { color:#c45e00; font-weight:700; }
-  .btn { padding:6px 10px; border-radius:6px; cursor:pointer; }
-  .btn-edit { background:#2563eb; color:#fff; }
-  .btn-delete { background:#ef4444; color:#fff; }
-  .modal-bg { background: rgba(0,0,0,0.5); position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:50; }
-  .modal { background:#fff; padding:16px; border-radius:8px; width:320px; max-width:90%; }
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Rajasthan SandStone Hub - Live Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #f9f9f9; 
+        }
+        header { 
+            background: #c45e00; 
+            color: #fff; 
+            padding: 14px; 
+            text-align: center; 
+            font-weight: 700; 
+            font-size: 1.25rem;
+        }
+        .card-img { 
+            height: 200px; 
+            width: 100%;
+            object-fit: cover; 
+            border-radius: 0.5rem; 
+        }
+        .field-title { 
+            color: #c45e00; 
+            font-weight: 700; 
+            font-size: 1.1rem;
+        }
+        .btn { 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-edit { 
+            background: #2563eb; 
+            color: #fff; 
+        }
+        .btn-edit:hover {
+            background: #1d4ed8;
+        }
+        .btn-delete { 
+            background: #ef4444; 
+            color: #fff; 
+        }
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+        .modal-bg { 
+            background: rgba(0,0,0,0.5); 
+            position: fixed; 
+            inset: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 50; 
+        }
+        .modal { 
+            background: #fff; 
+            padding: 24px; 
+            border-radius: 8px; 
+            width: 320px; 
+            max-width: 90%; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .product-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .filter-select {
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+        }
+        .search-input {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+        }
+        .footer {
+            background: #111;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            margin-top: 32px;
+        }
+    </style>
 </head>
 <body>
 
-<header>🪨 Rajasthan SandStone Hub - Live Products</header>
+<header>
+    <span class="mr-2">🪨</span> Rajasthan SandStone Hub - Live Products
+</header>
 
-<div class="max-w-6xl mx-auto px-4 py-4">
-  <!-- Filters -->
-  <div class="flex flex-wrap gap-3 mb-4 items-center">
-    <input id="searchInput" class="border p-2 rounded flex-1" placeholder="🔍 Search by any field..." />
-    <select id="categoryFilter" class="border p-2 rounded"></select>
-    <select id="subCategoryFilter" class="border p-2 rounded"></select>
-    <select id="companyFilter" class="border p-2 rounded"></select>
-    <select id="rateSort" class="border p-2 rounded">
-      <option value="">Sort by Rate</option>
-      <option value="low-high">Lowest → Highest</option>
-      <option value="high-low">Highest → Lowest</option>
-    </select>
-  </div>
+<div class="max-w-7xl mx-auto px-4 py-6">
+    <!-- Filters Section -->
+    <div class="bg-white p-4 rounded-lg shadow mb-6">
+        <div class="flex flex-col md:flex-row gap-4 items-center">
+            <input id="searchInput" class="search-input flex-1 w-full" placeholder="🔍 Search by any field..." />
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <select id="categoryFilter" class="filter-select flex-1 min-w-[150px]"></select>
+                <select id="subCategoryFilter" class="filter-select flex-1 min-w-[150px]"></select>
+                <select id="companyFilter" class="filter-select flex-1 min-w-[150px]"></select>
+                <select id="rateSort" class="filter-select flex-1 min-w-[150px]">
+                    <option value="">Sort by Rate</option>
+                    <option value="low-high">Lowest → Highest</option>
+                    <option value="high-low">Highest → Lowest</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-  <!-- Products grid -->
-  <div id="products" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    ⏳ Loading...
-  </div>
+    <!-- Products Grid -->
+    <div id="products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="col-span-full text-center py-8">
+            <div class="loading-spinner mx-auto mb-2" style="border-top-color: #c45e00;"></div>
+            <p>Loading products...</p>
+        </div>
+    </div>
 </div>
 
-<footer class="text-center py-4 text-sm text-white" style="background:#111">© 2025 Rajasthan SandStone Hub</footer>
+<footer class="footer">
+    © 2025 Rajasthan SandStone Hub. All rights reserved.
+</footer>
 
-<!-- Edit/Delete Modal -->
+<!-- Modal for Security Code -->
 <div id="modal" style="display:none" class="modal-bg">
-  <div class="modal">
-    <h3 id="modalTitle" class="font-bold mb-2">Enter Security Code</h3>
-    <input id="modalCode" class="border p-2 rounded w-full mb-2" placeholder="Security code" />
-    <div class="text-xs text-gray-500 mb-2">This code is stored securely in sheet and not shown on site.</div>
-    <div class="flex gap-2 justify-end">
-      <button id="modalCancel" class="btn">Cancel</button>
-      <button id="modalConfirm" class="btn btn-edit">Confirm</button>
+    <div class="modal">
+        <h3 id="modalTitle" class="font-bold text-lg mb-3">Enter Security Code</h3>
+        <input id="modalCode" type="password" class="border p-2 rounded w-full mb-2" placeholder="Security code" />
+        <div class="text-xs text-gray-500 mb-3">This code is stored securely in sheet and not shown on site.</div>
+        <div class="flex gap-2 justify-end">
+            <button id="modalCancel" class="btn bg-gray-300 hover:bg-gray-400">Cancel</button>
+            <button id="modalConfirm" class="btn btn-edit">Confirm</button>
+        </div>
+        <div id="modalMsg" class="text-sm mt-2 text-center"></div>
     </div>
-    <div id="modalMsg" class="text-sm mt-2"></div>
-  </div>
 </div>
 
 <script>
+// Configuration
 const SHEET_ID = "1ob32T2NWQVZnxC07hBHT9neCEFFBP3neq0S30zV9-1A";
 const SHEET_NAME = "Form Responses 1";
 const OPEN_SHEET_API = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
-const WEB_APP_URL = "https://script.google.com/macros/s/YOUR_WEB_APP_ID/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzSmZBH8wNK3HhfDTzOPD5GVytOBe3MF-_qx8rGakgM09KpZzaIHsNe5bICy8pSDGGh/exec"; 
+
 const fallbackImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAMAAAAoyzS7AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAAApJREFUGFdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=";
 
 let productsData = [];
 
 // ---------------------- UTILITIES ----------------------
-function escapeHtml(str){
-  return (str||'').toString()
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+function escapeHtml(s) { 
+    return (s || '').toString().replace(/[&<>"']/g, c => 
+        ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])
+    ); 
 }
 
-function normalizeDriveImage(url){
-  if(!url) return fallbackImage;
-  if(url.includes("lh3.googleusercontent.com")) return url;
-  const match = url.match(/[-\w]{25,}/);
-  if(match) return `https://lh3.googleusercontent.com/d/${match[0]}=s800`;
-  return fallbackImage;
+function normalizeDriveImage(url) {
+    if (!url) return fallbackImage;
+    if (url.includes("lh3.googleusercontent.com")) return url;
+    const match = url.match(/[-\w]{25,}/);
+    if (match) return `http://googleusercontent.com/profile/picture/${match[0]}=s800`;
+    return fallbackImage;
 }
 
 // ---------------------- LOAD PRODUCTS ----------------------
-async function loadProducts(){
-  const container = document.getElementById('products');
-  container.innerHTML = '⏳ Loading...';
-  try{
-    const res = await fetch(OPEN_SHEET_API);
-    if(!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-    const data = await res.json();
-    if(!Array.isArray(data)){ container.innerHTML='<p>No data</p>'; return; }
+async function loadProducts() {
+    const container = document.getElementById('products');
+    container.innerHTML = `
+        <div class="col-span-full text-center py-8">
+            <div class="loading-spinner mx-auto mb-2" style="border-top-color: #c45e00;"></div>
+            <p>Loading products...</p>
+        </div>
+    `;
+    
+    try {
+        const res = await fetch(OPEN_SHEET_API);
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) { 
+            container.innerHTML = '<p class="col-span-full text-center py-8">No products found</p>'; 
+            return; 
+        }
 
-    productsData = data.map((row,index)=>{
-      const get=(keys)=> keys.reduce((acc,k)=> acc || (row[k]?row[k].toString().trim():""), "");
-      return {
-        __row: index+2,
-        image: normalizeDriveImage(get(["UPLOAD SAMPLE IMAGE","UPLOAD SAMPLE IMAGE "])),
-        category: get(["STONE CATAGORY ","STONE CATAGORY"])||"Unknown",
-        subCategory: get(["STONE SUB CATAGORY ","STONE SUB CATAGORY"])||"N/A",
-        description: get(["DESCRIPTION ","DESCRIPTION"])||"",
-        address: get(["ADDRESS"])||"Not Given",
-        contact: get(["CONTACT ","CONTACT"])||"",
-        company: get(["Company / Firm Name ","Company / Firm Name"])||"N/A",
-        rate: parseFloat((get(["RATE ","RATE"])||"0").replace(/[^\d.-]/g,''))||0,
-        rating: get(["RATING ","RATING"])||"N/A",
-        email: get(["  Email  ","Email","email"])||"",
-        security: get(["  SECURITY CODE  ","SECURITY CODE","SECURITY_CODE"])||""
-      };
-    });
+        productsData = data.map((row, index) => {
+            const get = (names) => names.reduce((acc, k) => acc || (row[k] ? row[k].toString().trim() : ""), "");
+            
+            return {
+                __row: index + 2,
+                image: normalizeDriveImage(get(["UPLOAD SAMPLE IMAGE", "UPLOAD SAMPLE IMAGE "])),
+                category: get(["STONE CATAGORY ", "STONE CATAGORY"]) || "Unknown",
+                subCategory: get(["STONE SUB CATAGORY ", "STONE SUB CATAGORY"]) || "N/A",
+                description: get(["DESCRIPTION ", "DESCRIPTION"]) || "",
+                address: get(["ADDRESS"]) || "Not Given",
+                contact: get(["CONTACT ", "CONTACT"]) || "",
+                company: get(["Company / Firm Name ", "Company / Firm Name"]) || "N/A",
+                rate: parseFloat((get(["RATE ", "RATE"]) || "0").replace(/[^\d.-]/g, '')) || 0,
+                rating: get(["RATING ", "RATING"]) || "N/A",
+                email: get(["  Email  ", "Email", "email"]) || "",
+                security: get(["  SECURITY CODE  ", "SECURITY CODE", "SECURITY_CODE"]) || ""
+            };
+        });
 
-    populateFilters();
-    renderProducts(productsData);
-  }catch(err){
-    console.error(err);
-    container.innerHTML = `<p>Error loading products: ${err.message}</p>`;
-  }
+        populateFilters();
+        renderProducts(productsData);
+    } catch(err) {
+        console.error('Error loading products:', err);
+        container.innerHTML = `
+            <div class="col-span-full text-center py-8">
+                <p class="text-red-500 font-medium">Error loading products</p>
+                <p class="text-sm text-gray-600 mt-1">${err.message}</p>
+                <button onclick="loadProducts()" class="mt-3 btn bg-orange-600 text-white">Try Again</button>
+            </div>
+        `;
+    }
 }
 
 // ---------------------- RENDER PRODUCTS ----------------------
-function renderProducts(list){
-  const container = document.getElementById('products');
-  container.innerHTML='';
-  if(!list.length){ container.innerHTML='<p class="col-span-full">No products found</p>'; return; }
+function renderProducts(list) {
+    const container = document.getElementById('products');
+    container.innerHTML = '';
+    
+    if (!list.length) { 
+        container.innerHTML = '<p class="col-span-full text-center py-8">No products found matching your criteria</p>'; 
+        return; 
+    }
 
-  list.forEach(item=>{
-    const cleanPhone=(s)=>(s||'').replace(/[^+\d]/g,'');
-    const waLink=item.contact?`https://wa.me/${cleanPhone(item.contact)}?text=${encodeURIComponent('Hello, I am interested in your ' + item.category + ' - ' + item.subCategory)}`:'#';
+    list.forEach(item => {
+        const cleanPhone = (s) => (s || '').replace(/[^+\d]/g, '');
+        const waLink = item.contact ? 
+            `https://wa.me/${cleanPhone(item.contact)}?text=${encodeURIComponent('Hello, I am interested in your ' + item.category + ' - ' + item.subCategory)}` : 
+            '#';
 
-    const card=document.createElement('div');
-    card.className='bg-white p-4 rounded-lg shadow';
-    card.innerHTML=`
-      <img class="card-img" src="${item.image}" onerror="this.src='${fallbackImage}'" alt="${escapeHtml(item.category)}" />
-      <div class="mt-2">
-        <div class="flex items-center justify-between">
-          <div>
-            <div class="field-title">${escapeHtml(item.category)}</div>
-            <div class="text-sm text-gray-600">${escapeHtml(item.subCategory)}</div>
-          </div>
-          <div class="text-sm font-semibold text-green-700">₹ ${item.rate}</div>
-        </div>
-        <p class="mt-2 text-sm">${escapeHtml(item.description)}</p>
-        <p class="mt-2 text-sm"><span class="font-semibold">ADDRESS:</span> ${escapeHtml(item.address)}</p>
-        <p class="text-sm"><span class="font-semibold">CONTACT:</span> <a class="text-blue-600" href="${waLink}" target="_blank">${escapeHtml(item.contact||'—')}</a></p>
-        <p class="text-sm font-medium mt-1">🏢 ${escapeHtml(item.company)}</p>
-        <p class="text-sm">⭐ ${escapeHtml(item.rating)}</p>
-        <div class="mt-3 flex gap-2">
-          <button class="btn btn-edit px-3 py-1 text-white" data-action="edit" data-row="${item.__row}">Edit</button>
-          <button class="btn btn-delete px-3 py-1 text-white" data-action="delete" data-row="${item.__row}">Delete</button>
-        </div>
-      </div>
-    `;
-    container.appendChild(card);
-  });
+        const card = document.createElement('div');
+        card.className = 'bg-white p-4 rounded-lg shadow product-card';
+        card.innerHTML = `
+            <img class="card-img" src="${item.image}" onerror="this.src='${fallbackImage}'" alt="${escapeHtml(item.category)}" />
+            <div class="mt-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <div class="field-title">${escapeHtml(item.category)}</div>
+                        <div class="text-sm text-gray-600">${escapeHtml(item.subCategory)}</div>
+                    </div>
+                    <div class="text-lg font-bold text-green-700">₹${item.rate.toLocaleString()}</div>
+                </div>
+                <p class="mt-2 text-sm text-gray-700 line-clamp-2">${escapeHtml(item.description)}</p>
+                <div class="mt-3 space-y-1 text-sm">
+                    <p><span class="font-semibold">Address:</span> ${escapeHtml(item.address)}</p>
+                    <p><span class="font-semibold">Contact:</span> 
+                        <a class="text-blue-600 hover:underline" href="${waLink}" target="_blank">${escapeHtml(item.contact || '—')}</a>
+                    </p>
+                    <p><span class="font-semibold">Company:</span> ${escapeHtml(item.company)}</p>
+                    <p><span class="font-semibold">Rating:</span> ⭐ ${escapeHtml(item.rating)}</p>
+                </div>
+                <div class="mt-4 flex gap-2">
+                    <button class="btn btn-edit flex-1" data-action="edit" data-row="${item.__row}">Edit</button>
+                    <button class="btn btn-delete flex-1" data-action="delete" data-row="${item.__row}">Delete</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
 
-  document.querySelectorAll('[data-action="edit"]').forEach(b=>b.addEventListener('click', onEditClick));
-  document.querySelectorAll('[data-action="delete"]').forEach(b=>b.addEventListener('click', onDeleteClick));
+    // Add event listeners to buttons
+    document.querySelectorAll('[data-action="edit"]').forEach(b => b.addEventListener('click', onEditClick));
+    document.querySelectorAll('[data-action="delete"]').forEach(b => b.addEventListener('click', onDeleteClick));
 }
 
 // ---------------------- FILTERS ----------------------
-function populateFilters(){
-  const cats=[...new Set(productsData.map(p=>p.category))].sort();
-  const subs=[...new Set(productsData.map(p=>p.subCategory))].sort();
-  const comps=[...new Set(productsData.map(p=>p.company))].sort();
-  const setOptions=(id,list)=>{
-    const el=document.getElementById(id);
-    el.innerHTML=`<option value="">All ${id.replace('Filter','')}</option>`+list.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
-  };
-  setOptions('categoryFilter',cats);
-  setOptions('subCategoryFilter',subs);
-  setOptions('companyFilter',comps);
+function populateFilters() {
+    const cats = [...new Set(productsData.map(p => p.category))].sort();
+    const subs = [...new Set(productsData.map(p => p.subCategory))].sort();
+    const comps = [...new Set(productsData.map(p => p.company))].sort();
+    
+    const setOptions = (id, list) => {
+        const el = document.getElementById(id);
+        el.innerHTML = `<option value="">All ${id.replace('Filter', '')}</option>` + 
+            list.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+    };
+    
+    setOptions('categoryFilter', cats);
+    setOptions('subCategoryFilter', subs);
+    setOptions('companyFilter', comps);
 }
 
-document.getElementById('searchInput').addEventListener('input',applyFilters);
-document.getElementById('categoryFilter').addEventListener('change',applyFilters);
-document.getElementById('subCategoryFilter').addEventListener('change',applyFilters);
-document.getElementById('companyFilter').addEventListener('change',applyFilters);
-document.getElementById('rateSort').addEventListener('change',applyFilters);
+// Filter event listeners
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+document.getElementById('subCategoryFilter').addEventListener('change', applyFilters);
+document.getElementById('companyFilter').addEventListener('change', applyFilters);
+document.getElementById('rateSort').addEventListener('change', applyFilters);
 
-function applyFilters(){
-  const q=document.getElementById('searchInput').value.toLowerCase();
-  const cat=document.getElementById('categoryFilter').value;
-  const sub=document.getElementById('subCategoryFilter').value;
-  const comp=document.getElementById('companyFilter').value;
-  const sort=document.getElementById('rateSort').value;
+function applyFilters() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const cat = document.getElementById('categoryFilter').value;
+    const sub = document.getElementById('subCategoryFilter').value;
+    const comp = document.getElementById('companyFilter').value;
+    const sort = document.getElementById('rateSort').value;
 
-  let filtered=productsData.filter(p=>{
-    const matchesSearch=q ? Object.values(p).some(v=>v && v.toString().toLowerCase().includes(q)) : true;
-    const matchesCat=cat ? p.category===cat : true;
-    const matchesSub=sub ? p.subCategory===sub : true;
-    const matchesComp=comp ? p.company===comp : true;
-    return matchesSearch && matchesCat && matchesSub && matchesComp;
-  });
+    let filtered = productsData.filter(p => {
+        const matchesSearch = q ? 
+            Object.values(p).some(v => v && v.toString().toLowerCase().includes(q)) : true;
+        const matchesCat = cat ? p.category === cat : true;
+        const matchesSub = sub ? p.subCategory === sub : true;
+        const matchesComp = comp ? p.company === comp : true;
+        return matchesSearch && matchesCat && matchesSub && matchesComp;
+    });
 
-  if(sort==='low-high') filtered.sort((a,b)=>a.rate-b.rate);
-  if(sort==='high-low') filtered.sort((a,b)=>b.rate-a.rate);
+    if (sort === 'low-high') filtered.sort((a, b) => a.rate - b.rate);
+    if (sort === 'high-low') filtered.sort((a, b) => b.rate - a.rate);
 
-  renderProducts(filtered);
+    renderProducts(filtered);
 }
 
 // ---------------------- EDIT/DELETE ----------------------
-let pendingAction=null;
-function onEditClick(ev){ pendingAction={type:'edit', row:+ev.currentTarget.dataset.row}; openModal('Enter security code to EDIT'); }
-function onDeleteClick(ev){ pendingAction={type:'delete', row:+ev.currentTarget.dataset.row}; openModal('Enter security code to DELETE'); }
-function openModal(title){
-  document.getElementById('modalTitle').innerText=title;
-  document.getElementById('modalCode').value='';
-  document.getElementById('modalMsg').innerText='';
-  document.getElementById('modal').style.display='flex';
+let pendingAction = null;
+
+function onEditClick(ev) { 
+    pendingAction = {type: 'edit', row: +ev.currentTarget.dataset.row}; 
+    openModal('Enter security code to EDIT'); 
 }
-document.getElementById('modalCancel').onclick=()=>document.getElementById('modal').style.display='none';
-document.getElementById('modalConfirm').onclick=modalConfirm;
 
-async function modalConfirm(){
-  const code=document.getElementById('modalCode').value.trim();
-  if(!code){ document.getElementById('modalMsg').innerText='Enter security code'; return; }
-  document.getElementById('modalMsg').innerText='Verifying...';
+function onDeleteClick(ev) { 
+    pendingAction = {type: 'delete', row: +ev.currentTarget.dataset.row}; 
+    openModal('Enter security code to DELETE'); 
+}
 
-  try{
-    const payload={action:pendingAction.type,row:pendingAction.row,code};
-    const res=await fetch(WEB_APP_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload)
-    });
-    if(!res.ok) throw new Error(`HTTP Error! Status: ${res.status}`);
-    const result=await res.json();
-    if(result.success){
-      document.getElementById('modalMsg').innerText=result.message;
-      document.getElementById('modal').style.display='none';
-      if(pendingAction.type==='edit'){
-        const currentDescription=result.rowData?.DESCRIPTION||'';
-        const newDesc=prompt('Enter new DESCRIPTION', currentDescription);
-        if(newDesc!==null){
-          await fetch(WEB_APP_URL,{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({action:'applyEdit',row:pendingAction.row,code,updates:{DESCRIPTION:newDesc}})
-          });
-          alert('Update request sent. Reloading products...');
-          loadProducts();
-        }
-      }else if(pendingAction.type==='delete'){
-        alert('Product deleted. Reloading products...');
-        loadProducts();
-      }
-    }else{
-      document.getElementById('modalMsg').innerText='Error: '+result.message;
+function openModal(title) {
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalCode').value = '';
+    document.getElementById('modalMsg').innerText = '';
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modalCode').focus();
+}
+
+document.getElementById('modalCancel').onclick = () => {
+    document.getElementById('modal').style.display = 'none';
+    pendingAction = null;
+};
+
+document.getElementById('modalConfirm').onclick = modalConfirm;
+
+// Handle Enter key in modal
+document.getElementById('modalCode').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') modalConfirm();
+});
+
+async function modalConfirm() {
+    const code = document.getElementById('modalCode').value.trim();
+    if (!code) { 
+        document.getElementById('modalMsg').innerText = 'Please enter security code'; 
+        document.getElementById('modalMsg').className = 'text-sm mt-2 text-center text-red-500';
+        return; 
     }
-  }catch(err){
-    console.error(err);
-    document.getElementById('modalMsg').innerText='Server error. Try again. Details: '+err.message;
-  }
+    
+    document.getElementById('modalMsg').innerText = 'Verifying...';
+    document.getElementById('modalMsg').className = 'text-sm mt-2 text-center text-blue-500';
+
+    try {
+        const payload = {action: pendingAction.type, row: pendingAction.row, code};
+        const res = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        
+        if (!res.ok) throw new Error(`HTTP Error! Status: ${res.status}`);
+        
+        const result = await res.json();
+        
+        if (result.success) {
+            document.getElementById('modalMsg').innerText = result.message;
+            document.getElementById('modalMsg').className = 'text-sm mt-2 text-center text-green-500';
+            
+            setTimeout(() => {
+                document.getElementById('modal').style.display = 'none';
+                
+                if (pendingAction.type === 'edit') {
+                    const currentDescription = result.rowData && result.rowData.DESCRIPTION ? 
+                        result.rowData.DESCRIPTION : '';
+                    const newDesc = prompt('Enter new DESCRIPTION', currentDescription);
+                    
+                    if (newDesc !== null) {
+                        updateProductDescription(pendingAction.row, code, newDesc);
+                    }
+                } else if (pendingAction.type === 'delete') {
+                    alert('Product deleted (or marked deleted). Reloading products...');
+                    loadProducts();
+                }
+                
+                pendingAction = null;
+            }, 1000);
+        } else {
+            document.getElementById('modalMsg').innerText = 'Error: ' + result.message;
+            document.getElementById('modalMsg').className = 'text-sm mt-2 text-center text-red-500';
+        }
+    } catch(err) {
+        console.error('Modal action error:', err);
+        document.getElementById('modalMsg').innerText = 'Server error. Please try again.';
+        document.getElementById('modalMsg').className = 'text-sm mt-2 text-center text-red-500';
+    }
+}
+
+async function updateProductDescription(row, code, newDesc) {
+    try {
+        const res = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                action: 'applyEdit', 
+                row: row, 
+                code: code, 
+                updates: {DESCRIPTION: newDesc}
+            })
+        });
+        
+        if (!res.ok) throw new Error(`HTTP Error! Status: ${res.status}`);
+        
+        const result = await res.json();
+        if (result.success) {
+            alert('Product description updated successfully!');
+            loadProducts();
+        } else {
+            alert('Failed to update: ' + result.message);
+        }
+    } catch(err) {
+        console.error('Update error:', err);
+        alert('Error updating product. Please try again.');
+    }
 }
 
 // ---------------------- INIT ----------------------
-loadProducts();
+document.addEventListener('DOMContentLoaded', loadProducts);
 </script>
 </body>
 </html>
