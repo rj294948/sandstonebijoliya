@@ -200,39 +200,52 @@ function openModal(title){
   document.getElementById('modal').style.display='flex';
 }
 document.getElementById('modalCancel').onclick=()=>document.getElementById('modal').style.display='none';
-document.getElementById('modalConfirm').onclick=modalConfirm;
 
-async function modalConfirm(){
-  const code=document.getElementById('modalCode').value.trim();
+document.getElementById('modalConfirm').onclick = async function() {
+  const code = (document.getElementById('modalCode').value||'').trim();
   if(!code){ document.getElementById('modalMsg').innerText='Please enter security code'; return; }
   document.getElementById('modalMsg').innerText='Verifying...';
 
-  try{
-    const payload={action:pendingAction.type,row:pendingAction.row,code};
-    const res=await fetch(WEB_APP_URL,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    const result=await res.json();
-    if(result&&result.success){
+  try {
+    const payload = {action:pendingAction.type,row:pendingAction.row,code};
+    const res = await fetch(WEB_APP_URL,{
+      method:'POST',
+      mode:'cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const result = await res.json();
+
+    // ✅ Security code verification and server message handling
+    if(result && result.success){
       document.getElementById('modalMsg').innerText='Success: '+(result.message||'Done');
       document.getElementById('modal').style.display='none';
+
       if(pendingAction.type==='edit'){
-        const newDesc=prompt('Enter new DESCRIPTION',result.rowData && result.rowData.DESCRIPTION || '');
+        const newDesc = prompt('Enter new DESCRIPTION', result.rowData?.DESCRIPTION || '');
         if(newDesc!==null){
-          await fetch(WEB_APP_URL,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'applyEdit',row:pendingAction.row,code,updates:{DESCRIPTION:newDesc}})});
+          await fetch(WEB_APP_URL,{
+            method:'POST',
+            mode:'cors',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({action:'applyEdit',row:pendingAction.row,code,updates:{DESCRIPTION:newDesc}})
+          });
           alert('Update request sent.');
           loadProducts();
         }
-      }else if(pendingAction.type==='delete'){
+      } else if(pendingAction.type==='delete'){
         alert('Product deleted (or marked deleted).');
         loadProducts();
       }
-    }else{
-      document.getElementById('modalMsg').innerText='Error: '+(result&&result.message?result.message:'Verification failed');
+    } else {
+      // Clear differentiation for wrong code
+      document.getElementById('modalMsg').innerText = '❌ Verification failed. Security code incorrect.';
     }
-  }catch(err){
+  } catch(err){
     console.error(err);
-    document.getElementById('modalMsg').innerText='Server error. Try later.';
+    document.getElementById('modalMsg').innerText='⚠️ Server error. Try later.';
   }
-}
+};
 
 function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
