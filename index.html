@@ -1,97 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - RJ Services</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      color: #333;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 500px;
-      margin: 40px auto;
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      margin-top: 15px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .msg {
-      margin-top: 12px;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rajasthan SandStone Hub - Bijoliya & Natural Stones</title>
+<meta name="description" content="Explore Rajasthan's best sandstone varieties from Bijoliya and nearby regions. Connect directly with verified suppliers and factories.">
+<link rel="icon" href="stone-icon.png" type="image/png">
+
+<style>
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  body {
+    background: #f9f7f4;
+    color: #333;
+  }
+
+  header {
+    background: #c7a97b;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: #e6d8c2;
+    padding: 10px;
+    gap: 15px;
+  }
+  nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    padding: 8px 15px;
+    background: white;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+  nav a:hover {
+    background: #d1b68d;
+    color: white;
+  }
+
+  .hero {
+    background: url('header-bg.jpg') center/cover no-repeat;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    text-shadow: 2px 2px 8px #000;
+  }
+
+  section {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  .card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
+  .card h3 {
+    padding: 15px;
+    background: #faf8f5;
+  }
+
+  footer {
+    background: #c7a97b;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+  }
+
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>Admin Data Entry (Firebase)</h2>
-    <form id="adminForm">
-      <label>Name:</label>
-      <input type="text" id="name" required>
-      
-      <label>Email:</label>
-      <input type="email" id="email" required>
-      
-      <label>Message:</label>
-      <textarea id="message" rows="4"></textarea>
-      
-      <button type="submit">Submit</button>
-      <p class="msg" id="msg"></p>
-    </form>
+
+<header>🪨 Rajasthan SandStone Hub</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="categories.html">Stone Categories</a>
+  <a href="factories.html">Factories</a>
+  <a href="blocks.html">Blocks</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="products.html">Products</a>
+  <a href="admin.html">Admin Panel</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+</nav>
+
+<div class="hero">
+  <h1>Explore Natural Sandstones from Rajasthan</h1>
+</div>
+
+<section>
+  <h2>Our Top Stone Categories</h2>
+  <div class="grid">
+    <a href="categories.html" class="card">
+      <img src="bijoliya-stone.jpg" alt="Bijoliya Sandstone">
+      <h3>Bijoliya Sandstone</h3>
+    </a>
+    <a href="categories.html" class="card">
+      <img src="dholpur-stone.jpg" alt="Dholpur Stone">
+      <h3>Dholpur Stone</h3>
+    </a>
+    <a href="categories.html" class="card">
+      <img src="kota-stone.jpg" alt="Kota Stone">
+      <h3>Kota Stone</h3>
+    </a>
+    <a href="categories.html" class="card">
+      <img src="mandana-stone.jpg" alt="Mandana Stone">
+      <h3>Mandana Red Stone</h3>
+    </a>
   </div>
+</section>
 
-  <!-- ✅ Firebase Config Import -->
-  <script type="module">
-    import { db, collection, addDoc } from "./firebase-config.js";
+<section>
+  <h2>Our Trusted Factories</h2>
+  <div class="grid">
+    <a href="factories.html" class="card">
+      <img src="factory1.jpg" alt="Factory 1">
+      <h3>Shree Bijoliya Stone Factory</h3>
+    </a>
+    <a href="factories.html" class="card">
+      <img src="factory2.jpg" alt="Factory 2">
+      <h3>Rajasthan Natural Stone Works</h3>
+    </a>
+  </div>
+</section>
 
-    const form = document.getElementById("adminForm");
-    const msg = document.getElementById("msg");
+<footer>
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services
+</footer>
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      msg.textContent = "⏳ Submitting...";
-      msg.style.color = "black";
-
-      try {
-        await addDoc(collection(db, "adminMessages"), {
-          name: document.getElementById("name").value,
-          email: document.getElementById("email").value,
-          message: document.getElementById("message").value,
-          timestamp: new Date().toISOString()
-        });
-
-        msg.style.color = "green";
-        msg.textContent = "✅ Data saved successfully in Firebase!";
-        form.reset();
-      } catch (err) {
-        msg.style.color = "red";
-        msg.textContent = "❌ Error: " + err.message;
-      }
-    });
-  </script>
 </body>
 </html>
