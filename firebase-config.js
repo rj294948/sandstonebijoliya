@@ -1,14 +1,9 @@
-// firebase-config.js
+// ✅ firebase-config.js
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { 
-  getFirestore, collection, addDoc, getDocs, getDoc, 
-  updateDoc, deleteDoc, doc, query, where, orderBy 
+  getFirestore, collection, addDoc 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-import { 
-  getStorage, ref, uploadBytes, getDownloadURL, deleteObject 
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDxNMhU09mINvq_aDLtylBg3FucCK-MzYE",
@@ -20,14 +15,9 @@ const firebaseConfig = {
   measurementId: "G-H7JMX9VNYF"
 };
 
+// ✅ Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
-export {
-  db, storage,
-  collection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc,
-  query, where, orderBy,
-  ref, uploadBytes, getDownloadURL, deleteObject
-};
+// ✅ Export Firestore utilities
+export { db, collection, addDoc };
