@@ -3,47 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bijoliya Sandstone | Rajasthan SandStone Hub</title>
+<title>Bijoliya Stones | Rajasthan SandStone Hub</title>
 <link rel="stylesheet" href="style.css">
-<script type="module" src="assets/js/products.js"></script>
+<style>
+/* Grid & Card same as previous code */
+.grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 20px; }
+.card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:0.3s; cursor:pointer; }
+.card:hover { transform:translateY(-5px); }
+.card img { width:100%; height:160px; object-fit:cover; }
+.card h3 { padding:10px; font-size:1rem; text-align:center; color:#333; }
+.card p { text-align:center; color:gray; font-size:0.9rem; }
+.card a { color:#c7a97b; text-decoration:none; font-weight:600; }
+.card a:hover { text-decoration:underline; }
+
+.filters { display:flex; flex-wrap:wrap; gap:10px; margin:20px 0; justify-content:center; }
+.filters select, .filters input { padding:6px 10px; border-radius:6px; border:1px solid #ccc; }
+.filters button { padding:6px 15px; background:#c7a97b; border:none; color:white; border-radius:6px; cursor:pointer; }
+.filters button:hover { background:#b38c5f; }
+
+@media(max-width:600px){ .filters{flex-direction:column; gap:8px;} }
+</style>
 </head>
 <body>
-  <!-- Header + Nav same as index.html -->
-  <!-- Banner -->
-  <div class="banner">Bijoliya Sandstones</div>
 
-  <!-- Filters -->
-  <div class="filters">
-    <select id="filter-category">
-      <option value="All">All Category</option>
-      <option value="Tile">Tile</option>
-      <option value="Slab">Slab</option>
-      <option value="Farsi">Farsi</option>
-    </select>
+<header>
+  <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
+</header>
 
-    <select id="filter-color">
-      <option value="All">All Colors</option>
-      <option value="Red">Red</option>
-      <option value="Pink">Pink</option>
-      <option value="Brown">Brown</option>
-    </select>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="bijoliya.html">Bijoliya Stone</a>
+  <a href="dholpur.html">Dholpur Stone</a>
+  <a href="mandana.html">Mandana Stone</a>
+  <a href="kota.html">Kota Stone</a>
+  <a href="other-stones.html">Other Stones</a>
+  <a href="factories.html">Factories</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+</nav>
 
-    <input type="number" id="min-price" placeholder="Min Price">
-    <input type="number" id="max-price" placeholder="Max Price">
-    <button onclick="applyFilters()">Apply Filters</button>
-  </div>
+<div class="banner">Bijoliya Sandstones</div>
 
-  <section>
-    <h2>Bijoliya Products</h2>
-    <div class="grid" id="product-grid">
-      <!-- Products dynamically loaded from Firebase -->
-    </div>
-  </section>
+<section class="filters">
+  <select id="filter-subcategory">
+    <option value="All">All Sub-categories</option>
+  </select>
+  <select id="filter-color">
+    <option value="All">All Colors</option>
+  </select>
+  <input type="number" id="min-price" placeholder="Min Price">
+  <input type="number" id="max-price" placeholder="Max Price">
+  <button onclick="applyFilters()">Apply Filters</button>
+</section>
 
-  <footer>
-    &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
-    <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
-  </footer>
+<section>
+  <div class="grid" id="product-grid"></div>
+</section>
+
+<footer>
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services
+</footer>
+
+<script type="module">
+import { db, collection, getDocs, query, orderBy } from './firebase-config.js';
+
+const productGrid = document.getElementById('product-grid');
+const filterSub = document.getElementById('filter-subcategory');
+const filterColor = document.getElementById('filter-color');
+let products = [];
+
+async function loadProducts() {
+  const q = query(collection(db,"products"),orderBy("created_at","desc"));
+  const snapshot = await getDocs(q);
+  products = snapshot.docs.map(doc => doc.data()).filter(p => p.category === "Bijoliya");
+
+  populateFilters();
+  renderProducts(products);
+}
+
+function populateFilters() {
+  const subcats = [...new Set(products.map(p=>p.sub_category))];
+  const colors = [...new Set(products.map(p=>p.color))];
+
+  subcats.forEach(s => filterSub.innerHTML += `<option value="${s}">${s}</option>`);
+  colors.forEach(c => filterColor.innerHTML += `<option value="${c}">${c}</option>`);
+}
+
+function renderProducts(list) {
+  productGrid.innerHTML = '';
+  list.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${p.image}" alt="${p.stone_name}">
+      <h3>${p.stone_name}</h3>
+      <p>${p.description}</p>
+      <p><strong>Sub-category:</strong> ${p.sub_category}</p>
+      <p><strong>Type:</strong> ${p.type}</p>
+      <p><strong>Color:</strong> ${p.color}</p>
+      <p><strong>Price:</strong> ₹${p.price} / ${p.price_unit}</p>
+      <p><strong>Factory:</strong> ${p.factory_name}</p>
+      <p>
+        <a href="${p.whatsapp_link}" target="_blank">WhatsApp</a> | 
+        <a href="tel:${p.contact_number}">Call</a>
+      </p>
+    `;
+    productGrid.appendChild(card);
+  });
+}
+
+function applyFilters() {
+  const subcat = filterSub.value;
+  const col = filterColor.value;
+  const minP = document.getElementById('min-price').value;
+  const maxP = document.getElementById('max-price').value;
+
+  const filtered = products.filter(p =>
+    (subcat === 'All' || p.sub_category === subcat) &&
+    (col === 'All' || p.color === col) &&
+    (!minP || p.price >= minP) &&
+    (!maxP || p.price <= maxP)
+  );
+  renderProducts(filtered);
+}
+
+window.onload = loadProducts;
+window.applyFilters = applyFilters;
+</script>
+
 </body>
 </html>
-
