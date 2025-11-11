@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factories - Rajasthan SandStone Hub</title>
+<style>
+body{font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
+header{background:#c7a97b;color:#fff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;}
+input{width:100%;padding:10px;margin:15px 0;border-radius:6px;border:1px solid #ccc;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;}
+.card{background:#fff;padding:12px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+.card img{width:100%;height:150px;object-fit:cover;border-radius:6px;}
+.card h3{margin:8px 0;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 onclick="window.location='index.html'">🏭 Factories</h1>
+  <button onclick="window.location='index.html'">⬅ Home</button>
+</header>
+
+<div class="container" style="padding:20px;">
+  <input type="text" id="search" placeholder="🔍 Search Factory Name...">
+  <div id="factory-products" class="grid"></div>
+</div>
+
+<script type="module">
+import { db, collection, getDocs } from './firebase-config.js';
+
+const search=document.getElementById("search");
+const grid=document.getElementById("factory-products");
+let allProducts=[];
+
+async function loadAll(){
+  const snap=await getDocs(collection(db,"products"));
+  allProducts=snap.docs.map(d=>d.data());
+  render(allProducts);
+}
+
+function render(list){
+  grid.innerHTML="";
+  list.forEach(p=>{
+    grid.innerHTML+=`
+      <div class='card'>
+        <img src='${p.image}' alt='${p.stone_name}'>
+        <h3>${p.stone_name}</h3>
+        <p>${p.category} | ${p.factory_name}</p>
+        <p>₹${p.price}/${p.price_unit}</p>
+        <p><a href='https://wa.me/${p.contact_number}' target='_blank'>WhatsApp</a></p>
+      </div>`;
+  });
+}
+
+search.oninput=()=>{
+  const val=search.value.toLowerCase();
+  const filtered=allProducts.filter(p=>p.factory_name.toLowerCase().includes(val));
+  render(filtered);
+};
+
+loadAll();
+</script>
+</body>
+</html>
 
