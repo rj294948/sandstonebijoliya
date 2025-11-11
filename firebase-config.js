@@ -1,4 +1,4 @@
-// ✅ firebase-config.js
+// ✅ Import Firebase Core & Services
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { 
   getFirestore, 
@@ -11,6 +11,7 @@ import {
   deleteDoc, 
   updateDoc 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
@@ -22,7 +23,15 @@ import {
   updateProfile 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-// ===== Firebase Config =====
+import { 
+  getStorage, 
+  ref, 
+  uploadBytes, 
+  getDownloadURL, 
+  deleteObject 
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
+
+// ✅ Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDxNMhU09mINvq_aDLtylBg3FucCK-MzYE",
   authDomain: "sandstonebijoliya-293d2.firebaseapp.com",
@@ -33,18 +42,20 @@ const firebaseConfig = {
   measurementId: "G-H7JMX9VNYF"
 };
 
-// ===== Initialize Firebase =====
+// ✅ Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ===== Exported Firebase Utilities =====
+// ✅ Export Everything You Need
 export {
-  app,              // Firebase app instance
-  db,               // Firestore instance
-  auth,             // Auth instance
-  googleProvider,   // For Gmail login
+  app,
+  db,
+  auth,
+  storage,
+  googleProvider,
   collection,
   addDoc,
   getDocs,
@@ -53,10 +64,14 @@ export {
   doc,
   deleteDoc,
   updateDoc,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  signInWithPopup,  // For Gmail login
+  signInWithPopup,
   onAuthStateChanged,
   updateProfile
 };
