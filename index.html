@@ -7,17 +7,40 @@
 <meta name="description" content="Buy premium Rajasthan Sandstones like Bijoliya, Dholpur, Mandana, and Kota directly from verified factories.">
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
+<style>
+body {font-family:"Poppins",sans-serif; background:#f5f5f5; margin:0; padding:0;}
+header {background:#c7a97b; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; color:white;}
+header h1 {font-size:1.5rem; cursor:pointer;}
+header input {padding:8px 12px; width:300px; border:none; border-radius:6px;}
+header button {padding:8px 15px; border:none; background:#fff; color:#c7a97b; border-radius:6px; cursor:pointer; font-weight:600;}
+header button:hover {background:#b38c5f; color:white;}
+nav {background:#b38c5f; display:flex; justify-content:center; gap:20px; padding:10px 0; flex-wrap:wrap;}
+nav a {color:white; text-decoration:none; font-weight:600; padding:6px 12px; border-radius:6px; transition:0.3s;}
+nav a:hover {background:#d1b68d; color:white;}
+.banner {background:url('assets/images/header-bg.jpg') center/cover no-repeat; height:50vh; display:flex; align-items:center; justify-content:center; color:white; text-shadow:2px 2px 8px rgba(0,0,0,0.7); font-size:2rem; font-weight:bold;}
+section {padding:30px 20px;}
+section h2 {font-size:1.5rem; margin-bottom:15px; color:#c7a97b; text-align:center;}
+.grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px;}
+.card {background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; cursor:pointer; padding:10px; position:relative;}
+.card:hover {transform:translateY(-5px);}
+.card img {width:100%; height:160px; object-fit:cover; border-radius:6px;}
+.card h3 {margin:10px 0 5px 0; color:#333;}
+.card p {margin:2px 0; font-size:0.9rem; color:#555;}
+footer {background:#c7a97b; color:white; text-align:center; padding:15px;}
+footer a {color:white; text-decoration:underline;}
+.filter-container {display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin-bottom:20px;}
+.filter-container select, .filter-container input {padding:8px 10px; border-radius:6px; border:1px solid #ccc; min-width:120px;}
+@media(max-width:600px){header{flex-direction:column; gap:10px;}header input{width:100%;}nav{flex-direction:column; gap:8px;}}
+</style>
 </head>
 <body>
 
-<!-- ===== Header ===== -->
 <header>
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
-  <input type="text" placeholder="Search stones, factories...">
+  <input type="text" placeholder="Search stones, factories..." id="searchInput">
   <button onclick="window.location='admin.html'">Admin</button>
 </header>
 
-<!-- ===== Navigation Row ===== -->
 <nav>
   <a href="bijoliya.html">Bijoliya Stone</a>
   <a href="dholpur.html">Dholpur Stone</a>
@@ -29,95 +52,101 @@
   <a href="contact.html">Contact</a>
 </nav>
 
-<!-- ===== Banner ===== -->
-<div class="banner">
-  Discover Natural Stones of Rajasthan
-</div>
+<div class="banner">Discover Natural Stones of Rajasthan</div>
 
-<!-- ===== Stone Categories ===== -->
 <section>
-  <h2>Stone Categories</h2>
-  <div class="grid">
-    <!-- Main Stones -->
-    <div class="card" onclick="location.href='bijoliya.html'">
-      <img src="assets/images/bijoliya-stone.jpg" alt="Bijoliya Stone">
-      <h3>Bijoliya Sandstone</h3>
-      <p>Known for strength and beauty</p>
-    </div>
-    <div class="card" onclick="location.href='dholpur.html'">
-      <img src="assets/images/dholpur-stone.jpg" alt="Dholpur Stone">
-      <h3>Dholpur Stone</h3>
-      <p>Pure and elegant texture</p>
-    </div>
-    <div class="card" onclick="location.href='mandana.html'">
-      <img src="assets/images/mandana-stone.jpg" alt="Mandana Stone">
-      <h3>Mandana Red Stone</h3>
-      <p>Rich red natural tone</p>
-    </div>
-    <div class="card" onclick="location.href='kota.html'">
-      <img src="assets/images/kota-stone.jpg" alt="Kota Stone">
-      <h3>Kota Stone</h3>
-      <p>Popular for flooring & walls</p>
-    </div>
+  <h2>Filter Products</h2>
+  <div class="filter-container">
+    <select id="filter-category"><option>All</option></select>
+    <select id="filter-color"><option>All</option></select>
+    <input type="number" id="min-price" placeholder="Min Price">
+    <input type="number" id="max-price" placeholder="Max Price">
+    <button onclick="applyFilters()">Apply Filter</button>
+  </div>
 
-    <!-- Other Stones -->
-    <div class="card" onclick="location.href='other-stones.html'">
-      <img src="assets/images/raj-pink.jpg" alt="Rajasthan Pink Stone">
-      <h3>Rajasthan Pink Stone</h3>
-      <p>Elegant pink hue</p>
-    </div>
-    <div class="card" onclick="location.href='other-stones.html'">
-      <img src="assets/images/chittorgarh.jpg" alt="Chittorgarh Stone">
-      <h3>Chittorgarh Marble</h3>
-      <p>Beautiful natural marble</p>
-    </div>
+  <div class="grid" id="product-grid">
+    <!-- Products will load here dynamically from Firebase -->
   </div>
 </section>
 
-<!-- ===== Featured Factories ===== -->
-<section>
-  <h2>Featured Factories</h2>
-  <div class="grid">
-    <div class="card" onclick="location.href='factories.html'">
-      <img src="assets/images/factory1.jpg" alt="Factory 1">
-      <h3>Shree Bijoliya Stone Factory</h3>
-      <p>Trusted supplier since 2005</p>
-    </div>
-    <div class="card" onclick="location.href='factories.html'">
-      <img src="assets/images/factory2.jpg" alt="Factory 2">
-      <h3>Rajasthan Natural Works</h3>
-      <p>Quality exports worldwide</p>
-    </div>
-  </div>
-</section>
-
-<!-- ===== Top Products ===== -->
-<section>
-  <h2>Top Products</h2>
-  <div class="grid">
-    <div class="card">
-      <img src="assets/images/tile1.jpg" alt="Tile Product">
-      <h3>Sandstone Floor Tile</h3>
-      <p>Natural finish, 12x12 inch</p>
-    </div>
-    <div class="card">
-      <img src="assets/images/slab1.jpg" alt="Slab">
-      <h3>Mandana Slab</h3>
-      <p>Durable for outdoor use</p>
-    </div>
-    <div class="card">
-      <img src="assets/images/pillar.jpg" alt="Pillar">
-      <h3>Stone Pillars</h3>
-      <p>Custom design & polish</p>
-    </div>
-  </div>
-</section>
-
-<!-- ===== Footer ===== -->
 <footer>
   &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
+
+<script type="module">
+import { db, collection, getDocs, query, orderBy } from './firebase-config.js';
+
+const productGrid = document.getElementById('product-grid');
+const categoryFilter = document.getElementById('filter-category');
+const colorFilter = document.getElementById('filter-color');
+const minPrice = document.getElementById('min-price');
+const maxPrice = document.getElementById('max-price');
+const searchInput = document.getElementById('searchInput');
+
+let products = [];
+
+// Load products from Firestore
+async function loadProducts() {
+  const q = query(collection(db, "products"), orderBy("created_at", "desc"));
+  const snapshot = await getDocs(q);
+  products = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+  populateFilters();
+  renderProducts(products);
+}
+
+// Populate category and color filters dynamically
+function populateFilters() {
+  const categories = ["All", ...new Set(products.map(p => p.category))];
+  const colors = ["All", ...new Set(products.map(p => p.color))];
+  categoryFilter.innerHTML = categories.map(c => `<option>${c}</option>`).join('');
+  colorFilter.innerHTML = colors.map(c => `<option>${c}</option>`).join('');
+}
+
+// Render products grid
+function renderProducts(list) {
+  productGrid.innerHTML = '';
+  list.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${p.image}" alt="${p.stone_name}">
+      <h3>${p.stone_name}</h3>
+      <p>${p.description}</p>
+      <p><strong>Category:</strong> ${p.category}</p>
+      <p><strong>Sub-category:</strong> ${p.sub_category}</p>
+      <p><strong>Type:</strong> ${p.type}</p>
+      <p><strong>Color:</strong> ${p.color}</p>
+      <p><strong>Price:</strong> ₹${p.price} / ${p.price_unit}</p>
+      <p><strong>Factory:</strong> ${p.factory_name}</p>
+      <p><a href="${p.whatsapp_link}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
+    `;
+    productGrid.appendChild(card);
+  });
+}
+
+// Apply filters
+function applyFilters() {
+  const cat = categoryFilter.value;
+  const col = colorFilter.value;
+  const minP = minPrice.value;
+  const maxP = maxPrice.value;
+  const searchText = searchInput.value.toLowerCase();
+
+  const filtered = products.filter(p => 
+    (cat === 'All' || p.category === cat) &&
+    (col === 'All' || p.color === col) &&
+    (!minP || p.price >= minP) &&
+    (!maxP || p.price <= maxP) &&
+    (p.stone_name.toLowerCase().includes(searchText) || p.description.toLowerCase().includes(searchText))
+  );
+
+  renderProducts(filtered);
+}
+
+window.onload = loadProducts;
+window.applyFilters = applyFilters;
+</script>
 
 </body>
 </html>
