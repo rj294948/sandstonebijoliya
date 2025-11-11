@@ -1,105 +1,24 @@
-:root {
-  --primary: #b89a74;
-  --dark: #2c2c2c;
-  --light: #fff;
-}
-
-body {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  color: var(--dark);
-  background-color: #faf7f3;
-}
-
-/* Header */
-.header {
-  background: var(--primary);
-  color: var(--light);
-  padding: 15px 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.header .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  margin: auto;
-}
-.logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-}
-.logo span { color: #f9f5f0; }
-
-nav a {
-  color: white;
-  text-decoration: none;
-  margin: 0 10px;
-  font-weight: 500;
-  transition: 0.3s;
-}
-nav a:hover, nav a.active { text-decoration: underline; }
-
-/* Hero */
-.hero {
-  background: url("https://i.ibb.co/PMXjvRn/sandstone-bg.jpg") center/cover no-repeat;
-  color: white;
-  text-align: center;
-  padding: 100px 20px;
-}
-.hero h2 { font-size: 2.5rem; }
-.hero span { color: #ffde9f; }
-.hero p { margin-top: 10px; font-size: 1.2rem; }
-.btn {
-  display: inline-block;
-  background: var(--primary);
-  color: white;
-  padding: 10px 25px;
-  border-radius: 25px;
-  margin-top: 20px;
-  text-decoration: none;
-  transition: 0.3s;
-}
-.btn:hover { background: #9c7e57; }
-
-/* Featured Section */
-.featured { padding: 60px 20px; text-align: center; }
-.featured h2 { font-size: 2rem; margin-bottom: 30px; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  width: 90%;
-  margin: auto;
-}
-.card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: 0.3s;
-}
-.card:hover { transform: scale(1.03); }
-.card img { width: 100%; height: 200px; object-fit: cover; }
-.card h3 { margin: 15px 0 5px; color: var(--primary); }
-.card p { padding: 0 15px 15px; font-size: 0.95rem; }
-
-/* CTA */
-.cta {
-  background: var(--primary);
-  color: white;
-  text-align: center;
-  padding: 60px 20px;
-}
-.cta h2 { font-size: 2rem; margin-bottom: 15px; }
-
-/* Footer */
-footer {
-  background: #2c2c2c;
-  color: white;
-  text-align: center;
-  padding: 15px 0;
-  font-size: 0.9rem;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+body{background:#fafafa;color:#333;}
+header{background:#c7a97b;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;color:white;}
+header h1{font-size:1.5rem;cursor:pointer;}
+header input{padding:8px 12px;width:300px;border:none;border-radius:6px;}
+header button{padding:8px 15px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
+header button:hover{background:#d1b68d;color:white;}
+nav{background:#b38c5f;display:flex;justify-content:center;gap:20px;padding:10px 0;}
+nav a{color:white;text-decoration:none;font-weight:600;padding:6px 12px;border-radius:6px;transition:0.3s;}
+nav a:hover{background:#d1b68d;color:white;}
+.banner{background:url('assets/images/header-bg.jpg') center/cover no-repeat;height:50vh;display:flex;align-items:center;justify-content:center;color:white;text-shadow:2px 2px 8px rgba(0,0,0,0.7);font-size:2rem;font-weight:bold;}
+section{padding:30px 20px;}
+section h2{font-size:1.5rem;margin-bottom:15px;color:#c7a97b;text-align:center;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.card{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:transform 0.3s;cursor:pointer;}
+.card:hover{transform:translateY(-5px);}
+.card img{width:100%;height:160px;object-fit:cover;}
+.card h3{padding:10px;font-size:1rem;color:#333;text-align:center;}
+.card p{text-align:center;color:gray;font-size:0.9rem;padding-bottom:10px;}
+.filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px;}
+.filters select,.filters input{padding:8px 12px;border-radius:6px;border:1px solid #ccc;}
+footer{background:#c7a97b;color:white;text-align:center;padding:15px;margin-top:40px;}
+footer a{color:white;text-decoration:underline;}
+@media(max-width:600px){header{flex-direction:column;gap:10px;}header input{width:100%;}nav{flex-direction:column;gap:8px;}.filters{flex-direction:column;gap:8px;}}
