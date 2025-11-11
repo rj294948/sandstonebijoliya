@@ -1,7 +1,7 @@
-<!-- ===== Sign In Modal / Page ===== -->
+<!-- ===== Sign In Modal ===== -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
-    <span class="modal-close" onclick="closeModal('signin-modal')">&times;</span>
+    <span class="modal-close" id="close-signin">&times;</span>
     <h2>Sign In</h2>
 
     <!-- Email Sign In -->
@@ -12,7 +12,10 @@
     <p style="text-align:center;margin:10px 0;">OR</p>
 
     <!-- Google Sign In -->
-    <button id="google-signin-btn" style="background:#4285F4;color:white;">Sign In with Google</button>
+    <button id="google-signin-btn">
+      <img src="assets/images/google-logo.png" style="width:20px; vertical-align:middle; margin-right:8px;">
+      Sign In with Google
+    </button>
 
     <div class="feedback" id="signin-feedback"></div>
     <a href="#" onclick="openModal('signup-modal');closeModal('signin-modal')">Don't have an account? Sign Up</a>
@@ -26,6 +29,14 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 
 const signinBtn = document.getElementById('signin-btn');
 const googleBtn = document.getElementById('google-signin-btn');
 const feedback = document.getElementById('signin-feedback');
+const closeBtn = document.getElementById('close-signin');
+
+/* ===== Modal Helper Functions ===== */
+window.openModal = (id) => document.getElementById(id).style.display = 'flex';
+window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+
+/* ===== Close Modal Button ===== */
+closeBtn.addEventListener('click', () => closeModal('signin-modal'));
 
 /* ===== Email Sign In ===== */
 signinBtn.addEventListener('click', async () => {
@@ -44,7 +55,6 @@ signinBtn.addEventListener('click', async () => {
     feedback.style.color = 'green';
     feedback.textContent = '✅ Signed in successfully! Redirecting...';
     setTimeout(()=>{ closeModal('signin-modal'); window.location='admin.html'; }, 1000);
-
   } catch(err) {
     feedback.style.color = 'red';
     feedback.textContent = '❌ ' + err.message;
@@ -65,22 +75,19 @@ googleBtn.addEventListener('click', async () => {
     feedback.textContent = '❌ ' + err.message;
   }
 });
-
-/* ===== Modal Helper Functions ===== */
-function openModal(id){ document.getElementById(id).style.display='flex'; }
-function closeModal(id){ document.getElementById(id).style.display='none'; }
 </script>
 
 <style>
-.modal{display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:9999;}
 .modal-content{background:white;padding:30px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.2);width:350px;position:relative;display:flex;flex-direction:column;gap:10px;}
 .modal-close{position:absolute;top:10px;right:15px;font-size:24px;cursor:pointer;}
 input{width:100%;padding:10px;margin-bottom:10px;border-radius:6px;border:1px solid #ccc;}
-button{width:100%;padding:12px;border:none;border-radius:6px;font-weight:600;cursor:pointer;}
-#signin-btn{background:#c7a97b;color:white;}
+button{width:100%;padding:12px;border:none;border-radius:6px;font-weight:600;cursor:pointer;display:flex;justify-content:center;align-items:center;}
+#signin-btn{background:#c7a97b;color:white;margin-bottom:5px;}
 #signin-btn:hover{background:#b38c5f;}
-#google-signin-btn{background:#4285F4;color:white;}
-#google-signin-btn:hover{background:#357ae8;}
+#google-signin-btn{background:#fff;color:#444;border:1px solid #ccc;}
+#google-signin-btn:hover{background:#f0f0f0;}
+#google-signin-btn img{margin-right:8px;}
 .feedback{text-align:center;font-weight:600;margin-top:5px;}
 a{text-decoration:none;color:#c7a97b;text-align:center;display:block;margin-top:10px;}
 </style>
