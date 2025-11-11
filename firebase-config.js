@@ -39,22 +39,24 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-export { 
-  db, 
-  auth, 
-  googleProvider,    // For Gmail login
-  collection, 
-  addDoc, 
-  getDocs, 
-  query, 
-  orderBy, 
-  doc, 
-  deleteDoc, 
-  updateDoc, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  signInWithPopup,   // For Gmail login
-  onAuthStateChanged, 
-  updateProfile 
+// ===== Exported Firebase Utilities =====
+export {
+  app,              // Firebase app instance
+  db,               // Firestore instance
+  auth,             // Auth instance
+  googleProvider,   // For Gmail login
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  doc,
+  deleteDoc,
+  updateDoc,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  signInWithPopup,  // For Gmail login
+  onAuthStateChanged,
+  updateProfile
 };
