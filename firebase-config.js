@@ -1,7 +1,19 @@
-// ✅ firebase-config.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+// ✅ firebase-config.js (Updated for Gmail Sign-In)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { 
+  getFirestore, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc 
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  onAuthStateChanged, 
+  updateProfile 
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDxNMhU09mINvq_aDLtylBg3FucCK-MzYE",
@@ -16,5 +28,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-export { db, auth, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut };
+export { db, auth, provider, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, onAuthStateChanged, updateProfile };
