@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rajasthan SandStone Hub | Natural Stones of Bijoliya</title>
-<meta name="description" content="Buy premium Rajasthan Sandstones like Bijoliya, Dholpur, Mandana, and Kota directly from verified factories.">
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -15,8 +14,7 @@
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
   <input type="text" placeholder="Search stones, factories..." id="search-input">
   <div>
-    <button id="btn-signin">Sign In</button>
-    <button id="btn-signup">Sign Up</button>
+    <button id="btn-google-signin">Sign In with Gmail</button>
     <button id="btn-signout" style="display:none;">Sign Out</button>
     <button id="btn-post" style="display:none;">Post Product</button>
   </div>
@@ -90,14 +88,48 @@
 <!-- ===== Scripts ===== -->
 <script type="module">
 import { db } from './firebase-config.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import { getAuth, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
+// ===== Firebase Auth =====
 const auth = getAuth();
+const provider = new GoogleAuthProvider();
+
+const btnGoogleSignIn = document.getElementById('btn-google-signin');
+const btnSignOut = document.getElementById('btn-signout');
+const btnPost = document.getElementById('btn-post');
+
+// ===== Google Sign-In =====
+btnGoogleSignIn.addEventListener('click', () => {
+  signInWithPopup(auth, provider)
+    .then(result => {
+      alert(`Signed in as ${result.user.displayName}`);
+    })
+    .catch(err => alert(err.message));
+});
+
+// ===== Sign Out =====
+btnSignOut.addEventListener('click', () => {
+  signOut(auth).then(() => alert("Signed out successfully"));
+});
+
+// ===== Auth State Observer =====
+onAuthStateChanged(auth, user => {
+  if(user){
+    btnGoogleSignIn.style.display = 'none';
+    btnSignOut.style.display = 'inline-block';
+    btnPost.style.display = 'inline-block';
+  } else {
+    btnGoogleSignIn.style.display = 'inline-block';
+    btnSignOut.style.display = 'none';
+    btnPost.style.display = 'none';
+  }
+});
+
+// ===== Load Products from Firestore =====
 const productGrid = document.getElementById('product-grid');
 let products = [];
 
-// ===== Load Products from Firestore =====
 async function loadProducts() {
   const q = query(collection(db, "products"), orderBy("created_at", "desc"));
   const snapshot = await getDocs(q);
@@ -146,47 +178,6 @@ window.applyFilters = () => {
   );
   renderProducts(filtered);
 }
-
-// ===== Authentication =====
-const btnSignIn = document.getElementById('btn-signin');
-const btnSignUp = document.getElementById('btn-signup');
-const btnSignOut = document.getElementById('btn-signout');
-const btnPost = document.getElementById('btn-post');
-
-btnSignIn.addEventListener('click', () => {
-  const email = prompt("Enter Email:");
-  const password = prompt("Enter Password:");
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => alert("Signed in successfully"))
-    .catch(err => alert(err.message));
-});
-
-btnSignUp.addEventListener('click', () => {
-  const email = prompt("Enter Email:");
-  const password = prompt("Enter Password:");
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => alert("Account created & signed in"))
-    .catch(err => alert(err.message));
-});
-
-btnSignOut.addEventListener('click', () => {
-  signOut(auth).then(() => alert("Signed out successfully"));
-});
-
-// ===== Auth State Observer =====
-onAuthStateChanged(auth, user => {
-  if(user){
-    btnSignIn.style.display = 'none';
-    btnSignUp.style.display = 'none';
-    btnSignOut.style.display = 'inline-block';
-    btnPost.style.display = 'inline-block';
-  } else {
-    btnSignIn.style.display = 'inline-block';
-    btnSignUp.style.display = 'inline-block';
-    btnSignOut.style.display = 'none';
-    btnPost.style.display = 'none';
-  }
-});
 
 // Load products on page load
 window.onload = loadProducts;
