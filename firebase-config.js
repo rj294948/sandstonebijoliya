@@ -1,8 +1,8 @@
-// ✅ firebase-config.js (Updated for Gmail Sign-In)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+// ✅ firebase-config.js (v12.5.0 with Google sign-in)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { 
   getFirestore, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc 
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 import { 
   getAuth, 
@@ -13,7 +13,7 @@ import {
   signInWithPopup, 
   onAuthStateChanged, 
   updateProfile 
-} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDxNMhU09mINvq_aDLtylBg3FucCK-MzYE",
