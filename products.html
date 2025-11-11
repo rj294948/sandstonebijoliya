@@ -3,311 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Products - Rajasthan SandStone Hub</title>
-<meta name="description" content="Browse all sandstone products from Rajasthan with search and filter options.">
-
+<title>Rajasthan SandStone Hub | Products</title>
+<meta name="description" content="Explore all natural stones from Rajasthan, including Bijoliya, Dholpur, Mandana, and Kota with prices, colors, and factory details.">
+<link rel="icon" href="stone-icon.png" type="image/png">
+<link rel="stylesheet" href="style.css">
 <style>
-/* ===== Reset & Basics ===== */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#fafafa;color:#333;}
+/* ===== Filters Section ===== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+  justify-content: center;
+}
+.filters select,
+.filters input {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.filters button {
+  padding: 6px 15px;
+  background: #c7a97b;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.filters button:hover { background: #b38c5f; }
 
-/* ===== Header ===== */
-header{
-  background:#c49a6c;
-  color:#fff;
-  text-align:center;
-  padding:20px 10px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.15);
+/* Product Grid */
+#product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 20px;
 }
-header h1{font-size:1.8em;}
-header p{font-size:0.9em;margin-top:5px;}
+.card { 
+  background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; cursor:pointer; 
+}
+.card:hover { transform: translateY(-5px); }
+.card img { width:100%; height:160px; object-fit:cover; }
+.card h3 { padding:10px; font-size:1rem; color:#333; text-align:center; }
+.card p { text-align:center; color:gray; font-size:0.9rem; padding-bottom:5px; }
+.card a { color:#c7a97b; text-decoration:none; font-weight:600; }
+.card a:hover { text-decoration:underline; }
 
-/* ===== Navbar ===== */
-nav{
-  background:#fff;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  border-bottom:2px solid #e0e0e0;
-}
-nav a{
-  text-decoration:none;
-  color:#333;
-  padding:12px 16px;
-  display:block;
-  font-weight:600;
-  transition:0.3s;
-}
-nav a:hover{background:#c49a6c;color:#fff;}
-
-/* ===== Search & Filter Section ===== */
-.search-filter{
-  max-width:1100px;
-  margin:20px auto;
-  padding:20px;
-  background:#fff;
-  border-radius:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
-}
-.search-box{
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-}
-.search-box input{
-  flex:1;
-  padding:12px;
-  border:2px solid #c49a6c;
-  border-radius:25px;
-  font-size:1em;
-}
-.search-box button{
-  background:#c49a6c;
-  color:#fff;
-  border:none;
-  padding:12px 25px;
-  border-radius:25px;
-  cursor:pointer;
-  font-weight:600;
-}
-.filters{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:15px;
-}
-.filter-group select{
-  width:100%;
-  padding:10px;
-  border:1px solid #ddd;
-  border-radius:5px;
-  background:#fff;
-}
-
-/* ===== Products Grid ===== */
-.products{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:25px;
-  margin:20px auto;
-  max-width:1100px;
-  padding:20px;
-}
-.product{
-  background:#fff;
-  border:1px solid #ddd;
-  border-radius:10px;
-  overflow:hidden;
-  transition:transform 0.3s, box-shadow 0.3s;
-}
-.product:hover{
-  transform:translateY(-5px);
-  box-shadow:0 8px 20px rgba(0,0,0,0.15);
-}
-.product img{
-  width:100%;
-  height:200px;
-  object-fit:cover;
-}
-.product .info{
-  padding:15px;
-}
-.product .info h3{
-  color:#c49a6c;
-  margin-bottom:10px;
-}
-.product .info p{
-  margin:5px 0;
-  color:#555;
-}
-
-/* ===== Contact Seller ===== */
-.contact-seller{
-  background:#f8f8f8;
-  padding:12px;
-  border-radius:8px;
-  margin-top:10px;
-  text-align:center;
-}
-.contact-btn{
-  display:inline-block;
-  background:#25D366;
-  color:#fff;
-  padding:8px 12px;
-  border-radius:5px;
-  text-decoration:none;
-  font-weight:600;
-  margin:3px;
-  font-size:0.9em;
-  transition:0.3s;
-}
-.contact-btn.whatsapp{background:#25D366;}
-.contact-btn.facebook{background:#1877F2;}
-.contact-btn.email{background:#EA4335;}
-.contact-btn:hover{
-  opacity:0.9;
-  transform:scale(1.05);
-}
-
-/* ===== Footer ===== */
-footer{
-  background:#333;
-  color:#fff;
-  text-align:center;
-  padding:15px 5px;
-  font-size:0.9em;
-  margin-top:40px;
-}
-
-/* ===== Responsive ===== */
-@media(max-width:700px){
-  nav a{padding:10px;font-size:0.9em;}
-  .search-box{flex-direction:column;}
-  .filters{grid-template-columns:1fr;}
+/* Responsive */
+@media(max-width:600px){
+  .filters{flex-direction:column; gap:8px;}
 }
 </style>
 </head>
 <body>
 
+<!-- Header -->
 <header>
-  <h1>Our Stone Products</h1>
-  <p>Browse and filter through our extensive collection</p>
+  <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
+  <input type="text" placeholder="Search stones, factories...">
+  <button onclick="window.location='admin.html'">Admin</button>
 </header>
 
+<!-- Navigation Row -->
 <nav>
-  <a href="index.html">Home</a>
-  <a href="products.html">Products</a>
-  <a href="admin.html">Add Product</a>
+  <a href="bijoliya.html">Bijoliya Stone</a>
+  <a href="dholpur.html">Dholpur Stone</a>
+  <a href="mandana.html">Mandana Stone</a>
+  <a href="kota.html">Kota Stone</a>
+  <a href="other-stones.html">Other Stones</a>
+  <a href="factories.html">Factories</a>
+  <a href="about.html">About Us</a>
   <a href="contact.html">Contact</a>
 </nav>
 
-<!-- ===== Search & Filter ===== -->
-<div class="search-filter">
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search products by name or description...">
-    <button onclick="filterProducts()">Search</button>
-  </div>
-  <div class="filters">
-    <div class="filter-group">
-      <select id="categoryFilter" onchange="filterProducts()">
-        <option value="">All Categories</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <select id="priceFilter" onchange="filterProducts()">
-        <option value="">Any Price</option>
-        <option value="0-1000">Under ₹1000</option>
-        <option value="1000-5000">₹1000 - ₹5000</option>
-        <option value="5000-10000">₹5000 - ₹10000</option>
-        <option value="10000+">Above ₹10000</option>
-      </select>
-    </div>
-  </div>
+<!-- Banner -->
+<div class="banner">
+  Explore All Rajasthan Natural Stones
 </div>
 
-<!-- ===== Products Grid ===== -->
-<div id="productsContainer" class="products">
-  <p style="text-align:center;grid-column:1/-1;">Loading products...</p>
-</div>
+<!-- Filters -->
+<section class="filters">
+  <select id="filter-category">
+    <option value="All">All Categories</option>
+  </select>
+  <select id="filter-subcategory">
+    <option value="All">All Sub-categories</option>
+  </select>
+  <select id="filter-color">
+    <option value="All">All Colors</option>
+  </select>
+  <input type="number" id="min-price" placeholder="Min Price">
+  <input type="number" id="max-price" placeholder="Max Price">
+  <button onclick="applyFilters()">Apply Filters</button>
+</section>
 
+<!-- Product Grid -->
+<section>
+  <div id="product-grid"></div>
+</section>
+
+<!-- Footer -->
 <footer>
-  © 2025 Rajasthan SandStone Hub | Designed by RJ Services
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+  <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<script>
-let allData = [];
-let allProducts = [];
+<!-- Firebase + Products Script -->
+<script type="module">
+import { db, collection, getDocs, query, orderBy } from './firebase-config.js';
 
-// Load data from GitHub JSON
-async function loadData() {
-  try {
-    const response = await fetch('https://github.com/rj294948/sandstonebijoliya/blob/main/products.json');
-    allData = await response.json();
-    
-    // Flatten products
-    allProducts = allData.categories.flatMap(cat =>
-      cat.products.map(p => ({
-        ...p,
-        category: cat.name
-      }))
-    );
+const productGrid = document.getElementById('product-grid');
+const filterCategory = document.getElementById('filter-category');
+const filterSubcategory = document.getElementById('filter-subcategory');
+const filterColor = document.getElementById('filter-color');
 
-    populateFilters();
-    filterProducts();
-    
-  } catch (error) {
-    console.error('Error loading JSON:', error);
-    document.getElementById('productsContainer').innerHTML = 
-      '<p style="text-align:center;color:red;">Error loading products. Please try again later.</p>';
-  }
+let products = [];
+
+async function loadProducts() {
+  const q = query(collection(db, "products"), orderBy("created_at", "desc"));
+  const snapshot = await getDocs(q);
+  products = snapshot.docs.map(doc => doc.data());
+  populateFilters();
+  renderProducts(products);
 }
 
-// Populate category dropdown
 function populateFilters() {
-  const categoryFilter = document.getElementById('categoryFilter');
-  const categories = allData.categories.map(c => c.name);
-  categories.forEach(cat => {
-    const option = document.createElement('option');
-    option.value = cat;
-    option.textContent = cat;
-    categoryFilter.appendChild(option);
-  });
+  const categories = [...new Set(products.map(p => p.category))];
+  const subcategories = [...new Set(products.map(p => p.sub_category))];
+  const colors = [...new Set(products.map(p => p.color))];
+
+  categories.forEach(c => filterCategory.innerHTML += `<option value="${c}">${c}</option>`);
+  subcategories.forEach(s => filterSubcategory.innerHTML += `<option value="${s}">${s}</option>`);
+  colors.forEach(col => filterColor.innerHTML += `<option value="${col}">${col}</option>`);
 }
 
-// Filter function
-function filterProducts() {
-  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-  const category = document.getElementById('categoryFilter').value;
-  const priceRange = document.getElementById('priceFilter').value;
-  
-  let filtered = allProducts.filter(p => {
-    const matchesSearch = !searchTerm || p.name.toLowerCase().includes(searchTerm) || p.description?.toLowerCase().includes(searchTerm);
-    const matchesCategory = !category || p.category === category;
-    let matchesPrice = true;
-    if (priceRange) {
-      const price = parseInt(p.price.replace(/\D/g, '')) || 0;
-      switch(priceRange) {
-        case '0-1000': matchesPrice = price <= 1000; break;
-        case '1000-5000': matchesPrice = price > 1000 && price <= 5000; break;
-        case '5000-10000': matchesPrice = price > 5000 && price <= 10000; break;
-        case '10000+': matchesPrice = price > 10000; break;
-      }
-    }
-    return matchesSearch && matchesCategory && matchesPrice;
-  });
-
-  displayProducts(filtered);
-}
-
-// Display all products
-function displayProducts(products) {
-  const container = document.getElementById('productsContainer');
-  if (products.length === 0) {
-    container.innerHTML = '<p style="text-align:center;grid-column:1/-1;">No products found matching your filters.</p>';
-    return;
-  }
-
-  container.innerHTML = '';
-  products.forEach(p => {
-    container.innerHTML += `
-      <div class="product">
-        <img src="${p.image}" alt="${p.name}">
-        <div class="info">
-          <h3>${p.name}</h3>
-          <p><strong>Category:</strong> ${p.category}</p>
-          <p><strong>Price:</strong> ${p.price}</p>
-          <p>${p.description || ''}</p>
-          <div class="contact-seller">
-            <a href="https://wa.me/917737740207?text=Hi, I’m interested in ${p.name} (${p.price})" class="contact-btn whatsapp" target="_blank">WhatsApp</a>
-            <a href="tel:+917737740207" class="contact-btn facebook">Call</a>
-          </div>
-        </div>
-      </div>
+function renderProducts(list) {
+  productGrid.innerHTML = '';
+  list.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${p.image}" alt="${p.stone_name}">
+      <h3>${p.stone_name}</h3>
+      <p>${p.description}</p>
+      <p><strong>Category:</strong> ${p.category}</p>
+      <p><strong>Sub-category:</strong> ${p.sub_category}</p>
+      <p><strong>Type:</strong> ${p.type}</p>
+      <p><strong>Color:</strong> ${p.color}</p>
+      <p><strong>Price:</strong> ₹${p.price} / ${p.price_unit}</p>
+      <p><strong>Factory:</strong> ${p.factory_name}</p>
+      <p>
+        <a href="${p.whatsapp_link}" target="_blank">WhatsApp</a> | 
+        <a href="tel:${p.contact_number}">Call</a>
+      </p>
     `;
+    productGrid.appendChild(card);
   });
 }
 
-document.addEventListener('DOMContentLoaded', loadData);
-document.getElementById('searchInput').addEventListener('keypress', e => { if(e.key==='Enter') filterProducts(); });
+function applyFilters() {
+  const cat = filterCategory.value;
+  const subcat = filterSubcategory.value;
+  const col = filterColor.value;
+  const minP = document.getElementById('min-price').value;
+  const maxP = document.getElementById('max-price').value;
+
+  const filtered = products.filter(p =>
+    (cat === 'All' || p.category === cat) &&
+    (subcat === 'All' || p.sub_category === subcat) &&
+    (col === 'All' || p.color === col) &&
+    (!minP || p.price >= minP) &&
+    (!maxP || p.price <= maxP)
+  );
+
+  renderProducts(filtered);
+}
+
+window.onload = loadProducts;
+window.applyFilters = applyFilters;
 </script>
 
 </body>
