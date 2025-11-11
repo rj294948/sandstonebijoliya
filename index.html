@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rajasthan SandStone Hub | Natural Stones of Bijoliya</title>
-<meta name="description" content="Buy premium Rajasthan Sandstones like Bijoliya, Dholpur, Mandana, and Kota directly from verified factories.">
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
 body {font-family:"Poppins",sans-serif; background:#f5f5f5; margin:0; padding:0;}
 header {background:#c7a97b; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; color:white;}
 header h1 {font-size:1.5rem; cursor:pointer;}
-header input {padding:8px 12px; width:300px; border:none; border-radius:6px;}
+header .header-right {display:flex; gap:10px; align-items:center;}
+header input {padding:8px 12px; width:200px; border:none; border-radius:6px;}
 header button {padding:8px 15px; border:none; background:#fff; color:#c7a97b; border-radius:6px; cursor:pointer; font-weight:600;}
 header button:hover {background:#b38c5f; color:white;}
 nav {background:#b38c5f; display:flex; justify-content:center; gap:20px; padding:10px 0; flex-wrap:wrap;}
@@ -21,7 +21,7 @@ nav a:hover {background:#d1b68d; color:white;}
 section {padding:30px 20px;}
 section h2 {font-size:1.5rem; margin-bottom:15px; color:#c7a97b; text-align:center;}
 .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px;}
-.card {background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; cursor:pointer; padding:10px; position:relative;}
+.card {background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; cursor:pointer; padding:10px;}
 .card:hover {transform:translateY(-5px);}
 .card img {width:100%; height:160px; object-fit:cover; border-radius:6px;}
 .card h3 {margin:10px 0 5px 0; color:#333;}
@@ -30,6 +30,9 @@ footer {background:#c7a97b; color:white; text-align:center; padding:15px;}
 footer a {color:white; text-decoration:underline;}
 .filter-container {display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin-bottom:20px;}
 .filter-container select, .filter-container input {padding:8px 10px; border-radius:6px; border:1px solid #ccc; min-width:120px;}
+#post-section {margin:20px auto; text-align:center;}
+#post-section button {background:#c7a97b; color:white; padding:10px 15px; border:none; border-radius:6px; cursor:pointer;}
+#post-section button:hover {background:#b38c5f;}
 @media(max-width:600px){header{flex-direction:column; gap:10px;}header input{width:100%;}nav{flex-direction:column; gap:8px;}}
 </style>
 </head>
@@ -37,8 +40,13 @@ footer a {color:white; text-decoration:underline;}
 
 <header>
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
-  <input type="text" placeholder="Search stones, factories..." id="searchInput">
-  <button onclick="window.location='admin.html'">Admin</button>
+  <div class="header-right">
+    <input type="text" placeholder="Search stones..." id="searchInput">
+    <button id="btn-signin" onclick="openSignIn()">Sign In</button>
+    <button id="btn-signup" onclick="openSignUp()">Sign Up</button>
+    <button id="btn-signout" onclick="signOut()" style="display:none;">Sign Out</button>
+    <button id="btn-post" onclick="openPost()" style="display:none;">Post Product</button>
+  </div>
 </header>
 
 <nav>
@@ -63,10 +71,8 @@ footer a {color:white; text-decoration:underline;}
     <input type="number" id="max-price" placeholder="Max Price">
     <button onclick="applyFilters()">Apply Filter</button>
   </div>
-
-  <div class="grid" id="product-grid">
-    <!-- Products will load here dynamically from Firebase -->
-  </div>
+  <div id="post-section"></div>
+  <div class="grid" id="product-grid"></div>
 </section>
 
 <footer>
@@ -76,6 +82,7 @@ footer a {color:white; text-decoration:underline;}
 
 <script type="module">
 import { db, collection, getDocs, query, orderBy } from './firebase-config.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 const productGrid = document.getElementById('product-grid');
 const categoryFilter = document.getElementById('filter-category');
@@ -84,9 +91,54 @@ const minPrice = document.getElementById('min-price');
 const maxPrice = document.getElementById('max-price');
 const searchInput = document.getElementById('searchInput');
 
+const btnSignIn = document.getElementById('btn-signin');
+const btnSignUp = document.getElementById('btn-signup');
+const btnSignOut = document.getElementById('btn-signout');
+const btnPost = document.getElementById('btn-post');
+
+const auth = getAuth();
 let products = [];
 
-// Load products from Firestore
+// ---------------------- AUTH ----------------------
+onAuthStateChanged(auth, user => {
+  if (user) {
+    btnSignIn.style.display = 'none';
+    btnSignUp.style.display = 'none';
+    btnSignOut.style.display = 'inline-block';
+    btnPost.style.display = 'inline-block';
+  } else {
+    btnSignIn.style.display = 'inline-block';
+    btnSignUp.style.display = 'inline-block';
+    btnSignOut.style.display = 'none';
+    btnPost.style.display = 'none';
+  }
+});
+
+function openSignIn() {
+  const email = prompt("Enter Email:");
+  const password = prompt("Enter Password:");
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => alert("Signed in successfully"))
+    .catch(err => alert(err.message));
+}
+
+function openSignUp() {
+  const email = prompt("Enter Email:");
+  const password = prompt("Enter Password:");
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => alert("Account created & signed in"))
+    .catch(err => alert(err.message));
+}
+
+function signOut() {
+  firebaseSignOut(auth).then(() => alert("Signed out successfully"));
+}
+
+function openPost() {
+  window.location.href = 'admin.html'; // redirect to post/upload page
+}
+
+// ---------------------- PRODUCTS ----------------------
 async function loadProducts() {
   const q = query(collection(db, "products"), orderBy("created_at", "desc"));
   const snapshot = await getDocs(q);
@@ -95,7 +147,6 @@ async function loadProducts() {
   renderProducts(products);
 }
 
-// Populate category and color filters dynamically
 function populateFilters() {
   const categories = ["All", ...new Set(products.map(p => p.category))];
   const colors = ["All", ...new Set(products.map(p => p.color))];
@@ -103,7 +154,6 @@ function populateFilters() {
   colorFilter.innerHTML = colors.map(c => `<option>${c}</option>`).join('');
 }
 
-// Render products grid
 function renderProducts(list) {
   productGrid.innerHTML = '';
   list.forEach(p => {
@@ -125,7 +175,6 @@ function renderProducts(list) {
   });
 }
 
-// Apply filters
 function applyFilters() {
   const cat = categoryFilter.value;
   const col = colorFilter.value;
@@ -140,7 +189,6 @@ function applyFilters() {
     (!maxP || p.price <= maxP) &&
     (p.stone_name.toLowerCase().includes(searchText) || p.description.toLowerCase().includes(searchText))
   );
-
   renderProducts(filtered);
 }
 
