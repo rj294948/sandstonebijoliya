@@ -3,40 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - Add Stone</title>
-<link rel="stylesheet" href="style.css">
+<title>Admin Panel - Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone-icon.png" type="image/png">
+
+<style>
+* {margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif;}
+body {background:#f5f5f5; color:#333;}
+header {background:#c7a97b; color:white; padding:20px; text-align:center;}
+header h1 {font-size:1.8rem;}
+
+.container {max-width:900px; margin:30px auto; background:white; padding:25px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.container h2 {text-align:center; margin-bottom:20px; color:#c7a97b;}
+
+form {display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+form label {font-weight:600; margin-bottom:5px; display:block;}
+form input, form textarea, form select {width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; font-size:1rem;}
+form textarea {resize:none; height:80px;}
+form button {grid-column:1/-1; padding:12px; background:#c7a97b; border:none; color:white; font-weight:600; font-size:1rem; border-radius:6px; cursor:pointer; transition:0.3s;}
+form button:hover {background:#b38c5f;}
+.feedback {grid-column:1/-1; text-align:center; margin-top:10px; font-weight:600;}
+
+.image-preview {grid-column:1/-1; text-align:center;}
+.image-preview img {max-width:150px; border-radius:6px; margin-top:10px; border:1px solid #ccc;}
+@media(max-width:700px){form{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
 
 <header>
-  <h1>Admin Panel - Add Stone</h1>
+  <h1>🪨 Admin Panel - Add Stone</h1>
 </header>
 
-<section>
+<div class="container">
+  <h2>Add New Stone</h2>
   <form id="product-form">
-    <input type="text" name="stone_name" placeholder="Stone Name" required>
-    <input type="text" name="category" placeholder="Category (Bijoliya, Dholpur...)" required>
-    <input type="text" name="sub_category" placeholder="Sub-category (Tile, Slab, etc.)" required>
-    <input type="text" name="type" placeholder="Type (Farsi, Gitti, Poll)" required>
-    <input type="text" name="color" placeholder="Color" required>
-    <textarea name="description" placeholder="Stone Description" required></textarea>
-    <input type="number" name="price" placeholder="Price" required>
-    <input type="text" name="price_unit" placeholder="Price Unit (sqft, pcs, etc.)" required>
-    <input type="text" name="contact_number" placeholder="Contact Number" required>
-    <input type="url" name="whatsapp_link" placeholder="WhatsApp Link">
-    <input type="text" name="factory_name" placeholder="Factory Name" required>
-    <input type="url" name="image_url" placeholder="Image URL (from Firebase Storage)" required>
-    <button type="submit">Add Product</button>
+    <div>
+      <label for="stone_name">Stone Name</label>
+      <input type="text" name="stone_name" id="stone_name" placeholder="e.g. Bijoliya Sandstone" required>
+    </div>
+
+    <div>
+      <label for="category">Category</label>
+      <select name="category" id="category" required>
+        <option value="">Select Category</option>
+        <option value="Bijoliya">Bijoliya</option>
+        <option value="Dholpur">Dholpur</option>
+        <option value="Mandana">Mandana</option>
+        <option value="Kota">Kota</option>
+        <option value="Other">Other Stones</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="sub_category">Sub-category</label>
+      <input type="text" name="sub_category" id="sub_category" placeholder="Tile, Slab, Pillar, etc." required>
+    </div>
+
+    <div>
+      <label for="type">Type</label>
+      <input type="text" name="type" id="type" placeholder="Farsi, Gitti, Poll, etc." required>
+    </div>
+
+    <div>
+      <label for="color">Color</label>
+      <input type="text" name="color" id="color" placeholder="Red, Pink, Yellow..." required>
+    </div>
+
+    <div>
+      <label for="price">Price</label>
+      <input type="number" name="price" id="price" placeholder="e.g. 250" required>
+    </div>
+
+    <div>
+      <label for="price_unit">Price Unit</label>
+      <input type="text" name="price_unit" id="price_unit" placeholder="sqft, pcs, etc." required>
+    </div>
+
+    <div>
+      <label for="factory_name">Factory Name</label>
+      <input type="text" name="factory_name" id="factory_name" placeholder="Factory / Supplier Name" required>
+    </div>
+
+    <div>
+      <label for="contact_number">Contact Number</label>
+      <input type="tel" name="contact_number" id="contact_number" placeholder="e.g. +91 1234567890" required>
+    </div>
+
+    <div>
+      <label for="whatsapp_link">WhatsApp Link</label>
+      <input type="url" name="whatsapp_link" id="whatsapp_link" placeholder="https://wa.me/1234567890">
+    </div>
+
+    <div>
+      <label for="image_url">Image URL</label>
+      <input type="url" name="image_url" id="image_url" placeholder="Uploaded Image URL" required>
+    </div>
+
+    <div class="image-preview" id="image-preview"></div>
+
+    <button type="submit">Add Stone</button>
+    <div class="feedback" id="feedback"></div>
   </form>
-</section>
+</div>
 
 <script type="module">
 import { db, collection, addDoc } from './firebase-config.js';
 
 const productForm = document.getElementById('product-form');
+const feedback = document.getElementById('feedback');
+const imagePreview = document.getElementById('image-preview');
+const imageUrlInput = document.getElementById('image_url');
+
+imageUrlInput.addEventListener('input', ()=>{
+  const url = imageUrlInput.value.trim();
+  imagePreview.innerHTML = url ? `<img src="${url}" alt="Stone Image">` : '';
+});
 
 productForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  feedback.textContent = '';
 
   try {
     await addDoc(collection(db, "products"), {
@@ -45,7 +130,7 @@ productForm.addEventListener('submit', async (e) => {
       sub_category: productForm.sub_category.value,
       type: productForm.type.value,
       color: productForm.color.value,
-      description: productForm.description.value,
+      description: productForm.type.value + " " + productForm.sub_category.value, // Optional
       price: parseFloat(productForm.price.value),
       price_unit: productForm.price_unit.value,
       contact_number: productForm.contact_number.value,
@@ -54,13 +139,17 @@ productForm.addEventListener('submit', async (e) => {
       image: productForm.image_url.value,
       created_at: new Date()
     });
-    alert('Product uploaded successfully!');
+    feedback.style.color = 'green';
+    feedback.textContent = '✅ Product uploaded successfully!';
     productForm.reset();
-  } catch (err) {
+    imagePreview.innerHTML = '';
+  } catch(err){
     console.error(err);
-    alert('Error uploading product');
+    feedback.style.color = 'red';
+    feedback.textContent = '❌ Error uploading product';
   }
 });
 </script>
+
 </body>
 </html>
