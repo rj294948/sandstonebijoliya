@@ -6,59 +6,18 @@
 <title>Rajasthan SandStone Hub | Natural Stones of Bijoliya</title>
 <meta name="description" content="Buy premium Rajasthan Sandstones like Bijoliya, Dholpur, Mandana, and Kota directly from verified factories.">
 <link rel="icon" href="stone-icon.png" type="image/png">
-
-<style>
-* {margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif;}
-body {background:#fafafa; color:#333;}
-
-/* ===== Header ===== */
-header {background:#c7a97b; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; color:white;}
-header h1 {font-size:1.5rem; cursor:pointer;}
-header input {padding:8px 12px; width:300px; border:none; border-radius:6px;}
-header button {padding:8px 15px; border:none; background:#fff; color:#c7a97b; border-radius:6px; cursor:pointer; font-weight:600;}
-header button:hover {background:#d1b68d; color:white;}
-
-/* ===== Navigation Row ===== */
-nav {background:#b38c5f; display:flex; justify-content:center; gap:20px; padding:10px 0;}
-nav a {color:white; text-decoration:none; font-weight:600; padding:6px 12px; border-radius:6px; transition:0.3s;}
-nav a:hover {background:#d1b68d; color:white;}
-
-/* ===== Banner ===== */
-.banner {background:url('header-bg.jpg') center/cover no-repeat; height:50vh; display:flex; align-items:center; justify-content:center; color:white; text-shadow:2px 2px 8px rgba(0,0,0,0.7); font-size:2rem; font-weight:bold;}
-
-/* ===== Section ===== */
-section {padding:30px 20px;}
-section h2 {font-size:1.5rem; margin-bottom:15px; color:#c7a97b; text-align:center;}
-
-/* ===== Grid ===== */
-.grid {display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:20px;}
-.card {background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; cursor:pointer;}
-.card:hover {transform:translateY(-5px);}
-.card img {width:100%; height:160px; object-fit:cover;}
-.card h3 {padding:10px; font-size:1rem; color:#333; text-align:center;}
-.card p {text-align:center; color:gray; font-size:0.9rem; padding-bottom:10px;}
-
-/* ===== Footer ===== */
-footer {background:#c7a97b; color:white; text-align:center; padding:15px; margin-top:40px;}
-footer a {color:white; text-decoration:underline;}
-
-/* ===== Responsive ===== */
-@media(max-width:600px){
-  header{flex-direction:column; gap:10px;}
-  header input{width:100%;}
-  nav{flex-direction:column; gap:8px;}
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- ===== Header ===== -->
 <header>
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
   <input type="text" placeholder="Search stones, factories...">
   <button onclick="window.location='admin.html'">Admin</button>
 </header>
 
-<!-- Navigation Row -->
+<!-- ===== Navigation Row ===== -->
 <nav>
   <a href="bijoliya.html">Bijoliya Stone</a>
   <a href="dholpur.html">Dholpur Stone</a>
@@ -70,86 +29,91 @@ footer a {color:white; text-decoration:underline;}
   <a href="contact.html">Contact</a>
 </nav>
 
+<!-- ===== Banner ===== -->
 <div class="banner">
   Discover Natural Stones of Rajasthan
 </div>
 
+<!-- ===== Stone Categories ===== -->
 <section>
   <h2>Stone Categories</h2>
   <div class="grid">
     <!-- Main Stones -->
     <div class="card" onclick="location.href='bijoliya.html'">
-      <img src="bijoliya-stone.jpg" alt="Bijoliya Stone">
+      <img src="assets/images/bijoliya-stone.jpg" alt="Bijoliya Stone">
       <h3>Bijoliya Sandstone</h3>
       <p>Known for strength and beauty</p>
     </div>
     <div class="card" onclick="location.href='dholpur.html'">
-      <img src="dholpur-stone.jpg" alt="Dholpur Stone">
+      <img src="assets/images/dholpur-stone.jpg" alt="Dholpur Stone">
       <h3>Dholpur Stone</h3>
       <p>Pure and elegant texture</p>
     </div>
     <div class="card" onclick="location.href='mandana.html'">
-      <img src="mandana-stone.jpg" alt="Mandana Stone">
+      <img src="assets/images/mandana-stone.jpg" alt="Mandana Stone">
       <h3>Mandana Red Stone</h3>
       <p>Rich red natural tone</p>
     </div>
     <div class="card" onclick="location.href='kota.html'">
-      <img src="kota-stone.jpg" alt="Kota Stone">
+      <img src="assets/images/kota-stone.jpg" alt="Kota Stone">
       <h3>Kota Stone</h3>
       <p>Popular for flooring & walls</p>
     </div>
 
     <!-- Other Stones -->
-    <div class="card" onclick="location.href='raj-pink.html'">
-      <img src="raj-pink.jpg" alt="Rajasthan Pink Stone">
+    <div class="card" onclick="location.href='other-stones.html'">
+      <img src="assets/images/raj-pink.jpg" alt="Rajasthan Pink Stone">
       <h3>Rajasthan Pink Stone</h3>
       <p>Elegant pink hue</p>
     </div>
-    <div class="card" onclick="location.href='chittorgarh.html'">
-      <img src="chittorgarh.jpg" alt="Chittorgarh Stone">
+    <div class="card" onclick="location.href='other-stones.html'">
+      <img src="assets/images/chittorgarh.jpg" alt="Chittorgarh Stone">
       <h3>Chittorgarh Marble</h3>
       <p>Beautiful natural marble</p>
     </div>
   </div>
 </section>
 
+<!-- ===== Featured Factories ===== -->
 <section>
   <h2>Featured Factories</h2>
   <div class="grid">
     <div class="card" onclick="location.href='factories.html'">
-      <img src="factory1.jpg" alt="Factory 1">
+      <img src="assets/images/factory1.jpg" alt="Factory 1">
       <h3>Shree Bijoliya Stone Factory</h3>
       <p>Trusted supplier since 2005</p>
     </div>
     <div class="card" onclick="location.href='factories.html'">
-      <img src="factory2.jpg" alt="Factory 2">
+      <img src="assets/images/factory2.jpg" alt="Factory 2">
       <h3>Rajasthan Natural Works</h3>
       <p>Quality exports worldwide</p>
     </div>
   </div>
 </section>
 
+<!-- ===== Top Products ===== -->
 <section>
   <h2>Top Products</h2>
   <div class="grid">
     <div class="card">
-      <img src="tile1.jpg" alt="Tile Product">
+      <img src="assets/images/tile1.jpg" alt="Tile Product">
       <h3>Sandstone Floor Tile</h3>
       <p>Natural finish, 12x12 inch</p>
     </div>
     <div class="card">
-      <img src="slab1.jpg" alt="Slab">
+      <img src="assets/images/slab1.jpg" alt="Slab">
       <h3>Mandana Slab</h3>
       <p>Durable for outdoor use</p>
     </div>
     <div class="card">
-      <img src="pillar.jpg" alt="Pillar">
+      <img src="assets/images/pillar.jpg" alt="Pillar">
       <h3>Stone Pillars</h3>
       <p>Custom design & polish</p>
     </div>
   </div>
 </section>
 
+<!-- ===== Footer ===== -->
 <footer>
   &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
