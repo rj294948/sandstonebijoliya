@@ -29,6 +29,16 @@
 
 /* ===== Header Buttons ===== */
 header button {margin-left:5px;}
+
+/* ===== Grid ===== */
+.grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin:20px;}
+.card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.card img {width:100%; border-radius:8px;}
+.banner {background:#c7a97b;color:white;text-align:center;padding:50px;font-size:1.5rem;margin-bottom:20px;}
+section h2 {text-align:center; margin-bottom:15px;}
+nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px;}
+nav a{text-decoration:none;color:#333;font-weight:600;}
+footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
 </style>
 </head>
 <body>
@@ -104,26 +114,34 @@ header button {margin-left:5px;}
 <!-- ===== Footer ===== -->
 <footer>
   &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
-  <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
+  <a href="about.html" style="color:white;">About Us</a> | <a href="contact.html" style="color:white;">Contact</a>
 </footer>
 
 <!-- ===== Sign In Modal ===== -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
-    <span class="modal-close" onclick="closeModal('signin-modal')">&times;</span>
+    <span class="modal-close">&times;</span>
     <h2>Sign In</h2>
     <input type="email" id="signin-email" placeholder="Email">
     <input type="password" id="signin-password" placeholder="Password">
     <button id="signin-btn">Sign In</button>
+
+    <div style="text-align:center;margin:10px 0;">OR</div>
+
+    <button id="modal-google-signin" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
+      <img src="assets/images/google-logo.png" alt="Google" style="width:20px; height:20px;">
+      Sign In with Google
+    </button>
+
     <div class="feedback" id="signin-feedback"></div>
-    <a href="#" onclick="openModal('signup-modal');closeModal('signin-modal')">Don't have an account? Sign Up</a>
+    <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
   </div>
 </div>
 
 <!-- ===== Sign Up Modal ===== -->
 <div class="modal" id="signup-modal">
   <div class="modal-content">
-    <span class="modal-close" onclick="closeModal('signup-modal')">&times;</span>
+    <span class="modal-close">&times;</span>
     <h2>Create Account</h2>
     <input type="text" id="signup-name" placeholder="Full Name">
     <input type="email" id="signup-email" placeholder="Email">
@@ -131,7 +149,7 @@ header button {margin-left:5px;}
     <input type="text" id="signup-phone" placeholder="Phone Number">
     <button id="signup-btn">Sign Up</button>
     <div class="feedback" id="signup-feedback"></div>
-    <a href="#" onclick="openModal('signin-modal');closeModal('signup-modal')">Already have an account? Sign In</a>
+    <a href="#" onclick="openModal('signin-modal'); closeModal('signup-modal')">Already have an account? Sign In</a>
   </div>
 </div>
 
@@ -141,11 +159,21 @@ import { db, auth } from './firebase-config.js';
 import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-/* ===== Modals ===== */
-const signinModal = document.getElementById('signin-modal');
-const signupModal = document.getElementById('signup-modal');
+/* ===== Modal Functions ===== */
 function openModal(id){ document.getElementById(id).style.display='flex'; }
 function closeModal(id){ document.getElementById(id).style.display='none'; }
+
+/* ===== Cross Button Close ===== */
+document.querySelectorAll('.modal-close').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    btn.parentElement.parentElement.style.display='none';
+  });
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === "Escape"){
+    document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none');
+  }
+});
 
 /* ===== Header Buttons ===== */
 const btnOpenSignin = document.getElementById('btn-open-signin');
@@ -160,16 +188,37 @@ btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
 /* ===== Firebase Auth ===== */
 const provider = new GoogleAuthProvider();
 
-/* ===== Gmail SignIn ===== */
-btnGoogleSignin.addEventListener('click', ()=>{
-  signInWithPopup(auth, provider)
-  .then(result => alert(`Signed in as ${result.user.displayName}`))
-  .catch(err => alert(err.message));
+/* ===== Gmail Sign In Modal ===== */
+const modalGoogleBtn = document.getElementById('modal-google-signin');
+const signinFeedback = document.getElementById('signin-feedback');
+
+modalGoogleBtn.addEventListener('click', async ()=>{
+  signinFeedback.textContent = '';
+  try {
+    const result = await signInWithPopup(auth, provider);
+    signinFeedback.style.color = 'green';
+    signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
+    closeModal('signin-modal');
+  } catch(err) {
+    signinFeedback.style.color = 'red';
+    signinFeedback.textContent = '❌ ' + err.message;
+  }
+});
+
+/* ===== Header Gmail Sign In ===== */
+btnGoogleSignin.addEventListener('click', async ()=>{
+  try {
+    const result = await signInWithPopup(auth, provider);
+    alert(`Signed in as ${result.user.displayName}`);
+  } catch(err) {
+    alert(err.message);
+  }
 });
 
 /* ===== Sign Out ===== */
-btnSignOut.addEventListener('click', ()=>{
-  signOut(auth).then(()=>alert('Signed out successfully'));
+btnSignOut.addEventListener('click', async ()=>{
+  await signOut(auth);
+  alert('Signed out successfully');
 });
 
 /* ===== Email/Password Sign In ===== */
@@ -177,37 +226,37 @@ const signinBtn = document.getElementById('signin-btn');
 signinBtn.addEventListener('click', async ()=>{
   const email = document.getElementById('signin-email').value.trim();
   const password = document.getElementById('signin-password').value.trim();
-  const fb = document.getElementById('signin-feedback');
-  fb.textContent='';
+  signinFeedback.textContent='';
   try{
     await signInWithEmailAndPassword(auth,email,password);
-    fb.style.color='green';
-    fb.textContent='✅ Signed in successfully!';
+    signinFeedback.style.color='green';
+    signinFeedback.textContent='✅ Signed in successfully!';
     closeModal('signin-modal');
   }catch(err){
-    fb.style.color='red';
-    fb.textContent='❌ '+err.message;
+    signinFeedback.style.color='red';
+    signinFeedback.textContent='❌ '+err.message;
   }
 });
 
 /* ===== Email/Password Sign Up ===== */
 const signupBtn = document.getElementById('signup-btn');
+const signupFeedback = document.getElementById('signup-feedback');
+
 signupBtn.addEventListener('click', async ()=>{
   const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
   const password = document.getElementById('signup-password').value.trim();
   const phone = document.getElementById('signup-phone').value.trim();
-  const fb = document.getElementById('signup-feedback');
-  fb.textContent='';
+  signupFeedback.textContent='';
   try{
     const userCredential = await createUserWithEmailAndPassword(auth,email,password);
     await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
-    fb.style.color='green';
-    fb.textContent='✅ Account created successfully!';
+    signupFeedback.style.color='green';
+    signupFeedback.textContent='✅ Account created successfully!';
     closeModal('signup-modal');
   }catch(err){
-    fb.style.color='red';
-    fb.textContent='❌ '+err.message;
+    signupFeedback.style.color='red';
+    signupFeedback.textContent='❌ '+err.message;
   }
 });
 
@@ -278,7 +327,7 @@ window.applyFilters = ()=>{
   renderProducts(filtered);
 }
 
-window.onload=loadProducts;
+window.onload = loadProducts;
 </script>
 
 </body>
