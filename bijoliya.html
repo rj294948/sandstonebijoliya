@@ -1,1 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bijoliya Sandstone | Rajasthan SandStone Hub</title>
+<link rel="stylesheet" href="style.css">
+<script type="module" src="assets/js/products.js"></script>
+</head>
+<body>
+  <!-- Header + Nav same as index.html -->
+  <!-- Banner -->
+  <div class="banner">Bijoliya Sandstones</div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <select id="filter-category">
+      <option value="All">All Category</option>
+      <option value="Tile">Tile</option>
+      <option value="Slab">Slab</option>
+      <option value="Farsi">Farsi</option>
+    </select>
+
+    <select id="filter-color">
+      <option value="All">All Colors</option>
+      <option value="Red">Red</option>
+      <option value="Pink">Pink</option>
+      <option value="Brown">Brown</option>
+    </select>
+
+    <input type="number" id="min-price" placeholder="Min Price">
+    <input type="number" id="max-price" placeholder="Max Price">
+    <button onclick="applyFilters()">Apply Filters</button>
+  </div>
+
+  <section>
+    <h2>Bijoliya Products</h2>
+    <div class="grid" id="product-grid">
+      <!-- Products dynamically loaded from Firebase -->
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+    <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
+  </footer>
+</body>
+</html>
 
