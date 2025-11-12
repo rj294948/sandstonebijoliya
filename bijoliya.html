@@ -7,14 +7,13 @@
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
-/* === Theme === */
 :root {
   --primary: #c7a97b;
   --secondary: #8b6b45;
   --text-dark: #333;
   --text-light: #fff;
   --bg-light: #f5f5f5;
-  --shadow: rgba(0, 0, 0, 0.15);
+  --shadow: rgba(0,0,0,0.15);
 }
 body {font-family:"Poppins",sans-serif;background:var(--bg-light);margin:0;color:var(--text-dark);}
 header {
@@ -62,9 +61,9 @@ footer {
 }
 footer a {color:var(--primary);text-decoration:none;}
 footer a:hover {text-decoration:underline;}
-@media (max-width:600px) {
-  header h1 {font-size:1.2rem;}
-  header button {padding:6px 10px;font-size:0.9rem;}
+@media (max-width:600px){
+  header h1{font-size:1.2rem;}
+  header button{padding:6px 10px;font-size:0.9rem;}
 }
 </style>
 </head>
@@ -72,10 +71,12 @@ footer a:hover {text-decoration:underline;}
 
 <header>
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
-  <div>
-    <button onclick="window.location='index.html'">Home</button>
-    <button onclick="window.location='history.html'">My History</button>
-    <button id="logout-btn">Logout</button>
+  <div id="auth-buttons">
+    <button id="home-btn" onclick="window.location='index.html'">Home</button>
+    <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
+    <button id="signin-btn">Sign In</button>
+    <button id="google-btn">Sign in with Google</button>
+    <button id="logout-btn" style="display:none;">Logout</button>
   </div>
 </header>
 
@@ -102,43 +103,68 @@ footer a:hover {text-decoration:underline;}
 </footer>
 
 <script type="module">
-import { auth, db, collection, getDocs, query, where, signOut } from "./firebase-config.js";
+import { auth, db, collection, getDocs, query, where, signInWithPopup, GoogleAuthProvider, signOut } from "./firebase-config.js";
 
-const logoutBtn = document.getElementById("logout-btn");
+const provider = new GoogleAuthProvider();
 const grid = document.getElementById("product-grid");
 const noProducts = document.getElementById("no-products");
 
-// ✅ Logout setup → sign out + redirect to Home
+const signinBtn = document.getElementById("signin-btn");
+const googleBtn = document.getElementById("google-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const historyBtn = document.getElementById("history-btn");
+
+// ✅ Sign in manually (redirect)
+signinBtn.onclick = () => (window.location = "signin.html");
+
+// ✅ Google sign-in
+googleBtn.onclick = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+    alert("Login successful!");
+  } catch (error) {
+    console.error("Google login error:", error);
+    alert("Login failed. Try again.");
+  }
+};
+
+// ✅ Logout button
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
     alert("You have been logged out successfully!");
-    window.location = "index.html";
   } catch (error) {
     console.error("Logout failed:", error);
-    alert("Error logging out. Try again.");
   }
 };
 
-// ✅ Auth check + product load
-auth.onAuthStateChanged(async (user) => {
-  if (!user) window.location = "signin.html";
-  else loadProducts();
+// ✅ Show / Hide auth buttons
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    signinBtn.style.display = "none";
+    googleBtn.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+    historyBtn.style.display = "inline-block";
+  } else {
+    signinBtn.style.display = "inline-block";
+    googleBtn.style.display = "inline-block";
+    logoutBtn.style.display = "none";
+    historyBtn.style.display = "none";
+  }
+  loadProducts();
 });
 
+// ✅ Load all Bijoliya products (public)
 async function loadProducts() {
   grid.innerHTML = "<p style='text-align:center;'>⏳ Loading...</p>";
-
   try {
     const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
     const snap = await getDocs(q);
-
     grid.innerHTML = "";
     if (snap.empty) {
       noProducts.style.display = "block";
       return;
     }
-
     snap.forEach((doc) => {
       const d = doc.data();
       const card = document.createElement("div");
