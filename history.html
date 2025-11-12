@@ -67,11 +67,19 @@ import { auth, db, collection, query, getDocs, doc, deleteDoc, signOut, orderBy 
 const logoutBtn = document.getElementById("logout-btn");
 const grid = document.getElementById("product-grid");
 
+// ✅ Logout setup → full sign-out and redirect to Home
 logoutBtn.onclick = async () => {
-  await signOut(auth);
-  window.location = "signin.html";
+  try {
+    await signOut(auth);
+    alert("You have been logged out successfully!");
+    window.location = "index.html";
+  } catch (error) {
+    console.error("Logout failed:", error);
+    alert("Error logging out. Try again.");
+  }
 };
 
+// ✅ Auth check and data load
 auth.onAuthStateChanged(async (user) => {
   if (!user) window.location = "signin.html";
   else loadUserProducts(user.uid);
