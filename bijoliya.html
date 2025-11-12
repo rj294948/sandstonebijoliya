@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bijoliya Stones - Rajasthan SandStone Hub</title>
+<title>Bijoliya Stone - Rajasthan SandStone Hub</title>
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
@@ -45,9 +45,11 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
 
 <!-- ===== Header ===== -->
 <header>
-  <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
+  <h1 onclick="window.location='index.html'">🪨 Bijoliya Stone</h1>
   <input type="text" placeholder="Search stones, factories..." id="search-input">
   <div>
+    <button id="home-btn" onclick="window.location='index.html'">Home</button>
+    <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
     <button id="btn-open-signin">Sign In</button>
     <button id="btn-open-signup">Sign Up</button>
     <button id="btn-google-signin">Sign In with Gmail</button>
@@ -58,7 +60,7 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
 
 <!-- ===== Navigation Row ===== -->
 <nav>
-  <a href="bijoliya.html">Bijoliya Stone</a>
+  <a href="index.html">Home</a>
   <a href="dholpur.html">Dholpur Stone</a>
   <a href="mandana.html">Mandana Stone</a>
   <a href="kota.html">Kota Stone</a>
@@ -70,40 +72,6 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
 
 <!-- ===== Banner ===== -->
 <div class="banner">Discover Natural Stones of Bijoliya</div>
-
-<!-- ===== Filters ===== -->
-<section>
-  <h2>Filter Products</h2>
-  <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
-    <select id="filter-category">
-      <option>All</option>
-      <option>Bijoliya</option>
-      <option>Dholpur</option>
-      <option>Mandana</option>
-      <option>Kota</option>
-      <option>Other</option>
-    </select>
-    <select id="filter-subcategory">
-      <option>All</option>
-      <option>Farsi</option>
-      <option>Gitti</option>
-      <option>Poll</option>
-      <option>Slab</option>
-      <option>Tile</option>
-    </select>
-    <select id="filter-color">
-      <option>All</option>
-      <option>Red</option>
-      <option>Pink</option>
-      <option>Yellow</option>
-      <option>Brown</option>
-      <option>Grey</option>
-    </select>
-    <input type="number" id="min-price" placeholder="Min Price">
-    <input type="number" id="max-price" placeholder="Max Price">
-    <button onclick="applyFilters()">Apply</button>
-  </div>
-</section>
 
 <!-- ===== Products Grid ===== -->
 <section>
@@ -176,6 +144,7 @@ const btnOpenSignup = document.getElementById('btn-open-signup');
 const btnGoogleSignin = document.getElementById('btn-google-signin');
 const btnSignOut = document.getElementById('btn-signout');
 const btnPost = document.getElementById('btn-post');
+const historyBtn = document.getElementById('history-btn');
 
 btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
 btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
@@ -261,12 +230,14 @@ onAuthStateChanged(auth,user=>{
     btnGoogleSignin.style.display='none';
     btnSignOut.style.display='inline-block';
     btnPost.style.display='inline-block';
+    historyBtn.style.display='inline-block';
   }else{
     btnOpenSignin.style.display='inline-block';
     btnOpenSignup.style.display='inline-block';
     btnGoogleSignin.style.display='inline-block';
     btnSignOut.style.display='none';
     btnPost.style.display='none';
+    historyBtn.style.display='none';
   }
 });
 
@@ -299,24 +270,6 @@ function renderProducts(list){
     `;
     productGrid.appendChild(card);
   });
-}
-
-/* ===== Apply Filters ===== */
-window.applyFilters = ()=>{
-  const cat = document.getElementById('filter-category').value;
-  const sub = document.getElementById('filter-subcategory').value;
-  const col = document.getElementById('filter-color').value;
-  const minP = document.getElementById('min-price').value;
-  const maxP = document.getElementById('max-price').value;
-
-  let filtered = products.filter(p=> 
-    (cat==='All'||p.category===cat) &&
-    (sub==='All'||p.sub_category===sub) &&
-    (col==='All'||p.color===col) &&
-    (!minP||p.price>=minP) &&
-    (!maxP||p.price<=maxP)
-  );
-  renderProducts(filtered);
 }
 
 window.onload = loadProducts;
