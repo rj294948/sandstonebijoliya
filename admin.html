@@ -13,7 +13,7 @@ body {
   margin: 0;
 }
 
-/* ===== Header ===== */
+/* Header */
 header {
   background: #c7a97b;
   color: white;
@@ -43,7 +43,7 @@ header button {
   font-weight: 600;
 }
 
-/* ===== Navigation ===== */
+/* Navigation */
 nav {
   display: flex;
   justify-content: center;
@@ -58,7 +58,7 @@ nav a {
   font-weight: 600;
 }
 
-/* ===== Container ===== */
+/* Container */
 .container {
   padding: 20px;
   max-width: 1200px;
@@ -91,11 +91,9 @@ button {
   border-radius: 6px;
   cursor: pointer;
 }
-button:hover {
-  background: #b38c5f;
-}
+button:hover { background: #b38c5f; }
 
-/* ===== Product Grid ===== */
+/* Product Grid */
 #product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -105,7 +103,7 @@ button:hover {
 .card {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   padding: 10px;
 }
 .card img {
@@ -114,19 +112,10 @@ button:hover {
   object-fit: cover;
   border-radius: 6px;
 }
-.card h3 {
-  margin: 10px 0 5px;
-  color: #333;
-}
-.card p {
-  margin: 2px 0;
-  font-size: 0.9rem;
-  color: #555;
-}
+.card h3 { margin: 10px 0 5px; color: #333; }
+.card p { margin: 2px 0; font-size: 0.9rem; color: #555; }
 .card .actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
+  display: flex; justify-content: space-between; margin-top: 10px;
 }
 .card .actions button {
   padding: 6px 10px;
@@ -138,44 +127,35 @@ button:hover {
 .edit-btn { background: #5cb85c; color: #fff; }
 .delete-btn { background: #d9534f; color: #fff; }
 
-/* ===== Footer ===== */
+/* Footer */
 footer {
-  background: #333;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  margin-top: 40px;
+  background: #333; color: white; text-align: center; padding: 15px; margin-top: 40px;
 }
-footer a {
-  color: white;
-  text-decoration: none;
-}
+footer a { color: white; text-decoration: none; }
 </style>
 </head>
 <body>
 
-<!-- ===== Header ===== -->
 <header>
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
   <div>
     <button onclick="window.location='index.html'">Home</button>
+    <button onclick="window.location='history.html'">My History</button>
     <button id="logout-btn">Logout</button>
   </div>
 </header>
 
-<!-- ===== Navigation ===== -->
 <nav>
-  <a href="bijoliya.html">Bijoliya Stone</a>
-  <a href="dholpur.html">Dholpur Stone</a>
-  <a href="mandana.html">Mandana Stone</a>
-  <a href="kota.html">Kota Stone</a>
+  <a href="bijoliya.html">Bijoliya</a>
+  <a href="dholpur.html">Dholpur</a>
+  <a href="mandana.html">Mandana</a>
+  <a href="kota.html">Kota</a>
   <a href="other-stones.html">Other Stones</a>
   <a href="factories.html">Factories</a>
   <a href="about.html">About Us</a>
   <a href="contact.html">Contact</a>
 </nav>
 
-<!-- ===== Page Container ===== -->
 <div class="container">
   <h2>Add / Edit Stone Product</h2>
   <form id="product-form">
@@ -194,25 +174,19 @@ footer a {
     <input type="text" id="image_url" placeholder="Image URL (Firebase Storage)" required>
     <button type="submit">Save Product</button>
   </form>
-
-  <h2>My Products</h2>
-  <div id="product-grid"></div>
 </div>
 
-<!-- ===== Footer ===== -->
 <footer>
   &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services |
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<!-- ===== Scripts ===== -->
 <script type="module">
 import { 
   auth, db, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
-const grid = document.getElementById('product-grid');
 const logoutBtn = document.getElementById('logout-btn');
 const productIdInput = document.getElementById('product-id');
 
@@ -223,62 +197,9 @@ logoutBtn.onclick = async () => {
 
 auth.onAuthStateChanged(user => {
   if (!user) window.location = 'signin.html';
-  else loadProducts(user.uid);
 });
 
-async function loadProducts(uid) {
-  const q = query(collection(db, "products"), orderBy("created_at", "desc"));
-  const snap = await getDocs(q);
-  grid.innerHTML = "";
-  snap.forEach(docSnap => {
-    const p = docSnap.data();
-    if (p.userId === uid) {
-      grid.innerHTML += `
-        <div class='card'>
-          <img src='${p.image}' alt='${p.stone_name}'>
-          <h3>${p.stone_name}</h3>
-          <p><b>${p.category}</b> | ${p.type}</p>
-          <p>₹${p.price}/${p.price_unit}</p>
-          <p>${p.color}</p>
-          <p><a href='https://wa.me/${p.contact_number}' target='_blank'>WhatsApp</a> | 
-             <a href='tel:${p.contact_number}'>Call</a></p>
-          ${p.email ? `<p><a href='mailto:${p.email}'>Mail</a></p>` : ""}
-          <div class="actions">
-            <button class="edit-btn" onclick="editProduct('${docSnap.id}','${encodeURIComponent(JSON.stringify(p))}')">Edit</button>
-            <button class="delete-btn" onclick="deleteProduct('${docSnap.id}')">Delete</button>
-          </div>
-        </div>`;
-    }
-  });
-}
-
-window.editProduct = (id, pData) => {
-  const p = JSON.parse(decodeURIComponent(pData));
-  productIdInput.value = id;
-  form.stone_name.value = p.stone_name;
-  form.category.value = p.category;
-  form.sub_category.value = p.sub_category;
-  form.type.value = p.type;
-  form.color.value = p.color;
-  form.description.value = p.description;
-  form.price.value = p.price;
-  form.price_unit.value = p.price_unit;
-  form.contact_number.value = p.contact_number;
-  form.email.value = p.email;
-  form.factory_name.value = p.factory_name;
-  form.image_url.value = p.image;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-window.deleteProduct = async (id) => {
-  if (confirm("🗑️ Delete this product?")) {
-    await deleteDoc(doc(db, "products", id));
-    alert("Deleted successfully!");
-    const user = auth.currentUser;
-    if (user) loadProducts(user.uid);
-  }
-};
-
+// Save Product
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
@@ -312,9 +233,7 @@ form.onsubmit = async (e) => {
 
   form.reset();
   productIdInput.value = "";
-  loadProducts(user.uid);
 };
 </script>
-
 </body>
 </html>
