@@ -82,7 +82,7 @@ async function loadProducts(uid) {
 
 window.deleteProduct = async (id) => {
   if (confirm("🗑️ Delete this product?")) {
-    await deleteDoc(doc(db, "products", id));
+    await deleteDoc(doc(db, "products", id));      
     alert("Deleted successfully!");
     const user = auth.currentUser;
     if (user) loadProducts(user.uid);
