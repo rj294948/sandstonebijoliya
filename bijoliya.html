@@ -236,8 +236,7 @@ async function loadProducts() {
     // Firestore query: only Bijoliya category
     const q = query(
       collection(db, "products"),
-      where("category", "==", "Bijoliya"),
-      orderBy("created_at", "desc")
+      where("category", "==", "Bijoliya")
     );
     const snap = await getDocs(q);
 
