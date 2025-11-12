@@ -4,78 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Panel - Rajasthan Sandstone Hub</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #b36b00;
-      color: white;
-      padding: 10px;
-      text-align: center;
-    }
-    nav a {
-      color: white;
-      margin: 0 8px;
-      text-decoration: none;
-    }
-    main {
-      max-width: 900px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-    form {
-      display: grid;
-      gap: 10px;
-    }
-    input, textarea {
-      padding: 8px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      width: 100%;
-    }
-    button {
-      background: #b36b00;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #8a5200;
-    }
-    .item {
-      display: flex;
-      align-items: flex-start;
-      background: #fafafa;
-      border: 1px solid #ddd;
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 10px;
-    }
-    .item img {
-      width: 100px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 5px;
-      margin-right: 15px;
-    }
-    .deleteBtn {
-      background: red;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
@@ -89,8 +18,8 @@
     </nav>
   </header>
 
-  <main>
-    <h2>Add New Stone / Product</h2>
+  <main class="admin-container">
+    <h2>Add New Product / Stone</h2>
     <form id="addItemForm">
       <label>🪨 Stone Name:</label>
       <input type="text" id="stoneName" placeholder="e.g. Bijoliya Sandstone" required />
@@ -98,14 +27,8 @@
       <label>🏭 Factory / Company:</label>
       <input type="text" id="factoryName" placeholder="e.g. RJ Stones Pvt. Ltd." required />
 
-      <label>📂 Main Category:</label>
+      <label>📂 Category:</label>
       <input type="text" id="category" placeholder="e.g. Bijoliya, Dholpur, Mandana" required />
-
-      <label>📁 Sub Category:</label>
-      <input type="text" id="subCategory" placeholder="e.g. Red Stone, Grey Stone, Tiles" />
-
-      <label>🧩 Type:</label>
-      <input type="text" id="type" placeholder="e.g. Flooring, Wall Cladding, Outdoor" />
 
       <label>🖼️ Image URL:</label>
       <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" required />
@@ -117,26 +40,28 @@
     </form>
 
     <h2>🗂️ Existing Records</h2>
-    <div id="dataList"></div>
+    <div id="dataList" class="data-list"></div>
   </main>
 
   <script type="module">
-    import {
-      db,
-      collection,
-      addDoc,
-      getDocs,
-      query,
-      orderBy,
-      deleteDoc,
-      doc
+    import { 
+      db, 
+      collection, 
+      addDoc, 
+      getDocs, 
+      query, 
+      orderBy, 
+      deleteDoc, 
+      doc 
     } from "./firebase-config.js";
 
     const addItemForm = document.getElementById("addItemForm");
     const dataList = document.getElementById("dataList");
+
+    // 🔹 Firestore Collection Reference
     const colRef = collection(db, "stones");
 
-    // ➕ Add Data
+    // 🔹 Add Data
     addItemForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -144,43 +69,40 @@
         stoneName: document.getElementById("stoneName").value.trim(),
         factoryName: document.getElementById("factoryName").value.trim(),
         category: document.getElementById("category").value.trim(),
-        subCategory: document.getElementById("subCategory").value.trim(),
-        type: document.getElementById("type").value.trim(),
         imageUrl: document.getElementById("imageUrl").value.trim(),
         description: document.getElementById("description").value.trim(),
         createdAt: new Date().toISOString()
       };
 
       await addDoc(colRef, newStone);
-      alert("✅ Data Added Successfully!");
+      alert("✅ Added Successfully!");
       addItemForm.reset();
       loadData();
     });
 
-    // 🔄 Load Data
+    // 🔹 Fetch Data
     async function loadData() {
-      dataList.innerHTML = "<p>Loading data...</p>";
+      dataList.innerHTML = "<p>Loading...</p>";
       const q = query(colRef, orderBy("createdAt", "desc"));
       const querySnapshot = await getDocs(q);
 
       dataList.innerHTML = "";
       querySnapshot.forEach((docSnap) => {
         const data = docSnap.data();
-        const div = document.createElement("div");
-        div.classList.add("item");
-        div.innerHTML = `
-          <img src="${data.imageUrl}" alt="${data.stoneName}">
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("item");
+
+        itemDiv.innerHTML = `
+          <img src="${data.imageUrl}" alt="${data.stoneName}" width="100">
           <div>
             <h3>${data.stoneName}</h3>
             <p><b>Factory:</b> ${data.factoryName}</p>
             <p><b>Category:</b> ${data.category}</p>
-            <p><b>Sub Category:</b> ${data.subCategory || "—"}</p>
-            <p><b>Type:</b> ${data.type || "—"}</p>
             <p>${data.description}</p>
           </div>
-          <button class="deleteBtn" data-id="${docSnap.id}">🗑️ Delete</button>
+          <button data-id="${docSnap.id}" class="deleteBtn">🗑️ Delete</button>
         `;
-        dataList.appendChild(div);
+        dataList.appendChild(itemDiv);
       });
 
       document.querySelectorAll(".deleteBtn").forEach((btn) => {
