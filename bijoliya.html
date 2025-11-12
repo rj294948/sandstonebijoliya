@@ -246,7 +246,7 @@ const productGrid = document.getElementById('product-grid');
 let products = [];
 
 async function loadProducts(){
-  const q = query(collection(db,"products"), where("category","==","Bijoliya"), orderBy("created_at","desc"));
+ const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
   const snapshot = await getDocs(q);
   products = snapshot.docs.map(doc=>doc.data());
   renderProducts(products);
