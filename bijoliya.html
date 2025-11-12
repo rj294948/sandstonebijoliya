@@ -7,38 +7,36 @@
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
-/* ===== Popup Modal Styles ===== */
-.modal {
-  display:none;
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.6); justify-content:center; align-items:center;
-  z-index:1000;
-}
-.modal-content {
-  background:white; padding:25px; border-radius:12px; width:350px; position:relative;
-}
-.modal-content h2 {text-align:center; color:#c7a97b; margin-bottom:15px;}
-.modal-content input {width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;}
-.modal-content button {width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px;}
-.modal-content button:hover {background:#b38c5f;}
-.modal-close {
-  position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;
-}
-.modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
-.feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
-
-/* ===== Header Buttons ===== */
-header button {margin-left:5px;}
+/* ===== Header ===== */
+header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:#f3f3f3; }
+header h1 { cursor:pointer; color:#c7a97b; }
+header div button { margin-left:5px; }
 
 /* ===== Grid ===== */
-.grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin:20px;}
-.card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-.card img {width:100%; border-radius:8px;}
-.banner {background:#c7a97b;color:white;text-align:center;padding:50px;font-size:1.5rem;margin-bottom:20px;}
-section h2 {text-align:center; margin-bottom:15px;}
-nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px;}
-nav a{text-decoration:none;color:#333;font-weight:600;}
-footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin:20px; }
+.card { border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+.card img { width:100%; border-radius:8px; }
+.banner { background:#c7a97b; color:white; text-align:center; padding:50px; font-size:1.5rem; margin-bottom:20px; }
+section h2 { text-align:center; margin-bottom:15px; }
+
+/* ===== Navigation ===== */
+nav{ display:flex; justify-content:center; gap:15px; background:#f3f3f3; padding:10px; }
+nav a{ text-decoration:none; color:#333; font-weight:600; }
+
+/* ===== Footer ===== */
+footer{ background:#333; color:white; text-align:center; padding:15px; margin-top:20px; }
+footer a{ color:white; text-decoration:none; }
+
+/* ===== Modal ===== */
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; }
+.modal-content { background:white; padding:25px; border-radius:12px; width:350px; position:relative; }
+.modal-content h2 { text-align:center; color:#c7a97b; margin-bottom:15px; }
+.modal-content input { width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc; }
+.modal-content button { width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px; }
+.modal-content button:hover { background:#b38c5f; }
+.modal-close { position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b; }
+.modal a { text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px; }
+.feedback { text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem; }
 </style>
 </head>
 <body>
@@ -46,7 +44,6 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
 <!-- ===== Header ===== -->
 <header>
   <h1 onclick="window.location='index.html'">🪨 Bijoliya Stone</h1>
-  <input type="text" placeholder="Search stones, factories..." id="search-input">
   <div>
     <button id="home-btn" onclick="window.location='index.html'">Home</button>
     <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
@@ -58,7 +55,7 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
   </div>
 </header>
 
-<!-- ===== Navigation Row ===== -->
+<!-- ===== Navigation ===== -->
 <nav>
   <a href="index.html">Home</a>
   <a href="dholpur.html">Dholpur Stone</a>
@@ -82,7 +79,7 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
 <!-- ===== Footer ===== -->
 <footer>
   &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
-  <a href="about.html" style="color:white;">About Us</a> | <a href="contact.html" style="color:white;">Contact</a>
+  <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
 <!-- ===== Sign In Modal ===== -->
@@ -93,14 +90,11 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
     <input type="email" id="signin-email" placeholder="Email">
     <input type="password" id="signin-password" placeholder="Password">
     <button id="signin-btn">Sign In</button>
-
     <div style="text-align:center;margin:10px 0;">OR</div>
-
     <button id="modal-google-signin" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
       <img src="assets/images/google-logo.png" alt="Google" style="width:20px; height:20px;">
       Sign In with Google
     </button>
-
     <div class="feedback" id="signin-feedback"></div>
     <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
   </div>
@@ -123,20 +117,13 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
 
 <!-- ===== Scripts ===== -->
 <script type="module">
-import { db, auth } from './firebase-config.js';
-import { collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import { db, auth, collection, getDocs, query, where, orderBy, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from './firebase-config.js';
 
 /* ===== Modal Functions ===== */
 function openModal(id){ document.getElementById(id).style.display='flex'; }
 function closeModal(id){ document.getElementById(id).style.display='none'; }
-
-document.querySelectorAll('.modal-close').forEach(btn=>{
-  btn.addEventListener('click', ()=>{ btn.parentElement.parentElement.style.display='none'; });
-});
-document.addEventListener('keydown', (e)=>{
-  if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); }
-});
+document.querySelectorAll('.modal-close').forEach(btn=>{ btn.addEventListener('click', ()=>{ btn.parentElement.parentElement.style.display='none'; }); });
+document.addEventListener('keydown', (e)=>{ if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); } });
 
 /* ===== Header Buttons ===== */
 const btnOpenSignin = document.getElementById('btn-open-signin');
@@ -241,19 +228,30 @@ onAuthStateChanged(auth,user=>{
   }
 });
 
-/* ===== Firestore Products ===== */
+/* ===== Load Bijoliya Products ===== */
 const productGrid = document.getElementById('product-grid');
-let products = [];
 
 async function loadProducts(){
-  const q = query(collection(db,"products"), where("category","==","Bijoliya"), orderBy("created_at","desc"));
-  const snapshot = await getDocs(q);
-  products = snapshot.docs.map(doc=>doc.data());
-  renderProducts(products);
+  try{
+    const q = query(
+      collection(db,"products"), 
+      where("category","==","Bijoliya"), 
+      orderBy("created_at","desc")
+    );
+    const snapshot = await getDocs(q);
+    const products = snapshot.docs.map(doc=>doc.data());
+    renderProducts(products);
+  }catch(err){
+    productGrid.innerHTML = `<p style="text-align:center;color:red;">Failed to load products: ${err.message}</p>`;
+  }
 }
 
 function renderProducts(list){
   productGrid.innerHTML='';
+  if(list.length===0){
+    productGrid.innerHTML='<p style="text-align:center;">No Bijoliya stones found.</p>';
+    return;
+  }
   list.forEach(p=>{
     const card=document.createElement('div');
     card.className='card';
@@ -274,6 +272,5 @@ function renderProducts(list){
 
 window.onload = loadProducts;
 </script>
-
 </body>
 </html>
