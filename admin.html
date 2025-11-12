@@ -20,6 +20,10 @@ button{background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 2
 .card img{width:100%;height:160px;object-fit:cover;border-radius:6px;}
 .card h3{margin:10px 0 5px;color:#333;}
 .card p{margin:2px 0;font-size:0.9rem;color:#555;}
+.card .actions{display:flex;justify-content:space-between;margin-top:10px;}
+.card .actions button{padding:6px 10px;font-size:0.8rem;border:none;border-radius:4px;cursor:pointer;}
+.edit-btn{background:#5cb85c;color:#fff;}
+.delete-btn{background:#d9534f;color:#fff;}
 </style>
 </head>
 <body>
@@ -30,8 +34,9 @@ button{background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 2
 </header>
 
 <div class="container">
-  <h2>Add New Stone Product</h2>
+  <h2>Add / Edit Stone Product</h2>
   <form id="product-form">
+    <input type="hidden" id="product-id">
     <input type="text" id="stone_name" placeholder="Stone Name" required>
     <input type="text" id="category" placeholder="Category (Bijoliya, Dholpur...)" required>
     <input type="text" id="sub_category" placeholder="Sub-category (Optional)">
@@ -44,7 +49,7 @@ button{background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 2
     <input type="email" id="email" placeholder="Email (optional)">
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
     <input type="text" id="image_url" placeholder="Image URL (Firebase Storage)" required>
-    <button type="submit">Add Product</button>
+    <button type="submit">Save Product</button>
   </form>
 
   <h2>My Products</h2>
@@ -52,64 +57,115 @@ button{background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 2
 </div>
 
 <script type="module">
-import { auth, db, collection, addDoc, getDocs, query, orderBy, signOut } from './firebase-config.js';
-import { serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { 
+  auth, db, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc, signOut, serverTimestamp 
+} from './firebase-config.js';
 
 const form = document.getElementById('product-form');
 const grid = document.getElementById('product-grid');
 const logoutBtn = document.getElementById('logout-btn');
+const productIdInput = document.getElementById('product-id');
 
-logoutBtn.onclick = async ()=>{await signOut(auth);window.location='signin.html';};
+logoutBtn.onclick = async () => {
+  await signOut(auth);
+  window.location = 'signin.html';
+};
 
-auth.onAuthStateChanged(user=>{
-  if(!user) window.location='signin.html';
+auth.onAuthStateChanged(user => {
+  if (!user) window.location = 'signin.html';
   else loadProducts(user.uid);
 });
 
-async function loadProducts(uid){
-  const q=query(collection(db,"products"),orderBy("created_at","desc"));
-  const snap=await getDocs(q);
-  grid.innerHTML="";
-  snap.forEach(docSnap=>{
-    const p=docSnap.data();
-    if(p.userId===uid){
-      grid.innerHTML+=`
+async function loadProducts(uid) {
+  const q = query(collection(db, "products"), orderBy("created_at", "desc"));
+  const snap = await getDocs(q);
+  grid.innerHTML = "";
+  snap.forEach(docSnap => {
+    const p = docSnap.data();
+    if (p.userId === uid) {
+      grid.innerHTML += `
         <div class='card'>
           <img src='${p.image}' alt='${p.stone_name}'>
           <h3>${p.stone_name}</h3>
           <p><b>${p.category}</b> | ${p.type}</p>
           <p>₹${p.price}/${p.price_unit}</p>
+          <p>${p.color}</p>
           <p><a href='https://wa.me/${p.contact_number}' target='_blank'>WhatsApp</a> | 
              <a href='tel:${p.contact_number}'>Call</a></p>
           ${p.email ? `<p><a href='mailto:${p.email}'>Mail</a></p>` : ""}
+          <div class="actions">
+            <button class="edit-btn" onclick="editProduct('${docSnap.id}','${encodeURIComponent(JSON.stringify(p))}')">Edit</button>
+            <button class="delete-btn" onclick="deleteProduct('${docSnap.id}')">Delete</button>
+          </div>
         </div>`;
     }
   });
 }
 
-form.onsubmit = async e=>{
+// ✅ Edit Function
+window.editProduct = (id, pData) => {
+  const p = JSON.parse(decodeURIComponent(pData));
+  productIdInput.value = id;
+  form.stone_name.value = p.stone_name;
+  form.category.value = p.category;
+  form.sub_category.value = p.sub_category;
+  form.type.value = p.type;
+  form.color.value = p.color;
+  form.description.value = p.description;
+  form.price.value = p.price;
+  form.price_unit.value = p.price_unit;
+  form.contact_number.value = p.contact_number;
+  form.email.value = p.email;
+  form.factory_name.value = p.factory_name;
+  form.image_url.value = p.image;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// ✅ Delete Function
+window.deleteProduct = async (id) => {
+  if (confirm("🗑️ Delete this product?")) {
+    await deleteDoc(doc(db, "products", id));
+    alert("Deleted successfully!");
+    const user = auth.currentUser;
+    if (user) loadProducts(user.uid);
+  }
+};
+
+// ✅ Add / Update Function
+form.onsubmit = async (e) => {
   e.preventDefault();
-  const u=auth.currentUser;
-  const data={
-    stone_name:form.stone_name.value,
-    category:form.category.value,
-    sub_category:form.sub_category.value||"",
-    type:form.type.value,
-    color:form.color.value,
-    description:form.description.value,
-    price:parseFloat(form.price.value),
-    price_unit:form.price_unit.value,
-    contact_number:form.contact_number.value,
-    email:form.email.value||"",
-    factory_name:form.factory_name.value,
-    image:form.image_url.value,
-    created_at:serverTimestamp(),
-    userId:u.uid
+  const user = auth.currentUser;
+  if (!user) return alert("Please login again.");
+
+  const data = {
+    stone_name: form.stone_name.value,
+    category: form.category.value,
+    sub_category: form.sub_category.value || "",
+    type: form.type.value,
+    color: form.color.value,
+    description: form.description.value,
+    price: parseFloat(form.price.value),
+    price_unit: form.price_unit.value,
+    contact_number: form.contact_number.value,
+    email: form.email.value || "",
+    factory_name: form.factory_name.value,
+    image: form.image_url.value,
+    created_at: serverTimestamp(),
+    userId: user.uid
   };
-  await addDoc(collection(db,"products"),data);
-  alert("✅ Product Added Successfully!");
+
+  const id = productIdInput.value;
+  if (id) {
+    await updateDoc(doc(db, "products", id), data);
+    alert("✅ Product updated successfully!");
+  } else {
+    await addDoc(collection(db, "products"), data);
+    alert("✅ Product added successfully!");
+  }
+
   form.reset();
-  loadProducts(u.uid);
+  productIdInput.value = "";
+  loadProducts(user.uid);
 };
 </script>
 
