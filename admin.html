@@ -183,7 +183,7 @@ footer a { color: white; text-decoration: none; }
 
 <script type="module">
 import { 
-  auth, db, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc, signOut, serverTimestamp 
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
@@ -195,29 +195,33 @@ logoutBtn.onclick = async () => {
   window.location = 'signin.html';
 };
 
+// ✅ User authentication check
 auth.onAuthStateChanged(user => {
   if (!user) window.location = 'signin.html';
 });
 
-// Save Product
+// ✅ Save / Update Product
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
+  // Auto-format category (first letter capital)
+  const formattedCategory = form.category.value.trim().charAt(0).toUpperCase() + form.category.value.trim().slice(1).toLowerCase();
+
   const data = {
-    stone_name: form.stone_name.value,
-    category: form.category.value,
-    sub_category: form.sub_category.value || "",
-    type: form.type.value,
-    color: form.color.value,
-    description: form.description.value,
+    stone_name: form.stone_name.value.trim(),
+    category: formattedCategory, // ✅ Auto-format
+    sub_category: form.sub_category.value.trim() || "",
+    type: form.type.value.trim(),
+    color: form.color.value.trim(),
+    description: form.description.value.trim(),
     price: parseFloat(form.price.value),
-    price_unit: form.price_unit.value,
-    contact_number: form.contact_number.value,
-    email: form.email.value || "",
-    factory_name: form.factory_name.value,
-    image: form.image_url.value,
+    price_unit: form.price_unit.value.trim(),
+    contact_number: form.contact_number.value.trim(),
+    email: form.email.value.trim() || "",
+    factory_name: form.factory_name.value.trim(),
+    image: form.image_url.value.trim(),
     created_at: serverTimestamp(),
     userId: user.uid
   };
