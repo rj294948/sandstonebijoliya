@@ -27,9 +27,8 @@
 .modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
 .feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
 
-/* ===== Header ===== */
+/* ===== Header Buttons ===== */
 header button {margin-left:5px;}
-header a {text-decoration:none; color:white;}
 
 /* ===== Grid ===== */
 .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin:20px;}
@@ -53,12 +52,11 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
     <button id="btn-open-signup">Sign Up</button>
     <button id="btn-google-signin">Sign In with Gmail</button>
     <button id="btn-signout" style="display:none;">Sign Out</button>
-    <button id="btn-post" style="display:none;"><a href="admin.html">Post Product</a></button>
-    <button id="btn-history" style="display:none;"><a href="history.html">History</a></button>
+    <button id="btn-post" style="display:none;"><a href="admin.html">Post Product</button>
   </div>
 </header>
 
-<!-- ===== Navigation ===== -->
+<!-- ===== Navigation Row ===== -->
 <nav>
   <a href="bijoliya.html">Bijoliya Stone</a>
   <a href="dholpur.html">Dholpur Stone</a>
@@ -73,14 +71,50 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
 <!-- ===== Banner ===== -->
 <div class="banner">Discover Natural Stones of Rajasthan</div>
 
-<!-- ===== Products Section ===== -->
+<!-- ===== Filters ===== -->
+<section>
+  <h2>Filter Products</h2>
+  <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+    <select id="filter-category">
+      <option>All</option>
+      <option>Bijoliya</option>
+      <option>Dholpur</option>
+      <option>Mandana</option>
+      <option>Kota</option>
+      <option>Other</option>
+    </select>
+    <select id="filter-subcategory">
+      <option>All</option>
+      <option>Farsi</option>
+      <option>Gitti</option>
+      <option>Poll</option>
+      <option>Slab</option>
+      <option>Tile</option>
+    </select>
+    <select id="filter-color">
+      <option>All</option>
+      <option>Red</option>
+      <option>Pink</option>
+      <option>Yellow</option>
+      <option>Brown</option>
+      <option>Grey</option>
+    </select>
+    <input type="number" id="min-price" placeholder="Min Price">
+    <input type="number" id="max-price" placeholder="Max Price">
+    <button onclick="applyFilters()">Apply</button>
+  </div>
+</section>
+
+<!-- ===== Products Grid ===== -->
 <section>
   <h2>Available Products</h2>
   <div class="grid" id="product-grid"></div>
 </section>
 
+<!-- ===== Footer ===== -->
 <footer>
-  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+  <a href="about.html" style="color:white;">About Us</a> | <a href="contact.html" style="color:white;">Contact</a>
 </footer>
 
 <!-- ===== Sign In Modal ===== -->
@@ -91,8 +125,14 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
     <input type="email" id="signin-email" placeholder="Email">
     <input type="password" id="signin-password" placeholder="Password">
     <button id="signin-btn">Sign In</button>
+
     <div style="text-align:center;margin:10px 0;">OR</div>
-    <button id="modal-google-signin" style="background:#4285F4;color:white;">Sign In with Google</button>
+
+    <button id="modal-google-signin" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
+      <img src="assets/images/google-logo.png" alt="Google" style="width:20px; height:20px;">
+      Sign In with Google
+    </button>
+
     <div class="feedback" id="signin-feedback"></div>
     <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
   </div>
@@ -123,9 +163,16 @@ import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, creat
 function openModal(id){ document.getElementById(id).style.display='flex'; }
 function closeModal(id){ document.getElementById(id).style.display='none'; }
 
-/* ===== Cross Close ===== */
+/* ===== Cross Button Close ===== */
 document.querySelectorAll('.modal-close').forEach(btn=>{
-  btn.addEventListener('click', ()=>btn.parentElement.parentElement.style.display='none');
+  btn.addEventListener('click', ()=>{
+    btn.parentElement.parentElement.style.display='none';
+  });
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === "Escape"){
+    document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none');
+  }
 });
 
 /* ===== Header Buttons ===== */
@@ -134,7 +181,6 @@ const btnOpenSignup = document.getElementById('btn-open-signup');
 const btnGoogleSignin = document.getElementById('btn-google-signin');
 const btnSignOut = document.getElementById('btn-signout');
 const btnPost = document.getElementById('btn-post');
-const btnHistory = document.getElementById('btn-history');
 
 btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
 btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
@@ -142,42 +188,109 @@ btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
 /* ===== Firebase Auth ===== */
 const provider = new GoogleAuthProvider();
 
-btnGoogleSignin.addEventListener('click', async ()=>{
-  try { await signInWithPopup(auth, provider); }
-  catch(err){ alert(err.message); }
+/* ===== Gmail Sign In Modal ===== */
+const modalGoogleBtn = document.getElementById('modal-google-signin');
+const signinFeedback = document.getElementById('signin-feedback');
+
+modalGoogleBtn.addEventListener('click', async ()=>{
+  signinFeedback.textContent = '';
+  try {
+    const result = await signInWithPopup(auth, provider);
+    signinFeedback.style.color = 'green';
+    signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
+    closeModal('signin-modal');
+  } catch(err) {
+    signinFeedback.style.color = 'red';
+    signinFeedback.textContent = '❌ ' + err.message;
+  }
 });
 
+/* ===== Header Gmail Sign In ===== */
+btnGoogleSignin.addEventListener('click', async ()=>{
+  try {
+    const result = await signInWithPopup(auth, provider);
+    alert(`Signed in as ${result.user.displayName}`);
+  } catch(err) {
+    alert(err.message);
+  }
+});
+
+/* ===== Sign Out ===== */
 btnSignOut.addEventListener('click', async ()=>{
   await signOut(auth);
-  alert('Signed out successfully!');
+  alert('Signed out successfully');
 });
 
-/* ===== Auth State ===== */
-onAuthStateChanged(auth, user=>{
+/* ===== Email/Password Sign In ===== */
+const signinBtn = document.getElementById('signin-btn');
+signinBtn.addEventListener('click', async ()=>{
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value.trim();
+  signinFeedback.textContent='';
+  try{
+    await signInWithEmailAndPassword(auth,email,password);
+    signinFeedback.style.color='green';
+    signinFeedback.textContent='✅ Signed in successfully!';
+    closeModal('signin-modal');
+  }catch(err){
+    signinFeedback.style.color='red';
+    signinFeedback.textContent='❌ '+err.message;
+  }
+});
+
+/* ===== Email/Password Sign Up ===== */
+const signupBtn = document.getElementById('signup-btn');
+const signupFeedback = document.getElementById('signup-feedback');
+
+signupBtn.addEventListener('click', async ()=>{
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  signupFeedback.textContent='';
+  try{
+    const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
+    signupFeedback.style.color='green';
+    signupFeedback.textContent='✅ Account created successfully!';
+    closeModal('signup-modal');
+  }catch(err){
+    signupFeedback.style.color='red';
+    signupFeedback.textContent='❌ '+err.message;
+  }
+});
+
+/* ===== Auth State Observer ===== */
+onAuthStateChanged(auth,user=>{
   if(user){
     btnOpenSignin.style.display='none';
     btnOpenSignup.style.display='none';
     btnGoogleSignin.style.display='none';
     btnSignOut.style.display='inline-block';
     btnPost.style.display='inline-block';
-    btnHistory.style.display='inline-block';
-  } else {
+  }else{
     btnOpenSignin.style.display='inline-block';
     btnOpenSignup.style.display='inline-block';
     btnGoogleSignin.style.display='inline-block';
     btnSignOut.style.display='none';
     btnPost.style.display='none';
-    btnHistory.style.display='none';
   }
 });
 
 /* ===== Firestore Products ===== */
 const productGrid = document.getElementById('product-grid');
+let products = [];
+
 async function loadProducts(){
   const q = query(collection(db,"products"),orderBy("created_at","desc"));
   const snapshot = await getDocs(q);
-  snapshot.forEach(doc=>{
-    const p=doc.data();
+  products = snapshot.docs.map(doc=>doc.data());
+  renderProducts(products);
+}
+
+function renderProducts(list){
+  productGrid.innerHTML='';
+  list.forEach(p=>{
     const card=document.createElement('div');
     card.className='card';
     card.innerHTML=`
@@ -185,13 +298,37 @@ async function loadProducts(){
       <h3>${p.stone_name}</h3>
       <p>${p.description}</p>
       <p><strong>Category:</strong> ${p.category}</p>
+      <p><strong>Sub-category:</strong> ${p.sub_category}</p>
+      <p><strong>Type:</strong> ${p.type}</p>
+      <p><strong>Color:</strong> ${p.color}</p>
       <p><strong>Price:</strong> ₹${p.price} / ${p.price_unit}</p>
+      <p><strong>Factory:</strong> ${p.factory_name}</p>
       <p><a href="${p.whatsapp_link}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
     `;
     productGrid.appendChild(card);
   });
 }
+
+/* ===== Apply Filters ===== */
+window.applyFilters = ()=>{
+  const cat = document.getElementById('filter-category').value;
+  const sub = document.getElementById('filter-subcategory').value;
+  const col = document.getElementById('filter-color').value;
+  const minP = document.getElementById('min-price').value;
+  const maxP = document.getElementById('max-price').value;
+
+  let filtered = products.filter(p=> 
+    (cat==='All'||p.category===cat) &&
+    (sub==='All'||p.sub_category===sub) &&
+    (col==='All'||p.color===col) &&
+    (!minP||p.price>=minP) &&
+    (!maxP||p.price<=maxP)
+  );
+  renderProducts(filtered);
+}
+
 window.onload = loadProducts;
 </script>
+
 </body>
 </html>
