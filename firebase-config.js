@@ -1,19 +1,16 @@
 // ✅ firebase-config.js
-
-// ===== Import Firebase SDKs =====
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { 
   getFirestore, 
   collection, 
   addDoc, 
   getDocs, 
-  getDoc,
   query, 
   orderBy, 
   doc, 
   deleteDoc, 
   updateDoc,
-  serverTimestamp   // ✅ Added
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { 
   getAuth, 
@@ -50,36 +47,29 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ===== Export All Utilities =====
+// ===== Export all =====
 export {
   app,
   db,
   auth,
   storage,
   googleProvider,
-
-  // 🔹 Firestore
   collection,
   addDoc,
   getDocs,
-  getDoc,
   query,
   orderBy,
   doc,
   deleteDoc,
   updateDoc,
-  serverTimestamp,   // ✅ Timestamp export
-
-  // 🔹 Auth
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   signInWithPopup,
   onAuthStateChanged,
   updateProfile,
-
-  // 🔹 Storage
   ref,
   uploadBytes,
-  getDownloadURL
+  getDownloadURL,
+  serverTimestamp
 };
