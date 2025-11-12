@@ -1,5 +1,7 @@
 // ✅ firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+// Firestore
 import { 
   getFirestore, 
   collection, 
@@ -10,9 +12,11 @@ import {
   doc, 
   deleteDoc, 
   updateDoc,
-  where,              // ✅ ADD THIS LINE
+  where,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+// Auth
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
@@ -23,6 +27,8 @@ import {
   onAuthStateChanged, 
   updateProfile 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+// Storage
 import { 
   getStorage, 
   ref, 
@@ -48,7 +54,7 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ===== Export all =====
+// ===== Export =====
 export {
   app,
   db,
@@ -63,7 +69,8 @@ export {
   doc,
   deleteDoc,
   updateDoc,
-  where,               // ✅ ADD THIS TOO
+  where,
+  serverTimestamp,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
@@ -72,6 +79,5 @@ export {
   updateProfile,
   ref,
   uploadBytes,
-  getDownloadURL,
-  serverTimestamp
+  getDownloadURL
 };
