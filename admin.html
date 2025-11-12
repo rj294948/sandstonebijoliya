@@ -1,122 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel - Rajasthan Sandstone Hub</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Product | Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone-icon.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* ===== Header & Theme same as Home Page ===== */
+body{font-family:sans-serif;margin:0;padding:0;background:#fafafa;}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+header h1{color:#c7a97b;cursor:pointer;}
+header input{padding:8px;width:200px;border-radius:6px;border:1px solid #ccc;}
+header button{background:#c7a97b;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;}
+header button:hover{background:#b38c5f;}
+nav{display:flex;justify-content:center;gap:15px;background:#f3f3f3;padding:10px;}
+nav a{text-decoration:none;color:#333;font-weight:600;}
+.banner{background:#c7a97b;color:white;text-align:center;padding:40px;font-size:1.4rem;margin-bottom:20px;}
+footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
+
+/* ===== Admin Form ===== */
+section{max-width:700px;margin:20px auto;background:white;padding:25px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+section h2{text-align:center;color:#c7a97b;margin-bottom:20px;}
+form input, form select, form textarea{
+  width:100%;padding:10px;margin-bottom:12px;
+  border:1px solid #ccc;border-radius:6px;font-size:1rem;
+}
+form button{
+  width:100%;padding:12px;background:#c7a97b;color:white;
+  border:none;border-radius:6px;font-weight:600;cursor:pointer;
+}
+form button:hover{background:#b38c5f;}
+.feedback{text-align:center;margin-top:10px;font-weight:600;}
+</style>
 </head>
 <body>
-  <header>
-    <h1>🧱 Rajasthan Sandstone Hub - Admin Panel</h1>
-    <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="factories.html">🏭 Factories</a>
-      <a href="history.html">📜 History</a>
-      <a href="about.html">ℹ️ About</a>
-      <a href="contact.html">📞 Contact</a>
-    </nav>
-  </header>
 
-  <main class="admin-container">
-    <h2>Add New Product / Stone</h2>
-    <form id="addItemForm">
-      <label>🪨 Stone Name:</label>
-      <input type="text" id="stoneName" placeholder="e.g. Bijoliya Sandstone" required />
+<!-- ===== Header ===== -->
+<header>
+  <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
+  <div>
+    <button onclick="window.location='index.html'">🏠 Home</button>
+    <button id="btn-signout">Sign Out</button>
+  </div>
+</header>
 
-      <label>🏭 Factory / Company:</label>
-      <input type="text" id="factoryName" placeholder="e.g. RJ Stones Pvt. Ltd." required />
+<!-- ===== Navigation ===== -->
+<nav>
+  <a href="bijoliya.html">Bijoliya Stone</a>
+  <a href="dholpur.html">Dholpur Stone</a>
+  <a href="mandana.html">Mandana Stone</a>
+  <a href="kota.html">Kota Stone</a>
+  <a href="other-stones.html">Other Stones</a>
+  <a href="factories.html">Factories</a>
+</nav>
 
-      <label>📂 Category:</label>
-      <input type="text" id="category" placeholder="e.g. Bijoliya, Dholpur, Mandana" required />
+<!-- ===== Banner ===== -->
+<div class="banner">Add Your Stone Product Listing</div>
 
-      <label>🖼️ Image URL:</label>
-      <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" required />
+<!-- ===== Product Form ===== -->
+<section>
+  <h2>🧱 Post New Stone Product</h2>
+  <form id="product-form">
+    <input type="text" id="stone_name" placeholder="Stone Name" required>
+    <input type="text" id="factory_name" placeholder="Factory / Company Name" required>
+    <input type="text" id="category" placeholder="Category (e.g., Bijoliya, Dholpur)" required>
+    <input type="text" id="sub_category" placeholder="Sub Category (e.g., Farsi, Slab, Tile)">
+    <input type="text" id="type" placeholder="Type (e.g., Natural, Polished)">
+    <input type="text" id="color" placeholder="Color (e.g., Brown, Red)">
+    <input type="number" id="price" placeholder="Price">
+    <input type="text" id="price_unit" placeholder="Unit (e.g., sq.ft, piece)">
+    <textarea id="description" placeholder="Short Description"></textarea>
+    <input type="text" id="image" placeholder="Image URL (paste image link)" required>
+    <input type="text" id="whatsapp_link" placeholder="WhatsApp Link (https://wa.me/91...)">
+    <input type="text" id="contact_number" placeholder="Contact Number (+91...)">
+    <button type="submit">Submit Product</button>
+    <div class="feedback" id="feedback"></div>
+  </form>
+</section>
 
-      <label>📝 Description:</label>
-      <textarea id="description" placeholder="Enter short details..." required></textarea>
+<!-- ===== Footer ===== -->
+<footer>
+  &copy; 2025 Rajasthan SandStone Hub | Managed by RJ Services
+</footer>
 
-      <button type="submit">➕ Add to Firestore</button>
-    </form>
+<!-- ===== Scripts ===== -->
+<script type="module">
+import { db, auth } from './firebase-config.js';
+import { collection, addDoc, serverTimestamp } 
+  from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { signOut, onAuthStateChanged } 
+  from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-    <h2>🗂️ Existing Records</h2>
-    <div id="dataList" class="data-list"></div>
-  </main>
+/* ===== Sign Out ===== */
+const btnSignOut = document.getElementById('btn-signout');
+btnSignOut.addEventListener('click', async ()=>{
+  await signOut(auth);
+  alert('Signed out successfully!');
+  window.location='index.html';
+});
 
-  <script type="module">
-    import { 
-      db, 
-      collection, 
-      addDoc, 
-      getDocs, 
-      query, 
-      orderBy, 
-      deleteDoc, 
-      doc 
-    } from "./firebase-config.js";
+/* ===== Auth Guard ===== */
+onAuthStateChanged(auth, user=>{
+  if(!user){
+    alert('Please sign in first!');
+    window.location='index.html';
+  }
+});
 
-    const addItemForm = document.getElementById("addItemForm");
-    const dataList = document.getElementById("dataList");
+/* ===== Form Submit ===== */
+const form = document.getElementById('product-form');
+const feedback = document.getElementById('feedback');
 
-    // 🔹 Firestore Collection Reference
-    const colRef = collection(db, "stones");
+form.addEventListener('submit', async(e)=>{
+  e.preventDefault();
+  feedback.textContent='⏳ Uploading...';
 
-    // 🔹 Add Data
-    addItemForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  const data = {
+    stone_name: form.stone_name.value.trim(),
+    factory_name: form.factory_name.value.trim(),
+    category: form.category.value.trim(),
+    sub_category: form.sub_category.value.trim(),
+    type: form.type.value.trim(),
+    color: form.color.value.trim(),
+    price: parseFloat(form.price.value) || 0,
+    price_unit: form.price_unit.value.trim(),
+    description: form.description.value.trim(),
+    image: form.image.value.trim(),
+    whatsapp_link: form.whatsapp_link.value.trim(),
+    contact_number: form.contact_number.value.trim(),
+    created_at: new Date().toISOString(),
+    user_email: auth.currentUser?.email || "guest"
+  };
 
-      const newStone = {
-        stoneName: document.getElementById("stoneName").value.trim(),
-        factoryName: document.getElementById("factoryName").value.trim(),
-        category: document.getElementById("category").value.trim(),
-        imageUrl: document.getElementById("imageUrl").value.trim(),
-        description: document.getElementById("description").value.trim(),
-        createdAt: new Date().toISOString()
-      };
+  try {
+    await addDoc(collection(db, "products"), data);
+    feedback.style.color='green';
+    feedback.textContent='✅ Product added successfully!';
+    form.reset();
+  } catch(err){
+    feedback.style.color='red';
+    feedback.textContent='❌ Error: '+err.message;
+  }
+});
+</script>
 
-      await addDoc(colRef, newStone);
-      alert("✅ Added Successfully!");
-      addItemForm.reset();
-      loadData();
-    });
-
-    // 🔹 Fetch Data
-    async function loadData() {
-      dataList.innerHTML = "<p>Loading...</p>";
-      const q = query(colRef, orderBy("createdAt", "desc"));
-      const querySnapshot = await getDocs(q);
-
-      dataList.innerHTML = "";
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const itemDiv = document.createElement("div");
-        itemDiv.classList.add("item");
-
-        itemDiv.innerHTML = `
-          <img src="${data.imageUrl}" alt="${data.stoneName}" width="100">
-          <div>
-            <h3>${data.stoneName}</h3>
-            <p><b>Factory:</b> ${data.factoryName}</p>
-            <p><b>Category:</b> ${data.category}</p>
-            <p>${data.description}</p>
-          </div>
-          <button data-id="${docSnap.id}" class="deleteBtn">🗑️ Delete</button>
-        `;
-        dataList.appendChild(itemDiv);
-      });
-
-      document.querySelectorAll(".deleteBtn").forEach((btn) => {
-        btn.addEventListener("click", async (e) => {
-          const id = e.target.getAttribute("data-id");
-          if (confirm("Delete this record?")) {
-            await deleteDoc(doc(db, "stones", id));
-            loadData();
-          }
-        });
-      });
-    }
-
-    loadData();
-  </script>
 </body>
 </html>
