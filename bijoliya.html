@@ -103,9 +103,8 @@ footer a:hover {text-decoration:underline;}
 </footer>
 
 <script type="module">
-import { auth, db, collection, getDocs, query, where, signInWithPopup, GoogleAuthProvider, signOut } from "./firebase-config.js";
+import { auth, db, collection, getDocs, query, where, signInWithPopup, googleProvider, signOut } from "./firebase-config.js";
 
-const provider = new GoogleAuthProvider();
 const grid = document.getElementById("product-grid");
 const noProducts = document.getElementById("no-products");
 
@@ -120,7 +119,7 @@ signinBtn.onclick = () => (window.location = "signin.html");
 // ✅ Google sign-in
 googleBtn.onclick = async () => {
   try {
-    await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, googleProvider);
     alert("Login successful!");
   } catch (error) {
     console.error("Google login error:", error);
@@ -138,7 +137,7 @@ logoutBtn.onclick = async () => {
   }
 };
 
-// ✅ Show / Hide auth buttons
+// ✅ Show / Hide auth buttons & load products
 auth.onAuthStateChanged((user) => {
   if (user) {
     signinBtn.style.display = "none";
@@ -189,5 +188,6 @@ async function loadProducts() {
   }
 }
 </script>
+
 </body>
 </html>
