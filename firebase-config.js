@@ -10,6 +10,7 @@ import {
   doc, 
   deleteDoc, 
   updateDoc,
+  where,              // ✅ ADD THIS LINE
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { 
@@ -62,6 +63,7 @@ export {
   doc,
   deleteDoc,
   updateDoc,
+  where,               // ✅ ADD THIS TOO
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
