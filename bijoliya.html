@@ -1,134 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bijoliya Stones</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bijoliya Stone - Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone-icon.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== Popup Modal Styles ===== */
+.modal {
+  display:none;
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.6); justify-content:center; align-items:center;
+  z-index:1000;
+}
+.modal-content {
+  background:white; padding:25px; border-radius:12px; width:350px; position:relative;
+}
+.modal-content h2 {text-align:center; color:#c7a97b; margin-bottom:15px;}
+.modal-content input {width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;}
+.modal-content button {width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px;}
+.modal-content button:hover {background:#b38c5f;}
+.modal-close {
+  position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;
+}
+.modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
+.feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
 
-  <!-- Favicon -->
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Stone_icon.png/32px-Stone_icon.png" type="image/png">
+/* ===== Header Buttons ===== */
+header button {margin-left:5px;}
 
-  <!-- Styles -->
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-    }
-    header {
-      background-color: #004aad;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    .container {
-      padding: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .stone-card {
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background: white;
-      margin: 10px;
-      padding: 15px;
-      display: inline-block;
-      width: 280px;
-      vertical-align: top;
-      box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-    }
-    .stone-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-    .stone-card h3 {
-      margin: 10px 0 5px 0;
-    }
-    .stone-card p {
-      margin: 5px 0;
-    }
-  </style>
+/* ===== Grid ===== */
+.grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin:20px;}
+.card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.card img {width:100%; border-radius:8px;}
+.banner {background:#c7a97b;color:white;text-align:center;padding:50px;font-size:1.5rem;margin-bottom:20px;}
+section h2 {text-align:center; margin-bottom:15px;}
+nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px;}
+nav a{text-decoration:none;color:#333;font-weight:600;}
+footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>Bijoliya Stones Collection</h1>
-  </header>
-
-  <div class="container" id="stones-container">
-    <!-- Stones will be loaded here dynamically -->
+<!-- ===== Header ===== -->
+<header>
+  <h1 onclick="window.location='index.html'">🪨 Bijoliya Stone</h1>
+  <input type="text" placeholder="Search stones, factories..." id="search-input">
+  <div>
+    <button id="home-btn" onclick="window.location='index.html'">Home</button>
+    <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
+    <button id="btn-open-signin">Sign In</button>
+    <button id="btn-open-signup">Sign Up</button>
+    <button id="btn-google-signin">Sign In with Gmail</button>
+    <button id="btn-signout" style="display:none;">Sign Out</button>
+    <button id="btn-post" style="display:none;"><a href="admin.html">Post Product</a></button>
   </div>
+</header>
 
-  <!-- Firebase & JS -->
-  <script type="module">
-    import {
-      db,
-      collection,
-      getDocs,
-      query,
-      where,
-      orderBy,
-      googleProvider,
-      auth,
-      signInWithPopup
-    } from './firebase-config.js';
+<!-- ===== Navigation Row ===== -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="dholpur.html">Dholpur Stone</a>
+  <a href="mandana.html">Mandana Stone</a>
+  <a href="kota.html">Kota Stone</a>
+  <a href="other-stones.html">Other Stones</a>
+  <a href="factories.html">Factories</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+</nav>
 
-    const stonesContainer = document.getElementById('stones-container');
+<!-- ===== Banner ===== -->
+<div class="banner">Discover Natural Stones of Bijoliya</div>
 
-    // Fetch Bijoliya stones from Firestore
-    async function loadBijoliyaStones() {
-      try {
-        const stonesRef = collection(db, "products");
-        const q = query(stonesRef, where("category", "==", "Bijoliya"), orderBy("created_at", "desc"));
-        const querySnapshot = await getDocs(q);
+<!-- ===== Products Grid ===== -->
+<section>
+  <h2>Available Products</h2>
+  <div class="grid" id="product-grid"></div>
+</section>
 
-        stonesContainer.innerHTML = ""; // clear container
+<!-- ===== Footer ===== -->
+<footer>
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+  <a href="about.html" style="color:white;">About Us</a> | <a href="contact.html" style="color:white;">Contact</a>
+</footer>
 
-        if (querySnapshot.empty) {
-          stonesContainer.innerHTML = "<p>No Bijoliya stones found.</p>";
-          return;
-        }
+<!-- ===== Sign In Modal ===== -->
+<div class="modal" id="signin-modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2>Sign In</h2>
+    <input type="email" id="signin-email" placeholder="Email">
+    <input type="password" id="signin-password" placeholder="Password">
+    <button id="signin-btn">Sign In</button>
 
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const card = document.createElement('div');
-          card.className = 'stone-card';
-          card.innerHTML = `
-            <img src="${data.image}" alt="${data.stone_name}">
-            <h3>${data.stone_name}</h3>
-            <p><strong>Sub-category:</strong> ${data.sub_category}</p>
-            <p><strong>Type:</strong> ${data.type}</p>
-            <p><strong>Color:</strong> ${data.color}</p>
-            <p><strong>Price:</strong> ${data.price} / ${data.price_unit}</p>
-            <p><strong>Factory:</strong> ${data.factory_name}</p>
-            <p>${data.description}</p>
-          `;
-          stonesContainer.appendChild(card);
-        });
+    <div style="text-align:center;margin:10px 0;">OR</div>
 
-      } catch (error) {
-        console.error("Error fetching stones:", error);
-        stonesContainer.innerHTML = "<p>Error loading stones.</p>";
-      }
-    }
+    <button id="modal-google-signin" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
+      <img src="assets/images/google-logo.png" alt="Google" style="width:20px; height:20px;">
+      Sign In with Google
+    </button>
 
-    // Google Login Example (optional)
-    async function googleLogin() {
-      try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
-        alert(`Logged in as: ${user.displayName}`);
-      } catch (error) {
-        console.error(error);
-        alert("Google login failed.");
-      }
-    }
+    <div class="feedback" id="signin-feedback"></div>
+    <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
+  </div>
+</div>
 
-    // Load stones on page load
-    loadBijoliyaStones();
-  </script>
+<!-- ===== Sign Up Modal ===== -->
+<div class="modal" id="signup-modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2>Create Account</h2>
+    <input type="text" id="signup-name" placeholder="Full Name">
+    <input type="email" id="signup-email" placeholder="Email">
+    <input type="password" id="signup-password" placeholder="Password">
+    <input type="text" id="signup-phone" placeholder="Phone Number">
+    <button id="signup-btn">Sign Up</button>
+    <div class="feedback" id="signup-feedback"></div>
+    <a href="#" onclick="openModal('signin-modal'); closeModal('signup-modal')">Already have an account? Sign In</a>
+  </div>
+</div>
+
+<!-- ===== Scripts ===== -->
+<script type="module">
+import { db, auth } from './firebase-config.js';
+import { collection, getDocs, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+/* ===== Modal Functions ===== */
+function openModal(id){ document.getElementById(id).style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+
+document.querySelectorAll('.modal-close').forEach(btn=>{
+  btn.addEventListener('click', ()=>{ btn.parentElement.parentElement.style.display='none'; });
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); }
+});
+
+/* ===== Header Buttons ===== */
+const btnOpenSignin = document.getElementById('btn-open-signin');
+const btnOpenSignup = document.getElementById('btn-open-signup');
+const btnGoogleSignin = document.getElementById('btn-google-signin');
+const btnSignOut = document.getElementById('btn-signout');
+const btnPost = document.getElementById('btn-post');
+const historyBtn = document.getElementById('history-btn');
+
+btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
+btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
+
+/* ===== Firebase Auth ===== */
+const provider = new GoogleAuthProvider();
+
+/* ===== Gmail Sign In Modal ===== */
+const modalGoogleBtn = document.getElementById('modal-google-signin');
+const signinFeedback = document.getElementById('signin-feedback');
+
+modalGoogleBtn.addEventListener('click', async ()=>{
+  signinFeedback.textContent = '';
+  try {
+    const result = await signInWithPopup(auth, provider);
+    signinFeedback.style.color = 'green';
+    signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
+    closeModal('signin-modal');
+  } catch(err) {
+    signinFeedback.style.color = 'red';
+    signinFeedback.textContent = '❌ ' + err.message;
+  }
+});
+
+/* ===== Header Gmail Sign In ===== */
+btnGoogleSignin.addEventListener('click', async ()=>{
+  try {
+    const result = await signInWithPopup(auth, provider);
+    alert(`Signed in as ${result.user.displayName}`);
+  } catch(err) { alert(err.message); }
+});
+
+/* ===== Sign Out ===== */
+btnSignOut.addEventListener('click', async ()=>{
+  await signOut(auth);
+  alert('Signed out successfully');
+});
+
+/* ===== Email/Password Sign In ===== */
+const signinBtn = document.getElementById('signin-btn');
+signinBtn.addEventListener('click', async ()=>{
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value.trim();
+  signinFeedback.textContent='';
+  try{
+    await signInWithEmailAndPassword(auth,email,password);
+    signinFeedback.style.color='green';
+    signinFeedback.textContent='✅ Signed in successfully!';
+    closeModal('signin-modal');
+  }catch(err){
+    signinFeedback.style.color='red';
+    signinFeedback.textContent='❌ '+err.message;
+  }
+});
+
+/* ===== Email/Password Sign Up ===== */
+const signupBtn = document.getElementById('signup-btn');
+const signupFeedback = document.getElementById('signup-feedback');
+
+signupBtn.addEventListener('click', async ()=>{
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  signupFeedback.textContent='';
+  try{
+    const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
+    signupFeedback.style.color='green';
+    signupFeedback.textContent='✅ Account created successfully!';
+    closeModal('signup-modal');
+  }catch(err){
+    signupFeedback.style.color='red';
+    signupFeedback.textContent='❌ '+err.message;
+  }
+});
+
+/* ===== Auth State Observer ===== */
+onAuthStateChanged(auth,user=>{
+  if(user){
+    btnOpenSignin.style.display='none';
+    btnOpenSignup.style.display='none';
+    btnGoogleSignin.style.display='none';
+    btnSignOut.style.display='inline-block';
+    btnPost.style.display='inline-block';
+    historyBtn.style.display='inline-block';
+  }else{
+    btnOpenSignin.style.display='inline-block';
+    btnOpenSignup.style.display='inline-block';
+    btnGoogleSignin.style.display='inline-block';
+    btnSignOut.style.display='none';
+    btnPost.style.display='none';
+    historyBtn.style.display='none';
+  }
+});
+
+/* ===== Firestore Products ===== */
+const productGrid = document.getElementById('product-grid');
+let products = [];
+
+async function loadProducts(){
+  const q = query(collection(db,"products"), where("category","==","Bijoliya"), orderBy("created_at","desc"));
+  const snapshot = await getDocs(q);
+  products = snapshot.docs.map(doc=>doc.data());
+  renderProducts(products);
+}
+
+function renderProducts(list){
+  productGrid.innerHTML='';
+  list.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <img src="${p.image}" alt="${p.stone_name}">
+      <h3>${p.stone_name}</h3>
+      <p><strong>Category:</strong> ${p.category}</p>
+      <p><strong>Sub-category:</strong> ${p.sub_category}</p>
+      <p><strong>Type:</strong> ${p.type}</p>
+      <p><strong>Color:</strong> ${p.color}</p>
+      <p><strong>Price:</strong> ₹${p.price} / ${p.price_unit}</p>
+      <p><strong>Factory:</strong> ${p.factory_name}</p>
+      <p><a href="https://wa.me/${p.contact_number}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
+    `;
+    productGrid.appendChild(card);
+  });
+}
+
+window.onload = loadProducts;
+</script>
+
 </body>
 </html>
