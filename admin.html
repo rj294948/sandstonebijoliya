@@ -3,147 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Post Product | Rajasthan SandStone Hub</title>
-<link rel="icon" href="stone-icon.png" type="image/png">
+<title>Admin Panel - Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone-icon.png">
 <link rel="stylesheet" href="style.css">
-
 <style>
-/* ===== Header & Theme same as Home Page ===== */
-body{font-family:sans-serif;margin:0;padding:0;background:#fafafa;}
-header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-header h1{color:#c7a97b;cursor:pointer;}
-header input{padding:8px;width:200px;border-radius:6px;border:1px solid #ccc;}
-header button{background:#c7a97b;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;}
-header button:hover{background:#b38c5f;}
-nav{display:flex;justify-content:center;gap:15px;background:#f3f3f3;padding:10px;}
-nav a{text-decoration:none;color:#333;font-weight:600;}
-.banner{background:#c7a97b;color:white;text-align:center;padding:40px;font-size:1.4rem;margin-bottom:20px;}
-footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
-
-/* ===== Admin Form ===== */
-section{max-width:700px;margin:20px auto;background:white;padding:25px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-section h2{text-align:center;color:#c7a97b;margin-bottom:20px;}
-form input, form select, form textarea{
-  width:100%;padding:10px;margin-bottom:12px;
-  border:1px solid #ccc;border-radius:6px;font-size:1rem;
-}
-form button{
-  width:100%;padding:12px;background:#c7a97b;color:white;
-  border:none;border-radius:6px;font-weight:600;cursor:pointer;
-}
-form button:hover{background:#b38c5f;}
-.feedback{text-align:center;margin-top:10px;font-weight:600;}
+body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
+header{background:#c7a97b;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;color:white;}
+header h1{font-size:1.5rem;cursor:pointer;}
+header button{padding:8px 15px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
+.container{padding:20px;max-width:1200px;margin:auto;}
+form{background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+input,select,textarea{width:100%;padding:10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
+button{background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 20px;border-radius:6px;cursor:pointer;}
+#product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.card{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:10px;}
+.card img{width:100%;height:160px;object-fit:cover;border-radius:6px;}
+.card h3{margin:10px 0 5px;color:#333;}
+.card p{margin:2px 0;font-size:0.9rem;color:#555;}
 </style>
 </head>
 <body>
 
-<!-- ===== Header ===== -->
 <header>
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
-  <div>
-    <button onclick="window.location='index.html'">🏠 Home</button>
-    <button id="btn-signout">Sign Out</button>
-  </div>
+  <button id="logout-btn">Logout</button>
 </header>
 
-<!-- ===== Navigation ===== -->
-<nav>
-  <a href="bijoliya.html">Bijoliya Stone</a>
-  <a href="dholpur.html">Dholpur Stone</a>
-  <a href="mandana.html">Mandana Stone</a>
-  <a href="kota.html">Kota Stone</a>
-  <a href="other-stones.html">Other Stones</a>
-  <a href="factories.html">Factories</a>
-</nav>
-
-<!-- ===== Banner ===== -->
-<div class="banner">Add Your Stone Product Listing</div>
-
-<!-- ===== Product Form ===== -->
-<section>
-  <h2>🧱 Post New Stone Product</h2>
+<div class="container">
+  <h2>Add New Stone Product</h2>
   <form id="product-form">
     <input type="text" id="stone_name" placeholder="Stone Name" required>
-    <input type="text" id="factory_name" placeholder="Factory / Company Name" required>
-    <input type="text" id="category" placeholder="Category (e.g., Bijoliya, Dholpur)" required>
-    <input type="text" id="sub_category" placeholder="Sub Category (e.g., Farsi, Slab, Tile)">
-    <input type="text" id="type" placeholder="Type (e.g., Natural, Polished)">
-    <input type="text" id="color" placeholder="Color (e.g., Brown, Red)">
-    <input type="number" id="price" placeholder="Price">
-    <input type="text" id="price_unit" placeholder="Unit (e.g., sq.ft, piece)">
-    <textarea id="description" placeholder="Short Description"></textarea>
-    <input type="text" id="image" placeholder="Image URL (paste image link)" required>
-    <input type="text" id="whatsapp_link" placeholder="WhatsApp Link (https://wa.me/91...)">
-    <input type="text" id="contact_number" placeholder="Contact Number (+91...)">
-    <button type="submit">Submit Product</button>
-    <div class="feedback" id="feedback"></div>
+    <input type="text" id="category" placeholder="Category (Bijoliya, Dholpur...)" required>
+    <input type="text" id="sub_category" placeholder="Sub-category (Optional)">
+    <input type="text" id="type" placeholder="Type (Farsi, Gitti, Poll...)" required>
+    <input type="text" id="color" placeholder="Color" required>
+    <textarea id="description" placeholder="Description" rows="3"></textarea>
+    <input type="number" id="price" placeholder="Price" required>
+    <input type="text" id="price_unit" placeholder="Unit (sqft, piece...)" required>
+    <input type="text" id="contact_number" placeholder="Contact Number" required>
+    <input type="email" id="email" placeholder="Email (optional)">
+    <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
+    <input type="text" id="image_url" placeholder="Image URL (Firebase Storage)" required>
+    <button type="submit">Add Product</button>
   </form>
-</section>
 
-<!-- ===== Footer ===== -->
-<footer>
-  &copy; 2025 Rajasthan SandStone Hub | Managed by RJ Services
-</footer>
+  <h2>My Products</h2>
+  <div id="product-grid"></div>
+</div>
 
-<!-- ===== Scripts ===== -->
 <script type="module">
-import { db, auth } from './firebase-config.js';
-import { collection, addDoc, serverTimestamp } 
-  from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-import { signOut, onAuthStateChanged } 
-  from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import { auth, db, collection, addDoc, getDocs, query, orderBy, signOut } from './firebase-config.js';
+import { serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-/* ===== Sign Out ===== */
-const btnSignOut = document.getElementById('btn-signout');
-btnSignOut.addEventListener('click', async ()=>{
-  await signOut(auth);
-  alert('Signed out successfully!');
-  window.location='index.html';
-});
-
-/* ===== Auth Guard ===== */
-onAuthStateChanged(auth, user=>{
-  if(!user){
-    alert('Please sign in first!');
-    window.location='index.html';
-  }
-});
-
-/* ===== Form Submit ===== */
 const form = document.getElementById('product-form');
-const feedback = document.getElementById('feedback');
+const grid = document.getElementById('product-grid');
+const logoutBtn = document.getElementById('logout-btn');
 
-form.addEventListener('submit', async(e)=>{
-  e.preventDefault();
-  feedback.textContent='⏳ Uploading...';
+logoutBtn.onclick = async ()=>{await signOut(auth);window.location='signin.html';};
 
-  const data = {
-    stone_name: form.stone_name.value.trim(),
-    factory_name: form.factory_name.value.trim(),
-    category: form.category.value.trim(),
-    sub_category: form.sub_category.value.trim(),
-    type: form.type.value.trim(),
-    color: form.color.value.trim(),
-    price: parseFloat(form.price.value) || 0,
-    price_unit: form.price_unit.value.trim(),
-    description: form.description.value.trim(),
-    image: form.image.value.trim(),
-    whatsapp_link: form.whatsapp_link.value.trim(),
-    contact_number: form.contact_number.value.trim(),
-    created_at: new Date().toISOString(),
-    user_email: auth.currentUser?.email || "guest"
-  };
-
-  try {
-    await addDoc(collection(db, "products"), data);
-    feedback.style.color='green';
-    feedback.textContent='✅ Product added successfully!';
-    form.reset();
-  } catch(err){
-    feedback.style.color='red';
-    feedback.textContent='❌ Error: '+err.message;
-  }
+auth.onAuthStateChanged(user=>{
+  if(!user) window.location='signin.html';
+  else loadProducts(user.uid);
 });
+
+async function loadProducts(uid){
+  const q=query(collection(db,"products"),orderBy("created_at","desc"));
+  const snap=await getDocs(q);
+  grid.innerHTML="";
+  snap.forEach(docSnap=>{
+    const p=docSnap.data();
+    if(p.userId===uid){
+      grid.innerHTML+=`
+        <div class='card'>
+          <img src='${p.image}' alt='${p.stone_name}'>
+          <h3>${p.stone_name}</h3>
+          <p><b>${p.category}</b> | ${p.type}</p>
+          <p>₹${p.price}/${p.price_unit}</p>
+          <p><a href='https://wa.me/${p.contact_number}' target='_blank'>WhatsApp</a> | 
+             <a href='tel:${p.contact_number}'>Call</a></p>
+          ${p.email ? `<p><a href='mailto:${p.email}'>Mail</a></p>` : ""}
+        </div>`;
+    }
+  });
+}
+
+form.onsubmit = async e=>{
+  e.preventDefault();
+  const u=auth.currentUser;
+  const data={
+    stone_name:form.stone_name.value,
+    category:form.category.value,
+    sub_category:form.sub_category.value||"",
+    type:form.type.value,
+    color:form.color.value,
+    description:form.description.value,
+    price:parseFloat(form.price.value),
+    price_unit:form.price_unit.value,
+    contact_number:form.contact_number.value,
+    email:form.email.value||"",
+    factory_name:form.factory_name.value,
+    image:form.image_url.value,
+    created_at:serverTimestamp(),
+    userId:u.uid
+  };
+  await addDoc(collection(db,"products"),data);
+  alert("✅ Product Added Successfully!");
+  form.reset();
+  loadProducts(u.uid);
+};
 </script>
 
 </body>
