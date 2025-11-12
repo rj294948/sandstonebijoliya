@@ -7,74 +7,77 @@
 <link rel="icon" href="stone-icon.png">
 <style>
 body{font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
-header{background:#c7a97b;color:#fff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;}
-header h1{cursor:pointer;font-size:1.3rem;}
+header{background:#c7a97b;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;color:white;}
+header h1{font-size:1.5rem;cursor:pointer;}
+header nav a{color:white;margin-left:15px;text-decoration:none;font-weight:600;}
 .container{padding:20px;max-width:1200px;margin:auto;}
-.card{background:#fff;padding:15px;margin-bottom:15px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-.card img{width:100%;max-height:200px;object-fit:cover;border-radius:8px;}
-.card input, .card textarea{width:100%;margin-top:6px;margin-bottom:8px;padding:8px;border-radius:6px;border:1px solid #ccc;}
-.card button{margin-right:10px;padding:8px 14px;border:none;border-radius:5px;cursor:pointer;}
-.save-btn{background:#4CAF50;color:#fff;}
-.delete-btn{background:#f44336;color:#fff;}
+#product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.card{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:10px;}
+.card img{width:100%;height:160px;object-fit:cover;border-radius:6px;}
+.card h3{margin:10px 0 5px;color:#333;}
+.card p{margin:2px 0;font-size:0.9rem;color:#555;}
+.card .actions{display:flex;justify-content:space-between;margin-top:10px;}
+.edit-btn{background:#5cb85c;color:#fff;padding:6px 10px;border:none;border-radius:4px;cursor:pointer;}
+.delete-btn{background:#d9534f;color:#fff;padding:6px 10px;border:none;border-radius:4px;cursor:pointer;}
 </style>
 </head>
 <body>
 
 <header>
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
-  <button onclick="window.location='admin.html'">⬅ Back to Admin</button>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="admin.html">Add Product</a>
+  </nav>
 </header>
 
 <div class="container">
-  <h2>My Posted Products</h2>
-  <div id="my-products"></div>
+  <h2>My Products</h2>
+  <div id="product-grid"></div>
 </div>
 
 <script type="module">
-import { auth, db, collection, getDocs, query, where, updateDoc, deleteDoc, doc } from './firebase-config.js';
+import { auth, db, collection, getDocs, query, orderBy, doc, deleteDoc } from './firebase-config.js';
 
-const list = document.getElementById("my-products");
+const grid = document.getElementById('product-grid');
 
-auth.onAuthStateChanged(async user=>{
-  if(!user){window.location='signin.html';return;}
-  const q=query(collection(db,"products"),where("userId","==",user.uid));
-  const snap=await getDocs(q);
-  list.innerHTML="";
-  snap.forEach(d=>{
-    const p=d.data();
-    const div=document.createElement("div");
-    div.className="card";
-    div.innerHTML=`
-      <img src="${p.image}" alt="${p.stone_name}">
-      <input value="${p.stone_name}" id="name-${d.id}">
-      <input value="${p.price}" id="price-${d.id}" type="number">
-      <input value="${p.price_unit}" id="unit-${d.id}">
-      <input value="${p.category}" id="cat-${d.id}">
-      <textarea id="desc-${d.id}">${p.description||""}</textarea>
-      <button class="save-btn" onclick="saveEdit('${d.id}')">💾 Save</button>
-      <button class="delete-btn" onclick="deleteItem('${d.id}')">🗑 Delete</button>
-    `;
-    list.appendChild(div);
-  });
+auth.onAuthStateChanged(user => {
+  if (!user) window.location = 'signin.html';
+  else loadProducts(user.uid);
 });
 
-window.saveEdit = async (id)=>{
-  const name=document.getElementById(`name-${id}`).value;
-  const price=document.getElementById(`price-${id}`).value;
-  const unit=document.getElementById(`unit-${id}`).value;
-  const desc=document.getElementById(`desc-${id}`).value;
-  const cat=document.getElementById(`cat-${id}`).value;
-  await updateDoc(doc(db,"products",id),{stone_name:name,price:parseFloat(price),price_unit:unit,description:desc,category:cat});
-  alert("✅ Product Updated Successfully!");
+async function loadProducts(uid) {
+  const q = query(collection(db, "products"), orderBy("created_at", "desc"));
+  const snap = await getDocs(q);
+  grid.innerHTML = "";
+  snap.forEach(docSnap => {
+    const p = docSnap.data();
+    if (p.userId === uid) {
+      grid.innerHTML += `
+        <div class='card'>
+          <img src='${p.image}' alt='${p.stone_name}'>
+          <h3>${p.stone_name}</h3>
+          <p><b>${p.category}</b> | ${p.type}</p>
+          <p>₹${p.price}/${p.price_unit}</p>
+          <p>${p.color}</p>
+          <div class="actions">
+            <button class="edit-btn" onclick="window.location='admin.html?edit=${docSnap.id}'">Edit</button>
+            <button class="delete-btn" onclick="deleteProduct('${docSnap.id}')">Delete</button>
+          </div>
+        </div>`;
+    }
+  });
 }
 
-window.deleteItem = async (id)=>{
-  if(confirm("Delete this product?")){
-    await deleteDoc(doc(db,"products",id));
-    alert("🗑 Product Deleted!");
-    location.reload();
+window.deleteProduct = async (id) => {
+  if (confirm("🗑️ Delete this product?")) {
+    await deleteDoc(doc(db, "products", id));
+    alert("Deleted successfully!");
+    const user = auth.currentUser;
+    if (user) loadProducts(user.uid);
   }
-}
+};
 </script>
+
 </body>
 </html>
