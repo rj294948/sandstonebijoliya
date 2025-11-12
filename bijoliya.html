@@ -3,25 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bijoliya Stones | Rajasthan SandStone Hub</title>
-<link rel="stylesheet" href="style.css">
+<title>Bijoliya Stones - Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone-icon.png">
 <style>
-/* Grid & Card same as previous code */
-.grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 20px; }
-.card { background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:0.3s; cursor:pointer; }
-.card:hover { transform:translateY(-5px); }
-.card img { width:100%; height:160px; object-fit:cover; }
-.card h3 { padding:10px; font-size:1rem; text-align:center; color:#333; }
-.card p { text-align:center; color:gray; font-size:0.9rem; }
-.card a { color:#c7a97b; text-decoration:none; font-weight:600; }
-.card a:hover { text-decoration:underline; }
-
-.filters { display:flex; flex-wrap:wrap; gap:10px; margin:20px 0; justify-content:center; }
-.filters select, .filters input { padding:6px 10px; border-radius:6px; border:1px solid #ccc; }
-.filters button { padding:6px 15px; background:#c7a97b; border:none; color:white; border-radius:6px; cursor:pointer; }
-.filters button:hover { background:#b38c5f; }
-
-@media(max-width:600px){ .filters{flex-direction:column; gap:8px;} }
+body{font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
+header{background:#c7a97b;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;color:white;}
+header h1{font-size:1.5rem;cursor:pointer;}
+.container{padding:20px;max-width:1200px;margin:auto;}
+#product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.card{background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:10px;}
+.card img{width:100%;height:160px;object-fit:cover;border-radius:6px;}
+.card h3{margin:10px 0 5px;color:#333;}
+.card p{margin:2px 0;font-size:0.9rem;color:#555;}
 </style>
 </head>
 <body>
@@ -30,105 +23,35 @@
   <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
 </header>
 
-<nav>
-  <a href="index.html">Home</a>
-  <a href="bijoliya.html">Bijoliya Stone</a>
-  <a href="dholpur.html">Dholpur Stone</a>
-  <a href="mandana.html">Mandana Stone</a>
-  <a href="kota.html">Kota Stone</a>
-  <a href="other-stones.html">Other Stones</a>
-  <a href="factories.html">Factories</a>
-  <a href="about.html">About</a>
-  <a href="contact.html">Contact</a>
-</nav>
-
-<div class="banner">Bijoliya Sandstones</div>
-
-<section class="filters">
-  <select id="filter-subcategory">
-    <option value="All">All Sub-categories</option>
-  </select>
-  <select id="filter-color">
-    <option value="All">All Colors</option>
-  </select>
-  <input type="number" id="min-price" placeholder="Min Price">
-  <input type="number" id="max-price" placeholder="Max Price">
-  <button onclick="applyFilters()">Apply Filters</button>
-</section>
-
-<section>
-  <div class="grid" id="product-grid"></div>
-</section>
-
-<footer>
-  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services
-</footer>
+<div class="container">
+  <h2>Bijoliya Category Stones</h2>
+  <div id="product-grid"></div>
+</div>
 
 <script type="module">
 import { db, collection, getDocs, query, orderBy } from './firebase-config.js';
+const grid = document.getElementById('product-grid');
 
-const productGrid = document.getElementById('product-grid');
-const filterSub = document.getElementById('filter-subcategory');
-const filterColor = document.getElementById('filter-color');
-let products = [];
-
-async function loadProducts() {
-  const q = query(collection(db,"products"),orderBy("created_at","desc"));
-  const snapshot = await getDocs(q);
-  products = snapshot.docs.map(doc => doc.data()).filter(p => p.category === "Bijoliya");
-
-  populateFilters();
-  renderProducts(products);
-}
-
-function populateFilters() {
-  const subcats = [...new Set(products.map(p=>p.sub_category))];
-  const colors = [...new Set(products.map(p=>p.color))];
-
-  subcats.forEach(s => filterSub.innerHTML += `<option value="${s}">${s}</option>`);
-  colors.forEach(c => filterColor.innerHTML += `<option value="${c}">${c}</option>`);
-}
-
-function renderProducts(list) {
-  productGrid.innerHTML = '';
-  list.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${p.image}" alt="${p.stone_name}">
-      <h3>${p.stone_name}</h3>
-      <p>${p.description}</p>
-      <p><strong>Sub-category:</strong> ${p.sub_category}</p>
-      <p><strong>Type:</strong> ${p.type}</p>
-      <p><strong>Color:</strong> ${p.color}</p>
-      <p><strong>Price:</strong> ₹${p.price} / ${p.price_unit}</p>
-      <p><strong>Factory:</strong> ${p.factory_name}</p>
-      <p>
-        <a href="${p.whatsapp_link}" target="_blank">WhatsApp</a> | 
-        <a href="tel:${p.contact_number}">Call</a>
-      </p>
-    `;
-    productGrid.appendChild(card);
+async function loadCategory(category){
+  const q = query(collection(db, "products"), orderBy("created_at", "desc"));
+  const snap = await getDocs(q);
+  grid.innerHTML="";
+  snap.forEach(docSnap=>{
+    const p=docSnap.data();
+    if(p.category.toLowerCase()==category){
+      grid.innerHTML += `
+      <div class='card'>
+        <img src='${p.image}' alt='${p.stone_name}'>
+        <h3>${p.stone_name}</h3>
+        <p><b>${p.category}</b> | ${p.type}</p>
+        <p>₹${p.price}/${p.price_unit}</p>
+        <p>${p.color}</p>
+      </div>`;
+    }
   });
 }
 
-function applyFilters() {
-  const subcat = filterSub.value;
-  const col = filterColor.value;
-  const minP = document.getElementById('min-price').value;
-  const maxP = document.getElementById('max-price').value;
-
-  const filtered = products.filter(p =>
-    (subcat === 'All' || p.sub_category === subcat) &&
-    (col === 'All' || p.color === col) &&
-    (!minP || p.price >= minP) &&
-    (!maxP || p.price <= maxP)
-  );
-  renderProducts(filtered);
-}
-
-window.onload = loadProducts;
-window.applyFilters = applyFilters;
+loadCategory("bijoliya");
 </script>
 
 </body>
