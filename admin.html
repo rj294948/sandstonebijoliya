@@ -20,7 +20,6 @@ form {background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgb
 input,select,textarea {width:100%;padding:10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
 button {background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 20px;border-radius:6px;cursor:pointer;}
 button:hover {background:#b38c5f;}
-.preview img {width:120px;border-radius:8px;margin-top:10px;}
 footer {background:#333;color:white;text-align:center;padding:15px;margin-top:40px;}
 footer a {color:white;text-decoration:none;}
 </style>
@@ -62,11 +61,7 @@ footer a {color:white;text-decoration:none;}
     <input type="text" id="contact_number" placeholder="Contact Number" required>
     <input type="email" id="email" placeholder="Email (optional)">
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
-    
-    <label>Upload Stone Image:</label>
-    <input type="file" id="image_file" accept="image/*">
-    <div class="preview" id="image_preview"></div>
-    
+    <input type="text" id="image_url" placeholder="Image URL (Firebase Storage)" required>
     <button type="submit">Save Product</button>
   </form>
 </div>
@@ -78,108 +73,96 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, storage,
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
-import { 
-  collection, addDoc, doc, updateDoc, serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
-import { 
-  ref, uploadBytes, getDownloadURL 
-} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
 const productIdInput = document.getElementById('product-id');
-const imageInput = document.getElementById('image_file');
-const previewDiv = document.getElementById('image_preview');
 
-let uploadedImageUrl = "";
-
-// ✅ Logout
+// ✅ Logout and redirect to Home
 logoutBtn.onclick = async () => {
   try {
-    await auth.signOut();
-    alert("Logged out successfully!");
+    await signOut(auth);
+    alert("You have been logged out successfully!");
     window.location = 'index.html';
   } catch (error) {
-    alert("Logout failed. Try again.");
+    console.error("Logout failed:", error);
+    alert("Error logging out. Try again.");
   }
 };
 
-// ✅ Preview image before upload
-imageInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      previewDiv.innerHTML = `<img src="${ev.target.result}" alt="Preview">`;
-    };
-    reader.readAsDataURL(file);
+// ✅ Auto-fill product if editing from History
+window.addEventListener('DOMContentLoaded', () => {
+  const editId = localStorage.getItem("editProductId");
+  const editData = localStorage.getItem("editProductData");
+
+  if (editId && editData) {
+    const p = JSON.parse(decodeURIComponent(editData));
+    document.getElementById('product-id').value = editId;
+    document.getElementById('stone_name').value = p.stone_name || "";
+    document.getElementById('category').value = p.category || "";
+    document.getElementById('sub_category').value = p.sub_category || "";
+    document.getElementById('type').value = p.type || "";
+    document.getElementById('color').value = p.color || "";
+    document.getElementById('description').value = p.description || "";
+    document.getElementById('price').value = p.price || "";
+    document.getElementById('price_unit').value = p.price_unit || "";
+    document.getElementById('contact_number').value = p.contact_number || "";
+    document.getElementById('email').value = p.email || "";
+    document.getElementById('factory_name').value = p.factory_name || "";
+    document.getElementById('image_url').value = p.image || "";
   }
+
+  // Clear storage once data filled
+  localStorage.removeItem("editProductId");
+  localStorage.removeItem("editProductData");
 });
 
-// ✅ Auth Check
+// ✅ Auth check
 auth.onAuthStateChanged(user => {
   if (!user) {
-    console.log("Redirecting to sign in...");
+    console.log("User not logged in, redirecting...");
     window.location = 'signin.html';
   }
 });
 
-// ✅ Form Submit - Upload Image + Save Data
+// ✅ Save / Update Product
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
-  try {
-    let imageUrl = uploadedImageUrl;
+  const formattedCategory = form.category.value.trim().charAt(0).toUpperCase() + form.category.value.trim().slice(1).toLowerCase();
 
-    // 🔹 Upload image if selected
-    if (imageInput.files[0]) {
-      const file = imageInput.files[0];
-      const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
-      const snapshot = await uploadBytes(storageRef, file);
-      imageUrl = await getDownloadURL(snapshot.ref);
-    }
+  const data = {
+    stone_name: form.stone_name.value.trim(),
+    category: formattedCategory,
+    sub_category: form.sub_category.value.trim() || "",
+    type: form.type.value.trim(),
+    color: form.color.value.trim(),
+    description: form.description.value.trim(),
+    price: parseFloat(form.price.value),
+    price_unit: form.price_unit.value.trim(),
+    contact_number: form.contact_number.value.trim(),
+    email: form.email.value.trim() || "",
+    factory_name: form.factory_name.value.trim(),
+    image: form.image_url.value.trim(),
+    created_at: serverTimestamp(),
+    userId: user.uid
+  };
 
-    const formattedCategory = form.category.value.trim().charAt(0).toUpperCase() + 
-                              form.category.value.trim().slice(1).toLowerCase();
-
-    const data = {
-      stone_name: form.stone_name.value.trim(),
-      category: formattedCategory,
-      sub_category: form.sub_category.value.trim() || "",
-      type: form.type.value.trim(),
-      color: form.color.value.trim(),
-      description: form.description.value.trim(),
-      price: parseFloat(form.price.value),
-      price_unit: form.price_unit.value.trim(),
-      contact_number: form.contact_number.value.trim(),
-      email: form.email.value.trim() || "",
-      factory_name: form.factory_name.value.trim(),
-      image: imageUrl,
-      created_at: serverTimestamp(),
-      userId: user.uid
-    };
-
-    const id = productIdInput.value;
-    if (id) {
-      await updateDoc(doc(db, "products", id), data);
-      alert("✅ Product updated successfully!");
-    } else {
-      await addDoc(collection(db, "products"), data);
-      alert("✅ Product added successfully!");
-    }
-
-    form.reset();
-    previewDiv.innerHTML = "";
-    uploadedImageUrl = "";
-
-  } catch (err) {
-    console.error("Error uploading:", err);
-    alert("❌ Error: " + err.message);
+  const id = productIdInput.value;
+  if (id) {
+    await updateDoc(doc(db, "products", id), data);
+    alert("✅ Product updated successfully!");
+  } else {
+    await addDoc(collection(db, "products"), data);
+    alert("✅ Product added successfully!");
   }
+
+  form.reset();
+  productIdInput.value = "";
 };
 </script>
 </body>
