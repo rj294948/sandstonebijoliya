@@ -147,7 +147,7 @@ form.onsubmit = async (e) => {
     data.append('mimeType', file.type || "image/png");
 
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbyt6NqoGzGJf-Ltvb-L5gA6i7sRq4kirzT16_VIrw_haHMEkwfqel_dcOEDfWAzTQkT/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbzAXUxFwbvlmoAGVmB1GIPYJIXKDpybQj_lRw9VtdkGua9Cod0977b_KaR941Nv4Q4m/exec', {
         method:'POST',
         body:data,
       });
