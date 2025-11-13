@@ -61,7 +61,13 @@ footer a {color:white;text-decoration:none;}
     <input type="text" id="contact_number" placeholder="Contact Number" required>
     <input type="email" id="email" placeholder="Email (optional)">
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
-    <input type="text" id="image_url" placeholder="Image URL (Firebase Storage)" required>
+
+    <!-- 🆕 Image upload field -->
+    <label>Upload Image (from device):</label>
+    <input type="file" id="image_file" accept="image/*">
+    <input type="text" id="image_url" placeholder="Or paste Image URL (optional)">
+    <p id="upload-status" style="font-size:14px;color:#888;"></p>
+
     <button type="submit">Save Product</button>
   </form>
 </div>
@@ -73,12 +79,13 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
+  auth, db, storage, collection, addDoc, doc, updateDoc, signOut, serverTimestamp, ref, uploadBytes, getDownloadURL 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
 const productIdInput = document.getElementById('product-id');
+const uploadStatus = document.getElementById('upload-status');
 
 // ✅ Logout and redirect to Home
 logoutBtn.onclick = async () => {
@@ -92,29 +99,27 @@ logoutBtn.onclick = async () => {
   }
 };
 
-// ✅ Auto-fill product if editing from History
+// ✅ Auto-fill product if editing
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
 
   if (editId && editData) {
     const p = JSON.parse(decodeURIComponent(editData));
-    document.getElementById('product-id').value = editId;
-    document.getElementById('stone_name').value = p.stone_name || "";
-    document.getElementById('category').value = p.category || "";
-    document.getElementById('sub_category').value = p.sub_category || "";
-    document.getElementById('type').value = p.type || "";
-    document.getElementById('color').value = p.color || "";
-    document.getElementById('description').value = p.description || "";
-    document.getElementById('price').value = p.price || "";
-    document.getElementById('price_unit').value = p.price_unit || "";
-    document.getElementById('contact_number').value = p.contact_number || "";
-    document.getElementById('email').value = p.email || "";
-    document.getElementById('factory_name').value = p.factory_name || "";
-    document.getElementById('image_url').value = p.image || "";
+    productIdInput.value = editId;
+    form.stone_name.value = p.stone_name || "";
+    form.category.value = p.category || "";
+    form.sub_category.value = p.sub_category || "";
+    form.type.value = p.type || "";
+    form.color.value = p.color || "";
+    form.description.value = p.description || "";
+    form.price.value = p.price || "";
+    form.price_unit.value = p.price_unit || "";
+    form.contact_number.value = p.contact_number || "";
+    form.email.value = p.email || "";
+    form.factory_name.value = p.factory_name || "";
+    form.image_url.value = p.image || "";
   }
-
-  // Clear storage once data filled
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
@@ -122,7 +127,6 @@ window.addEventListener('DOMContentLoaded', () => {
 // ✅ Auth check
 auth.onAuthStateChanged(user => {
   if (!user) {
-    console.log("User not logged in, redirecting...");
     window.location = 'signin.html';
   }
 });
@@ -134,6 +138,24 @@ form.onsubmit = async (e) => {
   if (!user) return alert("Please login again.");
 
   const formattedCategory = form.category.value.trim().charAt(0).toUpperCase() + form.category.value.trim().slice(1).toLowerCase();
+
+  let imageURL = form.image_url.value.trim();
+
+  // 🆕 Upload image file if selected
+  const file = document.getElementById('image_file').files[0];
+  if (file) {
+    try {
+      uploadStatus.textContent = "⏳ Uploading image...";
+      const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      imageURL = await getDownloadURL(storageRef);
+      uploadStatus.textContent = "✅ Image uploaded successfully!";
+    } catch (err) {
+      console.error("Image upload failed:", err);
+      uploadStatus.textContent = "❌ Image upload failed.";
+      return alert("Error uploading image. Check console.");
+    }
+  }
 
   const data = {
     stone_name: form.stone_name.value.trim(),
@@ -147,7 +169,7 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim() || "",
     factory_name: form.factory_name.value.trim(),
-    image: form.image_url.value.trim(),
+    image: imageURL,
     created_at: serverTimestamp(),
     userId: user.uid
   };
@@ -163,6 +185,7 @@ form.onsubmit = async (e) => {
 
   form.reset();
   productIdInput.value = "";
+  uploadStatus.textContent = "";
 };
 </script>
 </body>
