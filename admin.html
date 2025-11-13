@@ -74,9 +74,7 @@ footer a {color:white;text-decoration:none;}
 </footer>
 
 <script type="module">
-import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
-} from './firebase-config.js';
+import { auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
@@ -86,7 +84,7 @@ const preview = document.getElementById('preview');
 
 let imageBase64 = "";
 
-// 🖼️ Convert image to Base64
+// Convert image to Base64
 imageInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if(file){
@@ -99,19 +97,19 @@ imageInput.addEventListener("change", (e) => {
   }
 });
 
-// ✅ Logout
+// Logout
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
     alert("You have been logged out successfully!");
     window.location = 'index.html';
   } catch (error) {
-    console.error("Logout failed:", error);
-    alert("Error logging out. Try again.");
+    console.error(error);
+    alert("Error logging out.");
   }
 };
 
-// ✅ Prefill Edit Mode
+// Prefill for edit mode
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
@@ -138,23 +136,22 @@ window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem("editProductData");
 });
 
-// ✅ Auth check
-auth.onAuthStateChanged(user => {
-  if(!user) window.location = 'signin.html';
-});
+// Auth check
+auth.onAuthStateChanged(user => { if(!user) window.location='signin.html'; });
 
-// ✅ Save / Update Product with Drive → Apps Script → Sheet → Firestore
+// Save / Update Product with Apps Script upload → Sheet → Firestore
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if(!user) return alert("Please login again.");
   if(!imageBase64) return alert("Please select an image!");
 
-  try {
+  try{
     const fileName = `${Date.now()}_stone.png`;
 
-    // 1️⃣ Upload image via Apps Script
-    const uploadRes = await fetch("https://script.google.com/macros/s/AKfycbzW1q5WQqFDszz0PoJ7bR6LNEGGhApK9ixcHEKQ6xM5HetN8LS_9NFDQasc8oRxYc5f/exec", {
+    // Upload to Google Apps Script → Drive → get URL
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzW1q5WQqFDszz0PoJ7bR6LNEGGhApK9ixcHEKQ6xM5HetN8LS_9NFDQasc8oRxYc5f/exec"; // Replace with your deployed script URL
+    const res = await fetch(scriptUrl, {
       method: "POST",
       body: new URLSearchParams({
         stone_name: form.stone_name.value.trim(),
@@ -164,12 +161,12 @@ form.onsubmit = async (e) => {
         mimeType: "image/png"
       })
     });
-    const uploadJson = await uploadRes.json();
-    if(uploadJson.status !== "success") throw new Error(uploadJson.message);
 
-    const imageUrl = uploadJson.url; // URL from Apps Script & Sheet
+    const json = await res.json();
+    if(json.status !== "success") throw new Error(json.message);
+    const imageUrl = json.url;
 
-    // 2️⃣ Save to Firestore
+    // Save product to Firestore
     const data = {
       stone_name: form.stone_name.value.trim(),
       category: form.category.value.trim(),
@@ -203,10 +200,9 @@ form.onsubmit = async (e) => {
 
   } catch(err){
     console.error(err);
-    alert("❌ Upload failed: "+err.message);
+    alert("❌ Upload failed: " + err.message);
   }
 };
 </script>
-
 </body>
 </html>
