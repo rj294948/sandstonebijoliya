@@ -74,7 +74,9 @@ footer a {color:white;text-decoration:none;}
 </footer>
 
 <script type="module">
-import { auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp } from './firebase-config.js';
+import { 
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
+} from './firebase-config.js';
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
@@ -82,23 +84,23 @@ const productIdInput = document.getElementById('product-id');
 const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 
-// Logout
+// ✅ Logout
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
-    alert("Logged out successfully!");
+    alert("You have been logged out successfully!");
     window.location = 'index.html';
-  } catch (err) {
-    console.error(err);
-    alert("Error logging out");
+  } catch (error) {
+    console.error("Logout failed:", error);
+    alert("Error logging out. Try again.");
   }
 };
 
-// Prefill edit mode
+// ✅ Prefill Edit Mode
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
-  if(editId && editData){
+  if (editId && editData) {
     const p = JSON.parse(decodeURIComponent(editData));
     productIdInput.value = editId;
     form.stone_name.value = p.stone_name || "";
@@ -112,46 +114,44 @@ window.addEventListener('DOMContentLoaded', () => {
     form.contact_number.value = p.contact_number || "";
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
-    if(p.image){
-      preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
-    }
+    if (p.image) preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
   }
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
 
-// Auth check
-auth.onAuthStateChanged(user => {
-  if(!user) window.location='signin.html';
-});
+// ✅ Auth check
+auth.onAuthStateChanged(user => { if (!user) window.location = 'signin.html'; });
 
-// Save / Update Product with Apps Script → Sheet → Firestore
-form.onsubmit = async (e)=>{
+// ✅ Save / Update Product (CORS-safe, Apps Script → Drive → Sheet → Firestore)
+form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
-  if(!user) return alert("Please login again!");
-  if(!imageInput.files.length) return alert("Please select an image!");
+  if (!user) return alert("Please login again.");
 
   const file = imageInput.files[0];
-  const fileName = `${Date.now()}_${file.name}`;
+  if (!file) return alert("Please select an image!");
 
   try {
-    // 1️⃣ Upload image to Apps Script & Sheet
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyt6NqoGzGJf-Ltvb-L5gA6i7sRq4kirzT16_VIrw_haHMEkwfqel_dcOEDfWAzTQkT/exec";
+    const fileName = `${Date.now()}_${file.name}`;
     const formData = new FormData();
     formData.append("stone_name", form.stone_name.value.trim());
     formData.append("category", form.category.value.trim());
     formData.append("fileName", fileName);
     formData.append("file", file);
 
-    const res = await fetch(scriptUrl, { method:"POST", body: formData });
-    const json = await res.json();
-    if(json.status!=="success") throw new Error(json.message);
+    // Upload to Apps Script
+    const res = await fetch("https://script.google.com/macros/s/AKfycbyt6NqoGzGJf-Ltvb-L5gA6i7sRq4kirzT16_VIrw_haHMEkwfqel_dcOEDfWAzTQkT/exec", {
+      method: "POST",
+      body: formData
+    });
+    const uploadData = await res.json();
+    if (uploadData.status !== "success") throw new Error(uploadData.message);
 
-    const imageUrl = json.url;
+    const imageUrl = uploadData.url;
 
-    // 2️⃣ Save product to Firestore
-    const data = {
+    // Save to Firestore
+    const productData = {
       stone_name: form.stone_name.value.trim(),
       category: form.category.value.trim(),
       sub_category: form.sub_category.value.trim(),
@@ -169,24 +169,19 @@ form.onsubmit = async (e)=>{
     };
 
     const id = productIdInput.value;
-    if(id){
-      await updateDoc(doc(db,"products",id),data);
-      alert("✅ Product updated successfully!");
-    } else {
-      await addDoc(collection(db,"products"),data);
-      alert("✅ Product added successfully!");
-    }
+    if (id) await updateDoc(doc(db, "products", id), productData);
+    else await addDoc(collection(db, "products"), productData);
 
+    alert("✅ Product saved successfully!");
     form.reset();
-    preview.innerHTML="";
-    productIdInput.value="";
-    
-  } catch(err){
+    preview.innerHTML = "";
+    productIdInput.value = "";
+
+  } catch (err) {
     console.error(err);
-    alert("❌ Upload failed: "+err.message);
+    alert("❌ Upload failed: " + err.message);
   }
 };
 </script>
-
 </body>
 </html>
