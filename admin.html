@@ -5,35 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel - Rajasthan SandStone Hub</title>
 <link rel="icon" href="stone-icon.png" type="image/png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <style>
-/* --- same CSS, koi change nahi hua --- */
-body {font-family: "Poppins", sans-serif; background: #f7f6f2; margin: 0;}
-header {background: #c7a97b; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; box-shadow: 0 3px 6px rgba(0,0,0,0.1);}
-header h1 {font-size: 1.5rem; cursor: pointer; margin: 0;}
-header button {padding: 8px 14px; border: none; background: #fff; color: #c7a97b; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;}
-header button:hover { background: #f4e9d8; }
-nav {display: flex; justify-content: center; flex-wrap: wrap; background: #fff; border-bottom: 1px solid #e0e0e0; gap: 15px; padding: 10px;}
-nav a {text-decoration: none; color: #444; font-weight: 600; padding: 6px 10px; border-radius: 6px;}
-nav a:hover {background: #f3ede3;}
-.container {max-width: 900px; background: #fff; margin: 25px auto; padding: 25px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);}
-h2 {text-align: center; color: #4a4a4a; margin-bottom: 20px;}
-form input, form select, form textarea {width: 100%; padding: 10px; margin-bottom: 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 15px; outline: none;}
-form input:focus, textarea:focus {border-color: #c7a97b;}
-form button {width: 100%; padding: 12px; background: #c7a97b; color: white; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s;}
-form button:hover {background: #b18a5f;}
-footer {background: #333; color: white; text-align: center; padding: 15px; margin-top: 40px;}
-footer a {color: #fff; text-decoration: none;}
-.toast {position: fixed; bottom: 25px; right: 25px; background: #333; color: white; padding: 12px 18px; border-radius: 8px; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; z-index: 1000;}
-.toast.show {opacity: 1; transform: translateY(0);}
-.preview {display: flex; justify-content: center; margin-bottom: 15px;}
-.preview img {max-width: 200px; border-radius: 10px; border: 1px solid #ccc;}
-.loader {display: none; text-align: center; margin-bottom: 15px;}
-.loader div {border: 4px solid #eee; border-top: 4px solid #c7a97b; border-radius: 50%; width: 35px; height: 35px; animation: spin 0.8s linear infinite; margin: auto;}
-@keyframes spin {100% {transform: rotate(360deg);}}
+body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
+header {background:#c7a97b;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+header h1 {font-size:1.5rem;cursor:pointer;margin:0;}
+header div {display:flex;flex-wrap:wrap;gap:10px;}
+header button {padding:8px 15px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
+nav {display:flex;justify-content:center;gap:15px;background:#f3f3f3;padding:10px;flex-wrap:wrap;}
+nav a {text-decoration:none;color:#333;font-weight:600;}
+.container {padding:20px;max-width:1200px;margin:auto;}
+h2 {color:#444;text-align:center;margin-bottom:20px;}
+form {background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+input,select,textarea {width:100%;padding:10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
+button {background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 20px;border-radius:6px;cursor:pointer;}
+button:hover {background:#b38c5f;}
+footer {background:#333;color:white;text-align:center;padding:15px;margin-top:40px;}
+footer a {color:white;text-decoration:none;}
+.preview-img {max-width:150px;border-radius:8px;margin-top:10px;display:none;}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -57,15 +48,11 @@ footer a {color: #fff; text-decoration: none;}
 </nav>
 
 <div class="container">
-  <h2>🪨 Add / Edit Stone Product</h2>
-  <div class="loader"><div></div><p>Uploading...</p></div>
+  <h2>Add / Edit Stone Product</h2>
   <form id="product-form">
     <input type="hidden" id="product-id">
     <input type="text" id="stone_name" placeholder="Stone Name" required>
-    <input list="category-list" id="category" placeholder="Category (Bijoliya, Dholpur...)" required>
-    <datalist id="category-list">
-      <option value="Bijoliya"><option value="Dholpur"><option value="Mandana"><option value="Kota"><option value="Other Stones">
-    </datalist>
+    <input type="text" id="category" placeholder="Category (Bijoliya, Dholpur...)" required>
     <input type="text" id="sub_category" placeholder="Sub-category (Optional)">
     <input type="text" id="type" placeholder="Type (Farsi, Gitti, Poll...)" required>
     <input type="text" id="color" placeholder="Color" required>
@@ -75,95 +62,108 @@ footer a {color: #fff; text-decoration: none;}
     <input type="text" id="contact_number" placeholder="Contact Number" required>
     <input type="email" id="email" placeholder="Email (optional)">
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
-    <label><strong>Upload Stone Image</strong></label>
-    <input type="file" id="image_upload" accept="image/*">
-    <div class="preview"><img id="preview-img" src="" alt=""></div>
+
+    <label>Upload Image (Google Drive)</label>
+    <input type="file" id="image_file" accept="image/*">
+    <img id="preview" class="preview-img" src="">
     <input type="text" id="image_url" placeholder="Image URL (Auto-filled)" readonly>
-    <button type="submit">💾 Save Product</button>
+
+    <button type="submit">Save Product</button>
   </form>
 </div>
 
 <footer>
-  © 2025 Rajasthan SandStone Hub | Designed by RJ Services |
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services |
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<div class="toast" id="toast"></div>
-
 <script type="module">
 import { 
-  auth, db, storage,
-  collection, addDoc, doc, updateDoc, signOut, serverTimestamp,
-  ref, uploadBytes, getDownloadURL
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
-const toast = document.getElementById('toast');
-const imageInput = document.getElementById('image_upload');
+const productIdInput = document.getElementById('product-id');
+const imageInput = document.getElementById('image_file');
 const imageUrlInput = document.getElementById('image_url');
-const previewImg = document.getElementById('preview-img');
-const loader = document.querySelector('.loader');
+const preview = document.getElementById('preview');
 
-function showToast(msg, color="#333") {
-  toast.textContent = msg;
-  toast.style.background = color;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000);
-}
+// ⚙️ Replace with your deployed Apps Script Web App URL
+const APP_SCRIPT_URL = "https://script.google.com/macros/s/PASTE_YOUR_SCRIPT_DEPLOYMENT_URL_HERE/exec";
 
 // ✅ Logout
 logoutBtn.onclick = async () => {
-  await signOut(auth);
-  showToast("Logged out successfully!", "#c7a97b");
-  setTimeout(() => window.location = 'index.html', 1200);
+  try {
+    await signOut(auth);
+    alert("You have been logged out successfully!");
+    window.location = 'index.html';
+  } catch (error) {
+    console.error("Logout failed:", error);
+    alert("Error logging out. Try again.");
+  }
 };
 
-// ✅ Prefill if editing
+// ✅ Load product if editing
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
   if (editId && editData) {
     const p = JSON.parse(decodeURIComponent(editData));
-    form["product-id"].value = editId;
-    for (const key in p) if (form[key]) form[key].value = p[key];
-    if (p.image) previewImg.src = p.image;
+    productIdInput.value = editId;
+    for (let key in p) {
+      if (form[key]) form[key].value = p[key];
+    }
+    if (p.image) {
+      imageUrlInput.value = p.image;
+      preview.src = p.image;
+      preview.style.display = "block";
+    }
   }
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
 
-// ✅ Auth check
-auth.onAuthStateChanged(user => { if (!user) window.location = 'signin.html'; });
+// ✅ Auth Check
+auth.onAuthStateChanged(user => {
+  if (!user) window.location = 'signin.html';
+});
 
-// ✅ Image upload with automatic URL + CORS-safe metadata
-imageInput.addEventListener('change', async (e) => {
+// ✅ Upload image to Google Drive via Apps Script
+imageInput.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
-  previewImg.src = URL.createObjectURL(file);
-  loader.style.display = "block";
 
+  const formData = new FormData();
+  formData.append("file", file);
+
+  imageUrlInput.placeholder = "Uploading...";
   try {
-    const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
-    // 🔧 Add CORS-safe metadata
-    const metadata = { contentType: file.type, cacheControl: "public, max-age=300" };
-    const snapshot = await uploadBytes(storageRef, file, metadata);
-    const url = await getDownloadURL(snapshot.ref);
-    imageUrlInput.value = url;
-    showToast("✅ Image uploaded successfully!", "#4caf50");
+    const res = await fetch(APP_SCRIPT_URL, {
+      method: "POST",
+      body: formData,
+    });
+    const result = await res.json();
+
+    if (result.success && result.imageUrl) {
+      imageUrlInput.value = result.imageUrl;
+      preview.src = result.imageUrl;
+      preview.style.display = "block";
+    } else {
+      alert("❌ Upload failed: " + (result.message || "Unknown error"));
+    }
   } catch (err) {
-    console.error(err);
-    showToast("❌ Upload failed (CORS or permission)", "#d9534f");
+    alert("❌ CORS or Upload Error: " + err.message);
   } finally {
-    loader.style.display = "none";
+    imageUrlInput.placeholder = "Image URL (Auto-filled)";
   }
 });
 
-// ✅ Add / Update product
+// ✅ Save / Update Product
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
-  if (!user) return showToast("Please login again!", "#d9534f");
+  if (!user) return alert("Please login again.");
 
   const data = {
     stone_name: form.stone_name.value.trim(),
@@ -177,22 +177,22 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim(),
     factory_name: form.factory_name.value.trim(),
-    image: form.image_url.value.trim(),
+    image: imageUrlInput.value.trim(),
     created_at: serverTimestamp(),
     userId: user.uid
   };
 
-  const id = form["product-id"].value;
-  if (id) {
-    await updateDoc(doc(db, "products", id), data);
-    showToast("✅ Product updated!", "#4caf50");
+  if (productIdInput.value) {
+    await updateDoc(doc(db, "products", productIdInput.value), data);
+    alert("✅ Product updated successfully!");
   } else {
     await addDoc(collection(db, "products"), data);
-    showToast("✅ Product added!", "#4caf50");
+    alert("✅ Product added successfully!");
   }
 
   form.reset();
-  previewImg.src = "";
+  preview.style.display = "none";
+  imageUrlInput.value = "";
 };
 </script>
 </body>
