@@ -5,23 +5,107 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel - Rajasthan SandStone Hub</title>
 <link rel="icon" href="stone-icon.png" type="image/png">
-<link rel="stylesheet" href="style.css">
 <style>
-body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
-header {background:#c7a97b;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
-header h1 {font-size:1.5rem;cursor:pointer;margin:0;}
-header div {display:flex;flex-wrap:wrap;gap:10px;}
-header button {padding:8px 15px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
-nav {display:flex;justify-content:center;gap:15px;background:#f3f3f3;padding:10px;flex-wrap:wrap;}
-nav a {text-decoration:none;color:#333;font-weight:600;}
-.container {padding:20px;max-width:1200px;margin:auto;}
-h2 {color:#444;text-align:center;margin-bottom:20px;}
-form {background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
-input,select,textarea {width:100%;padding:10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
-button {background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 20px;border-radius:6px;cursor:pointer;}
-button:hover {background:#b38c5f;}
-footer {background:#333;color:white;text-align:center;padding:15px;margin-top:40px;}
-footer a {color:white;text-decoration:none;}
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+}
+header {
+  background: #c7a97b;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+header h1 {
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin: 0;
+}
+header div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+header button {
+  padding: 8px 15px;
+  border: none;
+  background: #fff;
+  color: #c7a97b;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  background: #f3f3f3;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+}
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+h2 {
+  color: #444;
+  text-align: center;
+  margin-bottom: 20px;
+}
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #c7a97b;
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background: #b38c5f;
+}
+.preview {
+  text-align: center;
+  margin-bottom: 15px;
+}
+.preview img {
+  width: 160px;
+  border-radius: 10px;
+}
+footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 40px;
+}
+footer a {
+  color: white;
+  text-decoration: none;
+}
 </style>
 </head>
 <body>
@@ -61,7 +145,10 @@ footer a {color:white;text-decoration:none;}
     <input type="text" id="contact_number" placeholder="Contact Number" required>
     <input type="email" id="email" placeholder="Email (optional)">
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
-    <input type="text" id="image_url" placeholder="Image URL (Firebase Storage)" required>
+    
+    <input type="file" id="imageInput" accept="image/*">
+    <div class="preview" id="preview"></div>
+
     <button type="submit">Save Product</button>
   </form>
 </div>
@@ -73,14 +160,31 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
+  auth, db, storage, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
 const productIdInput = document.getElementById('product-id');
+const imageInput = document.getElementById('imageInput');
+const preview = document.getElementById('preview');
 
-// ✅ Logout and redirect to Home
+let imageFile = null;
+
+// 🖼️ Image preview
+imageInput.addEventListener("change", (e) => {
+  imageFile = e.target.files[0];
+  if (imageFile) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+    };
+    reader.readAsDataURL(imageFile);
+  }
+});
+
+// ✅ Logout function
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
@@ -92,78 +196,95 @@ logoutBtn.onclick = async () => {
   }
 };
 
-// ✅ Auto-fill product if editing from History
+// ✅ Auto-fill data for editing
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
 
   if (editId && editData) {
     const p = JSON.parse(decodeURIComponent(editData));
-    document.getElementById('product-id').value = editId;
-    document.getElementById('stone_name').value = p.stone_name || "";
-    document.getElementById('category').value = p.category || "";
-    document.getElementById('sub_category').value = p.sub_category || "";
-    document.getElementById('type').value = p.type || "";
-    document.getElementById('color').value = p.color || "";
-    document.getElementById('description').value = p.description || "";
-    document.getElementById('price').value = p.price || "";
-    document.getElementById('price_unit').value = p.price_unit || "";
-    document.getElementById('contact_number').value = p.contact_number || "";
-    document.getElementById('email').value = p.email || "";
-    document.getElementById('factory_name').value = p.factory_name || "";
-    document.getElementById('image_url').value = p.image || "";
+    productIdInput.value = editId;
+    form.stone_name.value = p.stone_name || "";
+    form.category.value = p.category || "";
+    form.sub_category.value = p.sub_category || "";
+    form.type.value = p.type || "";
+    form.color.value = p.color || "";
+    form.description.value = p.description || "";
+    form.price.value = p.price || "";
+    form.price_unit.value = p.price_unit || "";
+    form.contact_number.value = p.contact_number || "";
+    form.email.value = p.email || "";
+    form.factory_name.value = p.factory_name || "";
+    if (p.image) preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
   }
 
-  // Clear storage once data filled
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
 
 // ✅ Auth check
 auth.onAuthStateChanged(user => {
-  if (!user) {
-    console.log("User not logged in, redirecting...");
-    window.location = 'signin.html';
-  }
+  if (!user) window.location = 'signin.html';
 });
 
-// ✅ Save / Update Product
+// ✅ Submit form (Add / Update)
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
-  const formattedCategory = form.category.value.trim().charAt(0).toUpperCase() + form.category.value.trim().slice(1).toLowerCase();
+  let imageUrl = "";
 
-  const data = {
-    stone_name: form.stone_name.value.trim(),
-    category: formattedCategory,
-    sub_category: form.sub_category.value.trim() || "",
-    type: form.type.value.trim(),
-    color: form.color.value.trim(),
-    description: form.description.value.trim(),
-    price: parseFloat(form.price.value),
-    price_unit: form.price_unit.value.trim(),
-    contact_number: form.contact_number.value.trim(),
-    email: form.email.value.trim() || "",
-    factory_name: form.factory_name.value.trim(),
-    image: form.image_url.value.trim(),
-    created_at: serverTimestamp(),
-    userId: user.uid
-  };
+  try {
+    if (imageFile) {
+      const storageRef = ref(storage, `stones/${Date.now()}_${imageFile.name}`);
+      const snapshot = await uploadBytes(storageRef, imageFile);
+      imageUrl = await getDownloadURL(snapshot.ref);
+    } else if (productIdInput.value) {
+      // Keep previous image if not changed
+      const editData = localStorage.getItem("editProductData");
+      if (editData) {
+        const p = JSON.parse(decodeURIComponent(editData));
+        imageUrl = p.image || "";
+      }
+    }
 
-  const id = productIdInput.value;
-  if (id) {
-    await updateDoc(doc(db, "products", id), data);
-    alert("✅ Product updated successfully!");
-  } else {
-    await addDoc(collection(db, "products"), data);
-    alert("✅ Product added successfully!");
+    const data = {
+      stone_name: form.stone_name.value.trim(),
+      category: form.category.value.trim(),
+      sub_category: form.sub_category.value.trim(),
+      type: form.type.value.trim(),
+      color: form.color.value.trim(),
+      description: form.description.value.trim(),
+      price: parseFloat(form.price.value),
+      price_unit: form.price_unit.value.trim(),
+      contact_number: form.contact_number.value.trim(),
+      email: form.email.value.trim() || "",
+      factory_name: form.factory_name.value.trim(),
+      image: imageUrl,
+      created_at: serverTimestamp(),
+      userId: user.uid
+    };
+
+    const id = productIdInput.value;
+    if (id) {
+      await updateDoc(doc(db, "products", id), data);
+      alert("✅ Product updated successfully!");
+    } else {
+      await addDoc(collection(db, "products"), data);
+      alert("✅ Product added successfully!");
+    }
+
+    form.reset();
+    preview.innerHTML = "";
+    imageFile = null;
+    productIdInput.value = "";
+  } catch (error) {
+    console.error("Error:", error);
+    alert("❌ Upload failed: " + error.message);
   }
-
-  form.reset();
-  productIdInput.value = "";
 };
 </script>
+
 </body>
 </html>
