@@ -32,6 +32,7 @@ import {
 import {
   getStorage,
   ref,
+  uploadBytes,
   uploadBytesResumable,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
@@ -78,6 +79,7 @@ export {
   onAuthStateChanged,
   updateProfile,
   ref,
+  uploadBytes,
   uploadBytesResumable,
   getDownloadURL
 };
