@@ -111,11 +111,10 @@ logoutBtn.onclick = async () => {
   }
 };
 
-// ✅ Prefill for Edit mode
+// ✅ Prefill Edit mode
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
-
   if (editId && editData) {
     const p = JSON.parse(decodeURIComponent(editData));
     productIdInput.value = editId;
@@ -135,7 +134,6 @@ window.addEventListener('DOMContentLoaded', () => {
       preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
     }
   }
-
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
@@ -150,26 +148,44 @@ form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
+  if(!imageBase64) return alert("Please select an image!");
 
-  const data = {
-    stone_name: form.stone_name.value.trim(),
-    category: form.category.value.trim(),
-    sub_category: form.sub_category.value.trim(),
-    type: form.type.value.trim(),
-    color: form.color.value.trim(),
-    description: form.description.value.trim(),
-    price: parseFloat(form.price.value),
-    price_unit: form.price_unit.value.trim(),
-    contact_number: form.contact_number.value.trim(),
-    email: form.email.value.trim() || "",
-    factory_name: form.factory_name.value.trim(),
-    image: imageBase64 || "",
-    created_at: serverTimestamp(),
-    userId: user.uid
-  };
-
-  const id = productIdInput.value;
   try {
+    // Upload to Google Apps Script
+    const fileName = `${Date.now()}_stone.png`;
+    const res = await fetch("YOUR_WEB_APP_URL_HERE", { // Replace with your Apps Script Web App URL
+      method: "POST",
+      body: new URLSearchParams({
+        stone_name: form.stone_name.value.trim(),
+        category: form.category.value.trim(),
+        file: imageBase64,
+        filename: fileName,
+        mimeType: "image/png"
+      })
+    });
+    const json = await res.json();
+    if(json.status !== "success") throw new Error(json.message);
+    const imageUrl = json.url;
+
+    // Firestore save
+    const data = {
+      stone_name: form.stone_name.value.trim(),
+      category: form.category.value.trim(),
+      sub_category: form.sub_category.value.trim(),
+      type: form.type.value.trim(),
+      color: form.color.value.trim(),
+      description: form.description.value.trim(),
+      price: parseFloat(form.price.value),
+      price_unit: form.price_unit.value.trim(),
+      contact_number: form.contact_number.value.trim(),
+      email: form.email.value.trim() || "",
+      factory_name: form.factory_name.value.trim(),
+      image: imageUrl,
+      created_at: serverTimestamp(),
+      userId: user.uid
+    };
+
+    const id = productIdInput.value;
     if (id) {
       await updateDoc(doc(db, "products", id), data);
       alert("✅ Product updated successfully!");
@@ -182,9 +198,10 @@ form.onsubmit = async (e) => {
     preview.innerHTML = "";
     imageBase64 = "";
     productIdInput.value = "";
-  } catch (error) {
-    console.error("Error:", error);
-    alert("❌ Upload failed: " + error.message);
+
+  } catch(err) {
+    console.error(err);
+    alert("❌ Upload failed: " + err.message);
   }
 };
 </script>
