@@ -75,8 +75,8 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, storage, collection, addDoc, updateDoc, doc, deleteDoc, serverTimestamp,
-  signOut, onAuthStateChanged, ref, uploadBytes, getDownloadURL
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp,
+  storage, ref, uploadBytes, getDownloadURL
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
@@ -86,28 +86,38 @@ const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 
 let imageFile = null;
-let existingImageURL = "";
+let imageUrl = "";
 
-// Preview image
-imageInput.addEventListener("change", e => {
+// 🖼️ Handle image selection
+imageInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
-  if (!file) return;
-  imageFile = file;
-  const reader = new FileReader();
-  reader.onload = () => preview.innerHTML = `<img src="${reader.result}" alt="Preview">`;
-  reader.readAsDataURL(file);
+  if (file) {
+    imageFile = file;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+    };
+    reader.readAsDataURL(file);
+  }
 });
 
-// Logout
+// ✅ Logout
 logoutBtn.onclick = async () => {
-  try { await signOut(auth); window.location = 'index.html'; }
-  catch(e) { alert("Error logging out: " + e.message); }
+  try {
+    await signOut(auth);
+    alert("You have been logged out successfully!");
+    window.location = 'index.html';
+  } catch (error) {
+    console.error("Logout failed:", error);
+    alert("Error logging out. Try again.");
+  }
 };
 
-// Prefill for Edit
+// ✅ Prefill for Edit mode
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
+
   if (editId && editData) {
     const p = JSON.parse(decodeURIComponent(editData));
     productIdInput.value = editId;
@@ -123,64 +133,69 @@ window.addEventListener('DOMContentLoaded', () => {
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
     if (p.image) {
-      existingImageURL = p.image;
+      imageUrl = p.image;
       preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
     }
   }
+
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
 
-// Auth check
-onAuthStateChanged(auth, user => { if (!user) window.location='signin.html'; });
+// ✅ Auth check
+auth.onAuthStateChanged(user => {
+  if (!user) window.location = 'signin.html';
+});
 
-// Save / Update Product
-form.onsubmit = async e => {
+// ✅ Save / Update Product
+form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
-  let imageURL = existingImageURL;
-
-  // Upload new image if selected
-  if (imageFile) {
-    const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
-    try {
-      await uploadBytes(storageRef, imageFile);
-      imageURL = await getDownloadURL(storageRef);
-    } catch(err) {
-      console.error("Upload failed:", err);
-      return alert("❌ Image upload failed: " + err.message);
-    }
-  }
-
-  const data = {
-    stone_name: form.stone_name.value.trim(),
-    category: form.category.value.trim(),
-    sub_category: form.sub_category.value.trim(),
-    type: form.type.value.trim(),
-    color: form.color.value.trim(),
-    description: form.description.value.trim(),
-    price: parseFloat(form.price.value),
-    price_unit: form.price_unit.value.trim(),
-    contact_number: form.contact_number.value.trim(),
-    email: form.email.value.trim() || "",
-    factory_name: form.factory_name.value.trim(),
-    image: imageURL,
-    created_at: serverTimestamp(),
-    userId: user.uid
-  };
-
-  const id = productIdInput.value;
   try {
-    if (id) await updateDoc(doc(db, "products", id), data);
-    else await addDoc(collection(db, "products"), data);
+    // 🔹 Upload image if new selected
+    if (imageFile) {
+      const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
+      const snapshot = await uploadBytes(storageRef, imageFile);
+      imageUrl = await getDownloadURL(snapshot.ref);
+    }
 
-    alert("✅ Product saved successfully!");
-    form.reset(); preview.innerHTML=""; imageFile=null; existingImageURL=""; productIdInput.value="";
-  } catch(err) {
-    console.error(err);
-    alert("❌ Save failed: "+err.message);
+    const data = {
+      stone_name: form.stone_name.value.trim(),
+      category: form.category.value.trim(),
+      sub_category: form.sub_category.value.trim(),
+      type: form.type.value.trim(),
+      color: form.color.value.trim(),
+      description: form.description.value.trim(),
+      price: parseFloat(form.price.value),
+      price_unit: form.price_unit.value.trim(),
+      contact_number: form.contact_number.value.trim(),
+      email: form.email.value.trim() || "",
+      factory_name: form.factory_name.value.trim(),
+      image: imageUrl || "",
+      created_at: serverTimestamp(),
+      userId: user.uid
+    };
+
+    const id = productIdInput.value;
+    if (id) {
+      await updateDoc(doc(db, "products", id), data);
+      alert("✅ Product updated successfully!");
+    } else {
+      await addDoc(collection(db, "products"), data);
+      alert("✅ Product added successfully!");
+    }
+
+    form.reset();
+    preview.innerHTML = "";
+    imageFile = null;
+    imageUrl = "";
+    productIdInput.value = "";
+
+  } catch (error) {
+    console.error("Error:", error);
+    alert("❌ Upload failed: " + error.message);
   }
 };
 </script>
