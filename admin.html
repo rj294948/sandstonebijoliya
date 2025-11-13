@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel - Rajasthan SandStone Hub</title>
-<link rel="icon" href="stone-icon.png" type="image/png">
+<link rel="icon" href="stone-icon.png" onerror="this.href='https://cdn-icons-png.flaticon.com/512/4727/4727261.png'" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
 body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
@@ -77,9 +77,10 @@ footer a {color:white;text-decoration:none;}
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
+<!-- ✅ Firebase Config linked separately -->
 <script type="module">
 import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
+  auth, db, storage, collection, addDoc, doc, updateDoc, signOut, serverTimestamp, ref, uploadBytes, getDownloadURL 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
@@ -87,7 +88,7 @@ const logoutBtn = document.getElementById('logout-btn');
 const productIdInput = document.getElementById('product-id');
 const uploadStatus = document.getElementById('upload-status');
 
-// ✅ Logout
+// ✅ Logout and redirect to Home
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
@@ -131,16 +132,6 @@ auth.onAuthStateChanged(user => {
   }
 });
 
-// ✅ Function to convert image to Base64 URL
-function convertToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
-
 // ✅ Save / Update Product
 form.onsubmit = async (e) => {
   e.preventDefault();
@@ -150,19 +141,33 @@ form.onsubmit = async (e) => {
   const formattedCategory = form.category.value.trim().charAt(0).toUpperCase() + form.category.value.trim().slice(1).toLowerCase();
 
   let imageURL = form.image_url.value.trim();
-
-  // 🆕 Convert image to Base64 if file selected
   const file = document.getElementById('image_file').files[0];
+
+  // 🧠 Check image file size before upload (max ~3MB recommended)
+  if (file && file.size > 3 * 1024 * 1024) {
+    alert("❌ Image is too large. Please select a file under 3MB.");
+    return;
+  }
+
+  // ✅ Upload to Firebase Storage and get URL
   if (file) {
     try {
-      uploadStatus.textContent = "⏳ Converting image...";
-      imageURL = await convertToBase64(file);
-      uploadStatus.textContent = "✅ Image converted successfully!";
+      uploadStatus.textContent = "⏳ Uploading image...";
+      const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      imageURL = await getDownloadURL(storageRef);
+      uploadStatus.textContent = "✅ Image uploaded successfully!";
     } catch (err) {
-      console.error("Image conversion failed:", err);
-      uploadStatus.textContent = "❌ Image conversion failed.";
-      return alert("Error converting image. Try again.");
+      console.error("Image upload failed:", err);
+      uploadStatus.textContent = "❌ Image upload failed.";
+      return alert("Error uploading image. Check console.");
     }
+  }
+
+  // ✅ Prevent storing base64 data
+  if (imageURL.length > 1000 && imageURL.startsWith("data:")) {
+    alert("❌ Invalid image data. Please upload again.");
+    return;
   }
 
   const data = {
@@ -183,17 +188,21 @@ form.onsubmit = async (e) => {
   };
 
   const id = productIdInput.value;
-  if (id) {
-    await updateDoc(doc(db, "products", id), data);
-    alert("✅ Product updated successfully!");
-  } else {
-    await addDoc(collection(db, "products"), data);
-    alert("✅ Product added successfully!");
+  try {
+    if (id) {
+      await updateDoc(doc(db, "products", id), data);
+      alert("✅ Product updated successfully!");
+    } else {
+      await addDoc(collection(db, "products"), data);
+      alert("✅ Product added successfully!");
+    }
+    form.reset();
+    productIdInput.value = "";
+    uploadStatus.textContent = "";
+  } catch (err) {
+    console.error("Firestore error:", err);
+    alert("❌ Failed to save product. See console for details.");
   }
-
-  form.reset();
-  productIdInput.value = "";
-  uploadStatus.textContent = "";
 };
 </script>
 </body>
