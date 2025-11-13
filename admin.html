@@ -74,9 +74,7 @@ footer a {color:white;text-decoration:none;}
 </footer>
 
 <script type="module">
-import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
-} from './firebase-config.js';
+import { auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
@@ -86,45 +84,43 @@ const preview = document.getElementById('preview');
 
 let imageBase64 = "";
 
-// Convert image to Base64 for Apps Script
+// 🖼️ Convert image to Base64
 imageInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if(file){
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      imageBase64 = ev.target.result;
+    reader.onload = (event) => {
+      imageBase64 = event.target.result;
       preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
     };
     reader.readAsDataURL(file);
   }
 });
 
-// Logout
+// ✅ Logout
 logoutBtn.onclick = async () => {
-  try {
-    await signOut(auth);
-    alert("Logged out!");
-    window.location='index.html';
-  } catch(err){ console.error(err); alert("Logout failed!"); }
+  try { await signOut(auth); alert("Logged out!"); window.location='index.html'; }
+  catch(e){ alert("Error logging out."); console.error(e); }
 };
 
-// Auth check
+// ✅ Auth check
 auth.onAuthStateChanged(user => { if(!user) window.location='signin.html'; });
 
-// Save / Update Product
+// ✅ Save / Update Product
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
-  if(!user) return alert("Please login!");
-  if(!imageBase64) return alert("Please select an image!");
+  if(!user) return alert("Login first!");
+  if(!imageBase64) return alert("Select image!");
 
-  try{
+  try {
     const fileName = `${Date.now()}_stone.png`;
 
-    // Upload image to Apps Script → Drive → URL → Sheet
-    const uploadRes = await fetch("https://script.google.com/macros/s/AKfycbxFhjrME1H06oShCKSEwmGFwmQVAXWXlMfDmATM5qTmPoFJKozEQJ2UBu4n5OH-ATBu/exec",{
+    // Upload via Firebase Function → Apps Script → Sheet
+    const res = await fetch("https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/uploadToAppsScript", {
       method:"POST",
-      body: new URLSearchParams({
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
         stone_name: form.stone_name.value.trim(),
         category: form.category.value.trim(),
         filename: fileName,
@@ -133,11 +129,10 @@ form.onsubmit = async (e) => {
       })
     });
 
-    const uploadJson = await uploadRes.json();
-    if(uploadJson.status !== "success") throw new Error(uploadJson.message);
-    const imageUrl = uploadJson.url;
+    const json = await res.json();
+    if(json.status!=="success") throw new Error(json.message);
+    const imageUrl = json.url;
 
-    // Save product to Firestore
     const data = {
       stone_name: form.stone_name.value.trim(),
       category: form.category.value.trim(),
@@ -148,7 +143,7 @@ form.onsubmit = async (e) => {
       price: parseFloat(form.price.value),
       price_unit: form.price_unit.value.trim(),
       contact_number: form.contact_number.value.trim(),
-      email: form.email.value.trim()||"",
+      email: form.email.value.trim() || "",
       factory_name: form.factory_name.value.trim(),
       image: imageUrl,
       created_at: serverTimestamp(),
@@ -156,20 +151,13 @@ form.onsubmit = async (e) => {
     };
 
     const id = productIdInput.value;
-    if(id){
-      await updateDoc(doc(db,"products",id),data);
-      alert("Product updated!");
-    } else {
-      await addDoc(collection(db,"products"),data);
-      alert("Product added!");
-    }
+    if(id) await updateDoc(doc(db,"products",id),data);
+    else await addDoc(collection(db,"products"),data);
 
-    form.reset();
-    preview.innerHTML="";
-    imageBase64="";
-    productIdInput.value="";
+    alert("✅ Product saved!");
+    form.reset(); preview.innerHTML=""; imageBase64=""; productIdInput.value="";
 
-  }catch(err){ console.error(err); alert("Error: "+err.message);}
+  } catch(err){ console.error(err); alert("❌ Upload failed: "+err.message); }
 };
 </script>
 
