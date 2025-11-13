@@ -79,7 +79,7 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, storage, collection, addDoc, doc, updateDoc, signOut, serverTimestamp, ref, uploadBytes, getDownloadURL 
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
@@ -87,7 +87,7 @@ const logoutBtn = document.getElementById('logout-btn');
 const productIdInput = document.getElementById('product-id');
 const uploadStatus = document.getElementById('upload-status');
 
-// ✅ Logout and redirect to Home
+// ✅ Logout
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
@@ -131,6 +131,16 @@ auth.onAuthStateChanged(user => {
   }
 });
 
+// ✅ Function to convert image to Base64 URL
+function convertToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
 // ✅ Save / Update Product
 form.onsubmit = async (e) => {
   e.preventDefault();
@@ -141,19 +151,17 @@ form.onsubmit = async (e) => {
 
   let imageURL = form.image_url.value.trim();
 
-  // 🆕 Upload image file if selected
+  // 🆕 Convert image to Base64 if file selected
   const file = document.getElementById('image_file').files[0];
   if (file) {
     try {
-      uploadStatus.textContent = "⏳ Uploading image...";
-      const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      imageURL = await getDownloadURL(storageRef);
-      uploadStatus.textContent = "✅ Image uploaded successfully!";
+      uploadStatus.textContent = "⏳ Converting image...";
+      imageURL = await convertToBase64(file);
+      uploadStatus.textContent = "✅ Image converted successfully!";
     } catch (err) {
-      console.error("Image upload failed:", err);
-      uploadStatus.textContent = "❌ Image upload failed.";
-      return alert("Error uploading image. Check console.");
+      console.error("Image conversion failed:", err);
+      uploadStatus.textContent = "❌ Image conversion failed.";
+      return alert("Error converting image. Try again.");
     }
   }
 
