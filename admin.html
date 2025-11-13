@@ -73,135 +73,107 @@ footer a {color:white;text-decoration:none;}
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
+<!-- ✅ Firebase Integration -->
 <script type="module">
-import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
-} from './firebase-config.js';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+  import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
 
-const storage = getStorage();
-const form = document.getElementById('product-form');
-const logoutBtn = document.getElementById('logout-btn');
-const productIdInput = document.getElementById('product-id');
-const imageInput = document.getElementById('imageInput');
-const preview = document.getElementById('preview');
-
-let imageFile = null;
-let imageURL = "";
-
-// 🖼️ Show selected image preview
-imageInput.addEventListener("change", (e) => {
-  imageFile = e.target.files[0];
-  if (imageFile) {
-    if (imageFile.size > 5 * 1024 * 1024) {
-      alert("Image size should be under 5 MB!");
-      imageInput.value = "";
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
-    };
-    reader.readAsDataURL(imageFile);
-  }
-});
-
-// ✅ Logout
-logoutBtn.onclick = async () => {
-  try {
-    await signOut(auth);
-    alert("You have been logged out successfully!");
-    window.location = 'index.html';
-  } catch (error) {
-    console.error("Logout failed:", error);
-    alert("Error logging out. Try again.");
-  }
-};
-
-// ✅ Prefill for Edit mode
-window.addEventListener('DOMContentLoaded', () => {
-  const editId = localStorage.getItem("editProductId");
-  const editData = localStorage.getItem("editProductData");
-  if (editId && editData) {
-    const p = JSON.parse(decodeURIComponent(editData));
-    productIdInput.value = editId;
-    form.stone_name.value = p.stone_name || "";
-    form.category.value = p.category || "";
-    form.sub_category.value = p.sub_category || "";
-    form.type.value = p.type || "";
-    form.color.value = p.color || "";
-    form.description.value = p.description || "";
-    form.price.value = p.price || "";
-    form.price_unit.value = p.price_unit || "";
-    form.contact_number.value = p.contact_number || "";
-    form.email.value = p.email || "";
-    form.factory_name.value = p.factory_name || "";
-    if (p.image) {
-      imageURL = p.image;
-      preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
-    }
-  }
-  localStorage.removeItem("editProductId");
-  localStorage.removeItem("editProductData");
-});
-
-// ✅ Auth check
-auth.onAuthStateChanged(user => {
-  if (!user) window.location = 'signin.html';
-});
-
-// ✅ Save / Update Product
-form.onsubmit = async (e) => {
-  e.preventDefault();
-  const user = auth.currentUser;
-  if (!user) return alert("Please login again.");
-
-  const data = {
-    stone_name: form.stone_name.value.trim(),
-    category: form.category.value.trim(),
-    sub_category: form.sub_category.value.trim(),
-    type: form.type.value.trim(),
-    color: form.color.value.trim(),
-    description: form.description.value.trim(),
-    price: parseFloat(form.price.value),
-    price_unit: form.price_unit.value.trim(),
-    contact_number: form.contact_number.value.trim(),
-    email: form.email.value.trim() || "",
-    factory_name: form.factory_name.value.trim(),
-    image: imageURL || "",
-    created_at: serverTimestamp(),
-    userId: user.uid
+  // ✅ Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDxNMhU09mINvq_aDLtylBg3FucCK-MzYE",
+    authDomain: "sandstonebijoliya-293d2.firebaseapp.com",
+    projectId: "sandstonebijoliya-293d2",
+    storageBucket: "sandstonebijoliya-293d2.firebasestorage.app",
+    messagingSenderId: "133756247845",
+    appId: "1:133756247845:web:8e769ce2af3db1765484cc",
+    measurementId: "G-H7JMX9VNYF"
   };
 
-  const id = productIdInput.value;
-  try {
-    // 🔹 First upload image to Firebase Storage
-    if (imageFile) {
-      const filePath = `stone_images/${Date.now()}_${imageFile.name}`;
-      const storageRef = ref(storage, filePath);
-      await uploadBytes(storageRef, imageFile);
-      imageURL = await getDownloadURL(storageRef);
-      data.image = imageURL;
-    }
+  // ✅ Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
 
-    if (id) {
-      await updateDoc(doc(db, "products", id), data);
-      alert("✅ Product updated successfully!");
-    } else {
-      await addDoc(collection(db, "products"), data);
-      alert("✅ Product added successfully!");
-    }
+  const form = document.getElementById('product-form');
+  const logoutBtn = document.getElementById('logout-btn');
+  const imageInput = document.getElementById('imageInput');
+  const preview = document.getElementById('preview');
+  const productIdInput = document.getElementById('product-id');
 
-    form.reset();
-    preview.innerHTML = "";
-    imageFile = null;
-    imageURL = "";
-    productIdInput.value = "";
-  } catch (error) {
-    console.error("Error:", error);
-    alert("❌ Upload failed: " + error.message);
-  }
-};
+  let selectedFile = null;
+  imageInput.addEventListener("change", (e) => {
+    selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  });
+
+  logoutBtn.onclick = async () => {
+    await signOut(auth);
+    alert("You have been logged out successfully!");
+    window.location = 'signin.html';
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) window.location = 'signin.html';
+  });
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) return alert("Please login again.");
+
+    const data = {
+      stone_name: form.stone_name.value.trim(),
+      category: form.category.value.trim(),
+      sub_category: form.sub_category.value.trim(),
+      type: form.type.value.trim(),
+      color: form.color.value.trim(),
+      description: form.description.value.trim(),
+      price: parseFloat(form.price.value),
+      price_unit: form.price_unit.value.trim(),
+      contact_number: form.contact_number.value.trim(),
+      email: form.email.value.trim(),
+      factory_name: form.factory_name.value.trim(),
+      created_at: serverTimestamp(),
+      userId: user.uid
+    };
+
+    try {
+      // ✅ Upload image to Firebase Storage if available
+      if (selectedFile) {
+        const imageRef = ref(storage, `product_images/${Date.now()}_${selectedFile.name}`);
+        const snapshot = await uploadBytes(imageRef, selectedFile);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        data.image = downloadURL;
+      }
+
+      const id = productIdInput.value;
+      if (id) {
+        await updateDoc(doc(db, "products", id), data);
+        alert("✅ Product updated successfully!");
+      } else {
+        await addDoc(collection(db, "products"), data);
+        alert("✅ Product added successfully!");
+      }
+
+      form.reset();
+      preview.innerHTML = "";
+      selectedFile = null;
+      productIdInput.value = "";
+    } catch (error) {
+      console.error("Error:", error);
+      alert("❌ Upload failed: " + error.message);
+    }
+  };
 </script>
+
 </body>
 </html>
