@@ -1,75 +1,317 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stone Upload Form</title>
-<style>
-  body{font-family:sans-serif;padding:20px;}
-  input,button{padding:10px;margin:5px 0;width:100%;}
-  img{max-width:200px;margin-top:10px;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload Form - Google Sheets</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        h1 {
+            color: #4285f4;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #4285f4;
+            outline: none;
+        }
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border 0.3s;
+        }
+        .file-upload:hover {
+            border-color: #4285f4;
+        }
+        .file-upload input {
+            display: none;
+        }
+        .file-upload-label {
+            display: block;
+            color: #666;
+        }
+        .preview-container {
+            margin-top: 15px;
+            display: none;
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .submit-btn {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #3367d6;
+        }
+        .submit-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+        .required {
+            color: #d93025;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Image Upload Form</h1>
+        <form id="imageForm">
+            <div class="form-group">
+                <label for="name">नाम <span class="required">*</span></label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">ईमेल <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">श्रेणी</label>
+                <select id="category" name="category">
+                    <option value="">चुनें</option>
+                    <option value="nature">प्रकृति</option>
+                    <option value="portrait">पोर्ट्रेट</option>
+                    <option value="architecture">वास्तुकला</option>
+                    <option value="event">इवेंट</option>
+                    <option value="other">अन्य</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">विवरण</label>
+                <textarea id="description" name="description" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">छवि अपलोड करें <span class="required">*</span></label>
+                <div class="file-upload" id="fileUploadArea">
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <span class="file-upload-label">क्लिक करें या छवि को यहाँ ड्रॉप करें</span>
+                </div>
+                <div class="preview-container" id="previewContainer">
+                    <img class="image-preview" id="imagePreview" src="#" alt="Preview">
+                </div>
+            </div>
+            
+            <div class="loading" id="loading">
+                सबमिट हो रहा है... कृपया प्रतीक्षा करें
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">सबमिट करें</button>
+        </form>
+        
+        <div class="success-message" id="successMessage">
+            आपका फॉर्म सफलतापूर्वक सबमिट हो गया है!
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            सबमिशन में त्रुटि हुई। कृपया पुनः प्रयास करें।
+        </div>
+    </div>
 
-<h2>Upload Stone Image</h2>
-<form id="stoneForm">
-  <input type="text" name="stone_name" placeholder="Stone Name" required>
-  <input type="text" name="category" placeholder="Category" required>
-  <input type="file" id="imageInput" accept="image/*" required>
-  <button type="submit">Upload</button>
-</form>
-
-<div id="preview"></div>
-<div id="result"></div>
-
-<script>
-const form = document.getElementById('stoneForm');
-const imageInput = document.getElementById('imageInput');
-const preview = document.getElementById('preview');
-let base64Image = "";
-
-imageInput.addEventListener('change', (e)=>{
-  const file = e.target.files[0];
-  if(file){
-    const reader = new FileReader();
-    reader.onload = function(ev){
-      base64Image = ev.target.result;
-      preview.innerHTML = `<img src="${base64Image}" alt="Preview">`;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-form.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  if(!base64Image){ alert("Select an image"); return; }
-
-  const data = new FormData();
-  data.append('stone_name', form.stone_name.value);
-  data.append('category', form.category.value);
-  data.append('file', base64Image);
-  data.append('filename', form.stone_name.value + ".png");
-
-  try{
-    const res = await fetch("https://script.google.com/macros/s/AKfycbxtB1li_O_lXJj3HOSNUxunuVX-JufK0u-CNtvEJtQ5YIk-NecIQ5z3rtD5Tb5fBw4d/exec", {
-      method: 'POST',
-      body: data
-    });
-    const json = await res.json();
-    if(json.status === "success"){
-      document.getElementById('result').innerHTML = `Uploaded! URL: <a href="${json.url}" target="_blank">${json.url}</a>`;
-      form.reset();
-      preview.innerHTML = "";
-      base64Image = "";
-    } else {
-      document.getElementById('result').textContent = "Error: " + json.message;
-    }
-  }catch(err){
-    document.getElementById('result').textContent = "Error: " + err.message;
-  }
-});
-</script>
-
+    <script>
+        // Replace this with your Google Apps Script Web App URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxesm01QwV7PY8d5099t-24GFoorBap0M0AjYTdbQzEjo0PyIGFMJyKfrrqx57NmCfX/exec";
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('image');
+            const previewContainer = document.getElementById('previewContainer');
+            const imagePreview = document.getElementById('imagePreview');
+            const form = document.getElementById('imageForm');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // File upload area click handler
+            fileUploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // File input change handler
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            // Drag and drop functionality
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUploadArea.style.borderColor = '#4285f4';
+                fileUploadArea.style.backgroundColor = '#f8f9fa';
+            });
+            
+            fileUploadArea.addEventListener('dragleave', function() {
+                fileUploadArea.style.borderColor = '#ddd';
+                fileUploadArea.style.backgroundColor = 'transparent';
+            });
+            
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileUploadArea.style.borderColor = '#ddd';
+                fileUploadArea.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    
+                    if (fileInput.files && fileInput.files[0]) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            imagePreview.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                        }
+                        
+                        reader.readAsDataURL(fileInput.files[0]);
+                    }
+                }
+            });
+            
+            // Form submission handler
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Form validation
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const image = document.getElementById('image').files[0];
+                
+                if (!name || !email || !image) {
+                    alert('कृपया सभी आवश्यक फील्ड भरें');
+                    return;
+                }
+                
+                // Show loading, disable submit button
+                loading.style.display = 'block';
+                submitBtn.disabled = true;
+                errorMessage.style.display = 'none';
+                
+                try {
+                    // Prepare form data
+                    const formData = new FormData();
+                    formData.append('name', name);
+                    formData.append('email', email);
+                    formData.append('category', document.getElementById('category').value);
+                    formData.append('description', document.getElementById('description').value);
+                    formData.append('image', image);
+                    formData.append('timestamp', new Date().toISOString());
+                    
+                    // Send data to Google Apps Script
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.text();
+                    
+                    if (result === 'success') {
+                        // Show success message
+                        successMessage.style.display = 'block';
+                        
+                        // Reset form
+                        form.reset();
+                        previewContainer.style.display = 'none';
+                        
+                        // Hide success message after 5 seconds
+                        setTimeout(function() {
+                            successMessage.style.display = 'none';
+                        }, 5000);
+                    } else {
+                        throw new Error('Submission failed');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    errorMessage.style.display = 'block';
+                } finally {
+                    // Hide loading, enable submit button
+                    loading.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
