@@ -71,6 +71,8 @@
     import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
     import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
 
+    const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrdeZ9W2QkAnVMvyRnLlSaeI4D-91zD2Iqlb2z5OaUQON1FIVWzbEHGBPA--Qw8aEf/exec";
+
     const titleInput = document.getElementById("title");
     const descInput = document.getElementById("description");
     const imageInput = document.getElementById("imageInput");
@@ -83,7 +85,7 @@
       imageFile = e.target.files[0];
       if (imageFile) {
         const reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = (event) => {
           preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
         };
         reader.readAsDataURL(imageFile);
@@ -97,20 +99,43 @@
           return;
         }
 
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = "Uploading...";
+
         let imageUrl = "";
 
         if (imageFile) {
+          // ✅ Upload image to Firebase Storage
           const storageRef = ref(storage, `uploads/${Date.now()}_${imageFile.name}`);
           const uploadResult = await uploadBytes(storageRef, imageFile);
           imageUrl = await getDownloadURL(uploadResult.ref);
         }
 
+        // ✅ Save post in Firestore
         await addDoc(collection(db, "products"), {
           title: titleInput.value,
           description: descInput.value,
           image: imageUrl,
-          created_at: serverTimestamp()
+          created_at: serverTimestamp(),
         });
+
+        // ✅ Send data to Google Sheet (CORS-safe)
+        const payload = {
+          title: titleInput.value,
+          description: descInput.value,
+          image: imageUrl,
+          created_at: new Date().toISOString(),
+        };
+
+        const response = await fetch(APP_SCRIPT_URL, {
+          method: "POST",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+        console.log("Google Sheet:", result);
 
         alert("✅ Post uploaded successfully!");
         titleInput.value = "";
@@ -120,6 +145,9 @@
       } catch (error) {
         console.error("Error:", error);
         alert("❌ Upload failed: " + error.message);
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "Upload Post";
       }
     });
   </script>
