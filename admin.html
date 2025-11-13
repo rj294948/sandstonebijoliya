@@ -154,7 +154,7 @@ form.onsubmit = async (e) => {
     const fileName = `${Date.now()}_stone.png`;
 
     // 1️⃣ Upload image via Apps Script
-    const uploadRes = await fetch("https://script.google.com/macros/s/AKfycbzwe9rUdieK3wyy7VVbL-hu6jR6Eb05avpah6a9aGo/exec", {
+    const uploadRes = await fetch("https://script.google.com/macros/s/AKfycbzW1q5WQqFDszz0PoJ7bR6LNEGGhApK9ixcHEKQ6xM5HetN8LS_9NFDQasc8oRxYc5f/exec", {
       method: "POST",
       body: new URLSearchParams({
         stone_name: form.stone_name.value.trim(),
