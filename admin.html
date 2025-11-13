@@ -74,9 +74,7 @@ footer a {color:white;text-decoration:none;}
 </footer>
 
 <script type="module">
-import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
-} from './firebase-config.js';
+import { auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
@@ -84,18 +82,36 @@ const productIdInput = document.getElementById('product-id');
 const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 
-let imageBase64 = "";
+let imageURL = "";
 
-// 🖼️ Convert image to Base64
-imageInput.addEventListener("change", (e) => {
+// 🖼️ Upload image to Postimages.org via direct API
+imageInput.addEventListener("change", async (e) => {
   const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      imageBase64 = event.target.result; // Base64 string
-      preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
-    };
-    reader.readAsDataURL(file);
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("upload", file);
+
+  preview.innerHTML = "Uploading image...";
+
+  try {
+    const res = await fetch("https://api.postimages.org/1/upload", {
+      method: "POST",
+      body: formData
+      // Note: Postimages may require an API key for automated uploads.
+    });
+    const data = await res.json();
+    if (data && data.url) {
+      imageURL = data.url;
+      preview.innerHTML = `<img src="${imageURL}" alt="Preview">`;
+    } else {
+      preview.innerHTML = "Upload failed. Please try again.";
+      imageURL = "";
+    }
+  } catch (err) {
+    console.error(err);
+    preview.innerHTML = "Upload error.";
+    imageURL = "";
   }
 });
 
@@ -131,7 +147,7 @@ window.addEventListener('DOMContentLoaded', () => {
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
     if (p.image) {
-      imageBase64 = p.image;
+      imageURL = p.image;
       preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
     }
   }
@@ -163,7 +179,7 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim() || "",
     factory_name: form.factory_name.value.trim(),
-    image: imageBase64 || "",
+    image: imageURL || "",
     created_at: serverTimestamp(),
     userId: user.uid
   };
@@ -180,7 +196,7 @@ form.onsubmit = async (e) => {
 
     form.reset();
     preview.innerHTML = "";
-    imageBase64 = "";
+    imageURL = "";
     productIdInput.value = "";
   } catch (error) {
     console.error("Error:", error);
@@ -188,8 +204,6 @@ form.onsubmit = async (e) => {
   }
 };
 </script>
-
-
 
 </body>
 </html>
