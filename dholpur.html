@@ -10,59 +10,85 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             margin: 0;
             padding: 20px;
             color: #333;
+            min-height: 100vh;
         }
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4285f4, #34a853, #fbbc05, #ea4335);
         }
         h1 {
             color: #4285f4;
             text-align: center;
             margin-bottom: 30px;
+            font-size: 2.2em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1em;
         }
         input[type="text"],
         input[type="email"],
         textarea,
         select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
             font-size: 16px;
-            transition: border 0.3s;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
         }
         input:focus,
         textarea:focus,
         select:focus {
             border-color: #4285f4;
             outline: none;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
         }
         .file-upload {
-            border: 2px dashed #ddd;
-            border-radius: 4px;
-            padding: 20px;
+            border: 3px dashed #ddd;
+            border-radius: 10px;
+            padding: 30px;
             text-align: center;
             cursor: pointer;
-            transition: border 0.3s;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
         }
         .file-upload:hover {
             border-color: #4285f4;
+            background-color: #f0f7ff;
+        }
+        .file-upload.dragover {
+            border-color: #4285f4;
+            background-color: #e3f2fd;
+            transform: scale(1.02);
         }
         .file-upload input {
             display: none;
@@ -70,74 +96,117 @@
         .file-upload-label {
             display: block;
             color: #666;
+            font-size: 1.1em;
+        }
+        .file-upload-label i {
+            font-size: 2em;
+            color: #4285f4;
+            margin-bottom: 10px;
+            display: block;
         }
         .preview-container {
-            margin-top: 15px;
+            margin-top: 20px;
             display: none;
+            text-align: center;
         }
         .image-preview {
             max-width: 100%;
-            max-height: 200px;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 3px solid #4285f4;
         }
         .submit-btn {
-            background-color: #4285f4;
+            background: linear-gradient(135deg, #4285f4, #34a853);
             color: white;
             border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 4px;
+            padding: 18px 30px;
+            font-size: 18px;
+            border-radius: 10px;
             cursor: pointer;
             width: 100%;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .submit-btn:hover {
-            background-color: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
         }
         .submit-btn:disabled {
-            background-color: #cccccc;
+            background: #cccccc;
+            transform: none;
+            box-shadow: none;
             cursor: not-allowed;
         }
         .success-message {
-            background-color: #d4edda;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
             color: #155724;
-            padding: 12px;
-            border-radius: 4px;
-            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
             display: none;
+            border-left: 5px solid #28a745;
+            animation: slideIn 0.5s ease;
         }
         .error-message {
-            background-color: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da, #f1b0b7);
             color: #721c24;
-            padding: 12px;
-            border-radius: 4px;
-            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
             display: none;
+            border-left: 5px solid #dc3545;
+            animation: slideIn 0.5s ease;
         }
         .required {
-            color: #d93025;
+            color: #ea4335;
         }
         .loading {
             display: none;
             text-align: center;
-            margin: 10px 0;
+            margin: 20px 0;
             color: #4285f4;
+            font-size: 1.1em;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4285f4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Image Upload Form</h1>
+        <h1>📸 Image Upload Form</h1>
         <form id="imageForm">
             <div class="form-group">
                 <label for="name">नाम <span class="required">*</span></label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" required placeholder="अपना पूरा नाम दर्ज करें">
             </div>
             
             <div class="form-group">
                 <label for="email">ईमेल <span class="required">*</span></label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" required placeholder="your@email.com">
             </div>
             
             <div class="form-group">
@@ -154,25 +223,33 @@
             
             <div class="form-group">
                 <label for="description">विवरण</label>
-                <textarea id="description" name="description" rows="3"></textarea>
+                <textarea id="description" name="description" rows="3" placeholder="छवि के बारे में विवरण..."></textarea>
             </div>
             
             <div class="form-group">
                 <label for="image">छवि अपलोड करें <span class="required">*</span></label>
                 <div class="file-upload" id="fileUploadArea">
                     <input type="file" id="image" name="image" accept="image/*" required>
-                    <span class="file-upload-label">क्लिक करें या छवि को यहाँ ड्रॉप करें</span>
+                    <span class="file-upload-label">
+                        <i>📁</i>
+                        क्लिक करें या छवि को यहाँ ड्रॉप करें<br>
+                        <small>Supported: JPG, PNG, GIF (Max 5MB)</small>
+                    </span>
                 </div>
                 <div class="preview-container" id="previewContainer">
                     <img class="image-preview" id="imagePreview" src="#" alt="Preview">
+                    <div id="fileInfo"></div>
                 </div>
             </div>
             
             <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
                 ⏳ सबमिट हो रहा है... कृपया प्रतीक्षा करें
             </div>
             
-            <button type="submit" class="submit-btn" id="submitBtn">सबमिट करें</button>
+            <button type="submit" class="submit-btn" id="submitBtn">
+                📤 सबमिट करें
+            </button>
         </form>
         
         <div class="success-message" id="successMessage">
@@ -182,17 +259,22 @@
         <div class="error-message" id="errorMessage">
             ❌ सबमिशन में त्रुटि हुई। कृपया पुनः प्रयास करें।
         </div>
+        
+        <div class="form-footer">
+            Powered by Google Apps Script & Google Sheets
+        </div>
     </div>
 
     <script>
-        // REPLACE THIS WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAXUxFwbvlmoAGVmB1GIPYJIXKDpybQj_lRw9VtdkGua9Cod0977b_KaR941Nv4Q4m/exec";
+        // YOUR GOOGLE APPS SCRIPT URL - REPLACE WITH YOUR ACTUAL URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJ0qzQWh_mCeTiSXav_KkWF6huUkxaR4TJyNU9xiwzNa3hUYVY6DJsAlGI_P6yFkTK/exec";
         
         document.addEventListener('DOMContentLoaded', function() {
             const fileUploadArea = document.getElementById('fileUploadArea');
             const fileInput = document.getElementById('image');
             const previewContainer = document.getElementById('previewContainer');
             const imagePreview = document.getElementById('imagePreview');
+            const fileInfo = document.getElementById('fileInfo');
             const form = document.getElementById('imageForm');
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
@@ -206,48 +288,60 @@
             
             // File input change handler
             fileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
+                handleFileSelection(this.files[0]);
+            });
+            
+            function handleFileSelection(file) {
+                if (file) {
+                    // Check file size (5MB limit)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('फ़ाइल का आकार 5MB से कम होना चाहिए');
+                        fileInput.value = '';
+                        return;
+                    }
+                    
+                    // Check file type
+                    if (!file.type.startsWith('image/')) {
+                        alert('कृपया केवल छवि फ़ाइलें चुनें');
+                        fileInput.value = '';
+                        return;
+                    }
+                    
                     const reader = new FileReader();
                     
                     reader.onload = function(e) {
                         imagePreview.src = e.target.result;
                         previewContainer.style.display = 'block';
+                        fileInfo.innerHTML = `
+                            <div style="margin-top: 10px; color: #666;">
+                                <strong>फ़ाइल:</strong> ${file.name}<br>
+                                <strong>आकार:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+                                <strong>प्रकार:</strong> ${file.type}
+                            </div>
+                        `;
                     }
                     
-                    reader.readAsDataURL(this.files[0]);
+                    reader.readAsDataURL(file);
                 }
-            });
+            }
             
-            // Drag and drop functionality
+            // Enhanced drag and drop functionality
             fileUploadArea.addEventListener('dragover', function(e) {
                 e.preventDefault();
-                fileUploadArea.style.borderColor = '#4285f4';
-                fileUploadArea.style.backgroundColor = '#f8f9fa';
+                fileUploadArea.classList.add('dragover');
             });
             
             fileUploadArea.addEventListener('dragleave', function() {
-                fileUploadArea.style.borderColor = '#ddd';
-                fileUploadArea.style.backgroundColor = 'transparent';
+                fileUploadArea.classList.remove('dragover');
             });
             
             fileUploadArea.addEventListener('drop', function(e) {
                 e.preventDefault();
-                fileUploadArea.style.borderColor = '#ddd';
-                fileUploadArea.style.backgroundColor = 'transparent';
+                fileUploadArea.classList.remove('dragover');
                 
                 if (e.dataTransfer.files.length) {
                     fileInput.files = e.dataTransfer.files;
-                    
-                    if (fileInput.files && fileInput.files[0]) {
-                        const reader = new FileReader();
-                        
-                        reader.onload = function(e) {
-                            imagePreview.src = e.target.result;
-                            previewContainer.style.display = 'block';
-                        }
-                        
-                        reader.readAsDataURL(fileInput.files[0]);
-                    }
+                    handleFileSelection(e.dataTransfer.files[0]);
                 }
             });
             
@@ -256,63 +350,67 @@
                 e.preventDefault();
                 
                 // Form validation
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
                 const imageFile = document.getElementById('image').files[0];
                 
                 if (!name || !email || !imageFile) {
-                    alert('कृपया सभी आवश्यक फील्ड भरें');
+                    showError('कृपया सभी आवश्यक फील्ड भरें');
+                    return;
+                }
+                
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('कृपया एक वैध ईमेल पता दर्ज करें');
                     return;
                 }
                 
                 // Show loading, disable submit button
-                loading.style.display = 'block';
-                submitBtn.disabled = true;
-                errorMessage.style.display = 'none';
-                successMessage.style.display = 'none';
+                showLoading(true);
                 
                 try {
                     // Convert image to base64
                     const imageBase64 = await convertImageToBase64(imageFile);
                     
-                    // Create form data
-                    const formData = new FormData();
-                    formData.append('name', name);
-                    formData.append('email', email);
-                    formData.append('category', document.getElementById('category').value);
-                    formData.append('description', document.getElementById('description').value);
-                    formData.append('image', imageBase64);
-                    formData.append('timestamp', new Date().toISOString());
+                    // Prepare data for submission
+                    const formData = {
+                        name: name,
+                        email: email,
+                        category: document.getElementById('category').value,
+                        description: document.getElementById('description').value.trim(),
+                        image: imageBase64,
+                        timestamp: new Date().toISOString()
+                    };
                     
                     console.log('Sending data to:', SCRIPT_URL);
-                    
-                    // Send data to Google Apps Script
-                    const response = await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        body: formData
+                    console.log('Data:', { 
+                        name: formData.name, 
+                        email: formData.email, 
+                        category: formData.category 
                     });
                     
-                    const result = await response.text();
-                    console.log('Server response:', result);
+                    // Send data using XMLHttpRequest for better CORS handling
+                    const response = await makeRequest('POST', SCRIPT_URL, JSON.stringify(formData));
                     
-                    if (result.trim() === 'success') {
-                        successMessage.style.display = 'block';
+                    console.log('Server response:', response);
+                    
+                    if (response.status === 'success') {
+                        showSuccess(`
+                            ✅ ${response.message}<br><br>
+                            📊 <a href="${response.sheetUrl}" target="_blank" style="color: #155724; text-decoration: underline;">View Data in Google Sheets</a><br>
+                            🕒 ${new Date(response.timestamp).toLocaleString('hi-IN')}
+                        `);
                         form.reset();
                         previewContainer.style.display = 'none';
-                        
-                        setTimeout(function() {
-                            successMessage.style.display = 'none';
-                        }, 5000);
                     } else {
-                        throw new Error(result);
+                        throw new Error(response.message || 'Unknown error occurred');
                     }
                 } catch (error) {
                     console.error('Submission Error:', error);
-                    errorMessage.textContent = 'त्रुटि: ' + error.message;
-                    errorMessage.style.display = 'block';
+                    showError('त्रुटि: ' + error.message);
                 } finally {
-                    loading.style.display = 'none';
-                    submitBtn.disabled = false;
+                    showLoading(false);
                 }
             });
             
@@ -324,6 +422,71 @@
                     reader.readAsDataURL(file);
                 });
             }
+            
+            function makeRequest(method, url, data) {
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open(method, url);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                resolve(response);
+                            } catch (e) {
+                                reject(new Error('Invalid JSON response: ' + e.message));
+                            }
+                        } else {
+                            reject(new Error(`Request failed with status ${xhr.status}`));
+                        }
+                    };
+                    
+                    xhr.onerror = function() {
+                        reject(new Error('Network error - Please check your connection'));
+                    };
+                    
+                    xhr.ontimeout = function() {
+                        reject(new Error('Request timeout - Please try again'));
+                    };
+                    
+                    xhr.timeout = 30000; // 30 seconds timeout
+                    xhr.send(data);
+                });
+            }
+            
+            function showLoading(show) {
+                loading.style.display = show ? 'block' : 'none';
+                submitBtn.disabled = show;
+                if (show) {
+                    submitBtn.innerHTML = '⏳ प्रोसेस हो रहा है...';
+                } else {
+                    submitBtn.innerHTML = '📤 सबमिट करें';
+                }
+            }
+            
+            function showSuccess(message) {
+                successMessage.innerHTML = message;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 15000);
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+            
+            // Fix for form validation error
+            fileInput.addEventListener('invalid', function() {
+                if (!this.files || this.files.length === 0) {
+                    showError('कृपया एक छवि फ़ाइल चुनें');
+                }
+            });
         });
     </script>
 </body>
