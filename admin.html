@@ -1,199 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - Rajasthan SandStone Hub</title>
-<link rel="icon" href="stone-icon.png" type="image/png">
-<link rel="stylesheet" href="style.css">
-<style>
-body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
-header {background:#c7a97b;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
-header h1 {font-size:1.5rem;cursor:pointer;margin:0;}
-header div {display:flex;flex-wrap:wrap;gap:10px;}
-header button {padding:8px 15px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
-nav {display:flex;justify-content:center;gap:15px;background:#f3f3f3;padding:10px;flex-wrap:wrap;}
-nav a {text-decoration:none;color:#333;font-weight:600;}
-.container {padding:20px;max-width:1200px;margin:auto;}
-h2 {color:#444;text-align:center;margin-bottom:20px;}
-form {background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
-input,select,textarea {width:100%;padding:10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
-button {background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 20px;border-radius:6px;cursor:pointer;}
-button:hover {background:#b38c5f;}
-footer {background:#333;color:white;text-align:center;padding:15px;margin-top:40px;}
-footer a {color:white;text-decoration:none;}
-.preview-img {max-width:150px;border-radius:8px;margin-top:10px;display:none;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | RJ Services</title>
+  <link rel="icon" type="image/png" href="stone-icon.png" />
+  <script type="module" src="firebase-config.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      background: #fff;
+      padding: 20px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    input, textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .preview {
+      margin-top: 10px;
+      text-align: center;
+    }
+    .preview img {
+      width: 150px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
-  <div>
-    <button onclick="window.location='index.html'">Home</button>
-    <button onclick="window.location='history.html'">My History</button>
-    <button id="logout-btn">Logout</button>
+  <div class="container">
+    <h2>🛠 Admin Panel</h2>
+
+    <input type="text" id="title" placeholder="Enter Title" required />
+    <textarea id="description" placeholder="Enter Description" required></textarea>
+    <input type="file" id="imageInput" accept="image/*" />
+    <div class="preview" id="preview"></div>
+    <button id="uploadBtn">Upload Post</button>
   </div>
-</header>
 
-<nav>
-  <a href="bijoliya.html">Bijoliya</a>
-  <a href="dholpur.html">Dholpur</a>
-  <a href="mandana.html">Mandana</a>
-  <a href="kota.html">Kota</a>
-  <a href="other-stones.html">Other Stones</a>
-  <a href="factories.html">Factories</a>
-  <a href="about.html">About Us</a>
-  <a href="contact.html">Contact</a>
-</nav>
+  <script type="module">
+    import { db, storage } from './firebase-config.js';
+    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+    import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
 
-<div class="container">
-  <h2>Add / Edit Stone Product</h2>
-  <form id="product-form">
-    <input type="hidden" id="product-id">
-    <input type="text" id="stone_name" placeholder="Stone Name" required>
-    <input type="text" id="category" placeholder="Category (Bijoliya, Dholpur...)" required>
-    <input type="text" id="sub_category" placeholder="Sub-category (Optional)">
-    <input type="text" id="type" placeholder="Type (Farsi, Gitti, Poll...)" required>
-    <input type="text" id="color" placeholder="Color" required>
-    <textarea id="description" placeholder="Description" rows="3"></textarea>
-    <input type="number" id="price" placeholder="Price" required>
-    <input type="text" id="price_unit" placeholder="Unit (sqft, piece...)" required>
-    <input type="text" id="contact_number" placeholder="Contact Number" required>
-    <input type="email" id="email" placeholder="Email (optional)">
-    <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
+    const titleInput = document.getElementById("title");
+    const descInput = document.getElementById("description");
+    const imageInput = document.getElementById("imageInput");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const preview = document.getElementById("preview");
 
-    <label>Upload Image (Google Drive)</label>
-    <input type="file" id="image_file" accept="image/*">
-    <img id="preview" class="preview-img" src="">
-    <input type="text" id="image_url" placeholder="Image URL (Auto-filled)" readonly>
+    let imageFile = null;
 
-    <button type="submit">Save Product</button>
-  </form>
-</div>
-
-<footer>
-  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services |
-  <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
-</footer>
-
-<script type="module">
-import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
-} from './firebase-config.js';
-
-const form = document.getElementById('product-form');
-const logoutBtn = document.getElementById('logout-btn');
-const productIdInput = document.getElementById('product-id');
-const imageInput = document.getElementById('image_file');
-const imageUrlInput = document.getElementById('image_url');
-const preview = document.getElementById('preview');
-
-// ⚙️ Replace with your deployed Apps Script Web App URL
-const APP_SCRIPT_URL = "https://script.google.com/macros/s/PASTE_YOUR_SCRIPT_DEPLOYMENT_URL_HERE/exec";
-
-// ✅ Logout
-logoutBtn.onclick = async () => {
-  try {
-    await signOut(auth);
-    alert("You have been logged out successfully!");
-    window.location = 'index.html';
-  } catch (error) {
-    console.error("Logout failed:", error);
-    alert("Error logging out. Try again.");
-  }
-};
-
-// ✅ Load product if editing
-window.addEventListener('DOMContentLoaded', () => {
-  const editId = localStorage.getItem("editProductId");
-  const editData = localStorage.getItem("editProductData");
-  if (editId && editData) {
-    const p = JSON.parse(decodeURIComponent(editData));
-    productIdInput.value = editId;
-    for (let key in p) {
-      if (form[key]) form[key].value = p[key];
-    }
-    if (p.image) {
-      imageUrlInput.value = p.image;
-      preview.src = p.image;
-      preview.style.display = "block";
-    }
-  }
-  localStorage.removeItem("editProductId");
-  localStorage.removeItem("editProductData");
-});
-
-// ✅ Auth Check
-auth.onAuthStateChanged(user => {
-  if (!user) window.location = 'signin.html';
-});
-
-// ✅ Upload image to Google Drive via Apps Script
-imageInput.addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  imageUrlInput.placeholder = "Uploading...";
-  try {
-    const res = await fetch(APP_SCRIPT_URL, {
-      method: "POST",
-      body: formData,
+    imageInput.addEventListener("change", (e) => {
+      imageFile = e.target.files[0];
+      if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+        };
+        reader.readAsDataURL(imageFile);
+      }
     });
-    const result = await res.json();
 
-    if (result.success && result.imageUrl) {
-      imageUrlInput.value = result.imageUrl;
-      preview.src = result.imageUrl;
-      preview.style.display = "block";
-    } else {
-      alert("❌ Upload failed: " + (result.message || "Unknown error"));
-    }
-  } catch (err) {
-    alert("❌ CORS or Upload Error: " + err.message);
-  } finally {
-    imageUrlInput.placeholder = "Image URL (Auto-filled)";
-  }
-});
+    uploadBtn.addEventListener("click", async () => {
+      try {
+        if (!titleInput.value || !descInput.value) {
+          alert("Please fill all fields!");
+          return;
+        }
 
-// ✅ Save / Update Product
-form.onsubmit = async (e) => {
-  e.preventDefault();
-  const user = auth.currentUser;
-  if (!user) return alert("Please login again.");
+        let imageUrl = "";
 
-  const data = {
-    stone_name: form.stone_name.value.trim(),
-    category: form.category.value.trim(),
-    sub_category: form.sub_category.value.trim(),
-    type: form.type.value.trim(),
-    color: form.color.value.trim(),
-    description: form.description.value.trim(),
-    price: parseFloat(form.price.value),
-    price_unit: form.price_unit.value.trim(),
-    contact_number: form.contact_number.value.trim(),
-    email: form.email.value.trim(),
-    factory_name: form.factory_name.value.trim(),
-    image: imageUrlInput.value.trim(),
-    created_at: serverTimestamp(),
-    userId: user.uid
-  };
+        if (imageFile) {
+          const storageRef = ref(storage, `uploads/${Date.now()}_${imageFile.name}`);
+          const uploadResult = await uploadBytes(storageRef, imageFile);
+          imageUrl = await getDownloadURL(uploadResult.ref);
+        }
 
-  if (productIdInput.value) {
-    await updateDoc(doc(db, "products", productIdInput.value), data);
-    alert("✅ Product updated successfully!");
-  } else {
-    await addDoc(collection(db, "products"), data);
-    alert("✅ Product added successfully!");
-  }
+        await addDoc(collection(db, "products"), {
+          title: titleInput.value,
+          description: descInput.value,
+          image: imageUrl,
+          created_at: serverTimestamp()
+        });
 
-  form.reset();
-  preview.style.display = "none";
-  imageUrlInput.value = "";
-};
-</script>
+        alert("✅ Post uploaded successfully!");
+        titleInput.value = "";
+        descInput.value = "";
+        imageInput.value = "";
+        preview.innerHTML = "";
+      } catch (error) {
+        console.error("Error:", error);
+        alert("❌ Upload failed: " + error.message);
+      }
+    });
+  </script>
+
 </body>
 </html>
