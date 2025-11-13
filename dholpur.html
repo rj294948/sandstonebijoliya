@@ -52,7 +52,7 @@ form.addEventListener('submit', async (e)=>{
   data.append('filename', form.stone_name.value + ".png");
 
   try{
-    const res = await fetch("YOUR_APP_SCRIPT_URL_HERE", {
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzAXUxFwbvlmoAGVmB1GIPYJIXKDpybQj_lRw9VtdkGua9Cod0977b_KaR941Nv4Q4m/exec", {
       method: 'POST',
       body: data
     });
