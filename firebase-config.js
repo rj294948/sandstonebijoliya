@@ -1,39 +1,19 @@
-// ✅ firebase-config.js
+// firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
 // Firestore
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  doc,
-  deleteDoc,
-  updateDoc,
-  where,
-  serverTimestamp
+import { 
+  getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp, getDocs, query, orderBy 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 // Auth
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  updateProfile
+import { 
+  getAuth, signOut, onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 // Storage
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL
+import { 
+  getStorage, ref, uploadBytes, getDownloadURL 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
 
 // ===== Firebase Config =====
@@ -52,7 +32,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
-const googleProvider = new GoogleAuthProvider();
 
 // ===== Export =====
 export {
@@ -60,24 +39,18 @@ export {
   db,
   auth,
   storage,
-  googleProvider,
   collection,
   addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
   getDocs,
   query,
   orderBy,
-  doc,
-  deleteDoc,
-  updateDoc,
-  where,
-  serverTimestamp,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   signOut,
-  signInWithPopup,
   onAuthStateChanged,
-  updateProfile,
   ref,
-  uploadBytesResumable,
+  uploadBytes,
   getDownloadURL
 };
