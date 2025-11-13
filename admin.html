@@ -62,7 +62,7 @@ footer a {color:white;text-decoration:none;}
     <input type="email" id="email" placeholder="Email (optional)">
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
 
-    <!-- ✅ New: Image Upload + Auto URL field -->
+    <!-- ✅ Image Upload -->
     <label><strong>Upload Stone Image</strong></label>
     <input type="file" id="image_upload" accept="image/*">
     <input type="text" id="image_url" placeholder="Image URL (Auto-filled after upload)" readonly>
@@ -80,7 +80,7 @@ footer a {color:white;text-decoration:none;}
 import { 
   auth, db, storage,
   collection, addDoc, doc, updateDoc, signOut, serverTimestamp,
-  ref, uploadBytes, getDownloadURL
+  ref, uploadBytes, getDownloadURL, uploadImageAndGetURL
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
@@ -131,14 +131,12 @@ auth.onAuthStateChanged(user => {
   if (!user) window.location = 'signin.html';
 });
 
-// ✅ Upload image to Firebase Storage and get URL
+// ✅ Upload image and auto-generate URL (CORS-safe)
 imageInput.addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
   try {
-    const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
-    const snapshot = await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(snapshot.ref);
+    const url = await uploadImageAndGetURL(file, "stone_images");
     imageUrlInput.value = url;
     alert("✅ Image uploaded successfully!");
   } catch (err) {
