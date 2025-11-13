@@ -1,4 +1,6 @@
 // ✅ firebase-config.js
+
+// Import Firebase SDK modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
 // Firestore
@@ -54,7 +56,40 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ===== Export =====
+// ✅ Helper function — compress image before upload
+async function compressImage(file, maxSizeMB = 0.9) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const scale = Math.sqrt((maxSizeMB * 1024 * 1024) / event.target.result.length);
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(
+          (blob) => resolve(new File([blob], file.name, { type: file.type })),
+          file.type,
+          0.8
+        );
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ✅ Helper function — upload file & get download URL
+async function uploadImageAndGetURL(file, folder = "uploads") {
+  const compressedFile = file.size > 1048487 ? await compressImage(file) : file;
+  const storageRef = ref(storage, `${folder}/${Date.now()}-${compressedFile.name}`);
+  await uploadBytes(storageRef, compressedFile);
+  return await getDownloadURL(storageRef);
+}
+
+// ===== Export everything =====
 export {
   app,
   db,
@@ -79,5 +114,6 @@ export {
   updateProfile,
   ref,
   uploadBytes,
-  getDownloadURL
+  getDownloadURL,
+  uploadImageAndGetURL // ✅ image upload helper
 };
