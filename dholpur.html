@@ -122,6 +122,7 @@
             display: none;
             text-align: center;
             margin: 10px 0;
+            color: #4285f4;
         }
     </style>
 </head>
@@ -168,24 +169,24 @@
             </div>
             
             <div class="loading" id="loading">
-                सबमिट हो रहा है... कृपया प्रतीक्षा करें
+                ⏳ सबमिट हो रहा है... कृपया प्रतीक्षा करें
             </div>
             
             <button type="submit" class="submit-btn" id="submitBtn">सबमिट करें</button>
         </form>
         
         <div class="success-message" id="successMessage">
-            आपका फॉर्म सफलतापूर्वक सबमिट हो गया है!
+            ✅ आपका फॉर्म सफलतापूर्वक सबमिट हो गया है!
         </div>
         
         <div class="error-message" id="errorMessage">
-            सबमिशन में त्रुटि हुई। कृपया पुनः प्रयास करें।
+            ❌ सबमिशन में त्रुटि हुई। कृपया पुनः प्रयास करें।
         </div>
     </div>
 
     <script>
-        // Replace this with your Google Apps Script Web App URL
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxesm01QwV7PY8d5099t-24GFoorBap0M0AjYTdbQzEjo0PyIGFMJyKfrrqx57NmCfX/exec";
+        // REPLACE THIS WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAXUxFwbvlmoAGVmB1GIPYJIXKDpybQj_lRw9VtdkGua9Cod0977b_KaR941Nv4Q4m/exec";
         
         document.addEventListener('DOMContentLoaded', function() {
             const fileUploadArea = document.getElementById('fileUploadArea');
@@ -257,9 +258,9 @@
                 // Form validation
                 const name = document.getElementById('name').value;
                 const email = document.getElementById('email').value;
-                const image = document.getElementById('image').files[0];
+                const imageFile = document.getElementById('image').files[0];
                 
-                if (!name || !email || !image) {
+                if (!name || !email || !imageFile) {
                     alert('कृपया सभी आवश्यक फील्ड भरें');
                     return;
                 }
@@ -268,16 +269,22 @@
                 loading.style.display = 'block';
                 submitBtn.disabled = true;
                 errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
                 
                 try {
-                    // Prepare form data
+                    // Convert image to base64
+                    const imageBase64 = await convertImageToBase64(imageFile);
+                    
+                    // Create form data
                     const formData = new FormData();
                     formData.append('name', name);
                     formData.append('email', email);
                     formData.append('category', document.getElementById('category').value);
                     formData.append('description', document.getElementById('description').value);
-                    formData.append('image', image);
+                    formData.append('image', imageBase64);
                     formData.append('timestamp', new Date().toISOString());
+                    
+                    console.log('Sending data to:', SCRIPT_URL);
                     
                     // Send data to Google Apps Script
                     const response = await fetch(SCRIPT_URL, {
@@ -286,31 +293,37 @@
                     });
                     
                     const result = await response.text();
+                    console.log('Server response:', result);
                     
-                    if (result === 'success') {
-                        // Show success message
+                    if (result.trim() === 'success') {
                         successMessage.style.display = 'block';
-                        
-                        // Reset form
                         form.reset();
                         previewContainer.style.display = 'none';
                         
-                        // Hide success message after 5 seconds
                         setTimeout(function() {
                             successMessage.style.display = 'none';
                         }, 5000);
                     } else {
-                        throw new Error('Submission failed');
+                        throw new Error(result);
                     }
                 } catch (error) {
-                    console.error('Error:', error);
+                    console.error('Submission Error:', error);
+                    errorMessage.textContent = 'त्रुटि: ' + error.message;
                     errorMessage.style.display = 'block';
                 } finally {
-                    // Hide loading, enable submit button
                     loading.style.display = 'none';
                     submitBtn.disabled = false;
                 }
             });
+            
+            function convertImageToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                    reader.readAsDataURL(file);
+                });
+            }
         });
     </script>
 </body>
