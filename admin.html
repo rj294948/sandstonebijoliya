@@ -74,72 +74,86 @@ footer a {color:white;text-decoration:none;}
 </footer>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
+import { 
+  auth, db, storage, collection, addDoc, updateDoc, doc, deleteDoc, serverTimestamp,
+  signOut, onAuthStateChanged, ref, uploadBytes, getDownloadURL
+} from './firebase-config.js';
 
-// ✅ Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyDxNMhU09mINvq_aDLtylBg3FucCK-MzYE",
-  authDomain: "sandstonebijoliya-293d2.firebaseapp.com",
-  projectId: "sandstonebijoliya-293d2",
-  storageBucket: "sandstonebijoliya-293d2.appspot.com", // ✅ Correct bucket
-  messagingSenderId: "133756247845",
-  appId: "1:133756247845:web:8e769ce2af3db1765484cc",
-  measurementId: "G-H7JMX9VNYF"
-};
+const form = document.getElementById('product-form');
+const logoutBtn = document.getElementById('logout-btn');
+const productIdInput = document.getElementById('product-id');
+const imageInput = document.getElementById('imageInput');
+const preview = document.getElementById('preview');
 
-// ✅ Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+let imageFile = null;
+let existingImageURL = "";
 
-const form = document.getElementById("product-form");
-const logoutBtn = document.getElementById("logout-btn");
-const imageInput = document.getElementById("imageInput");
-const preview = document.getElementById("preview");
-const productIdInput = document.getElementById("product-id");
-
-let selectedFile = null;
-let existingImageUrl = "";
-
-// 🖼️ Image Preview
-imageInput.addEventListener("change", (e) => {
-  selectedFile = e.target.files[0];
-  if (selectedFile) {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
-    };
-    reader.readAsDataURL(selectedFile);
-  }
+// Preview image
+imageInput.addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  imageFile = file;
+  const reader = new FileReader();
+  reader.onload = () => preview.innerHTML = `<img src="${reader.result}" alt="Preview">`;
+  reader.readAsDataURL(file);
 });
 
-// ✅ Logout
+// Logout
 logoutBtn.onclick = async () => {
-  try {
-    await signOut(auth);
-    alert("You have been logged out successfully!");
-    window.location = 'index.html';
-  } catch (error) {
-    alert("Logout failed: " + error.message);
-  }
+  try { await signOut(auth); window.location = 'index.html'; }
+  catch(e) { alert("Error logging out: " + e.message); }
 };
 
-// ✅ Auth Check
-onAuthStateChanged(auth, (user) => {
-  if (!user) window.location = "signin.html";
+// Prefill for Edit
+window.addEventListener('DOMContentLoaded', () => {
+  const editId = localStorage.getItem("editProductId");
+  const editData = localStorage.getItem("editProductData");
+  if (editId && editData) {
+    const p = JSON.parse(decodeURIComponent(editData));
+    productIdInput.value = editId;
+    form.stone_name.value = p.stone_name || "";
+    form.category.value = p.category || "";
+    form.sub_category.value = p.sub_category || "";
+    form.type.value = p.type || "";
+    form.color.value = p.color || "";
+    form.description.value = p.description || "";
+    form.price.value = p.price || "";
+    form.price_unit.value = p.price_unit || "";
+    form.contact_number.value = p.contact_number || "";
+    form.email.value = p.email || "";
+    form.factory_name.value = p.factory_name || "";
+    if (p.image) {
+      existingImageURL = p.image;
+      preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
+    }
+  }
+  localStorage.removeItem("editProductId");
+  localStorage.removeItem("editProductData");
 });
 
-// ✅ Save or Update Product
-form.onsubmit = async (e) => {
+// Auth check
+onAuthStateChanged(auth, user => { if (!user) window.location='signin.html'; });
+
+// Save / Update Product
+form.onsubmit = async e => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
-  const id = productIdInput.value;
+  let imageURL = existingImageURL;
+
+  // Upload new image if selected
+  if (imageFile) {
+    const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
+    try {
+      await uploadBytes(storageRef, imageFile);
+      imageURL = await getDownloadURL(storageRef);
+    } catch(err) {
+      console.error("Upload failed:", err);
+      return alert("❌ Image upload failed: " + err.message);
+    }
+  }
+
   const data = {
     stone_name: form.stone_name.value.trim(),
     category: form.category.value.trim(),
@@ -152,43 +166,21 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim() || "",
     factory_name: form.factory_name.value.trim(),
+    image: imageURL,
     created_at: serverTimestamp(),
     userId: user.uid
   };
 
+  const id = productIdInput.value;
   try {
-    let imageUrl = existingImageUrl;
+    if (id) await updateDoc(doc(db, "products", id), data);
+    else await addDoc(collection(db, "products"), data);
 
-    // Upload image if new file selected
-    if (selectedFile) {
-      if (selectedFile.size > 2 * 1024 * 1024) {
-        alert("Image size too large. Please upload image under 2MB.");
-        return;
-      }
-
-      const fileName = `${Date.now()}_${selectedFile.name}`;
-      const storageRef = ref(storage, `product_images/${fileName}`);
-      const uploadTask = await uploadBytesResumable(storageRef, selectedFile);
-      imageUrl = await getDownloadURL(uploadTask.ref);
-    }
-
-    data.image = imageUrl;
-
-    if (id) {
-      await updateDoc(doc(db, "products", id), data);
-      alert("✅ Product updated successfully!");
-    } else {
-      await addDoc(collection(db, "products"), data);
-      alert("✅ Product added successfully!");
-    }
-
-    form.reset();
-    preview.innerHTML = "";
-    selectedFile = null;
-    existingImageUrl = "";
-  } catch (error) {
-    console.error("Error:", error);
-    alert("❌ Upload failed: " + error.message);
+    alert("✅ Product saved successfully!");
+    form.reset(); preview.innerHTML=""; imageFile=null; existingImageURL=""; productIdInput.value="";
+  } catch(err) {
+    console.error(err);
+    alert("❌ Save failed: "+err.message);
   }
 };
 </script>
