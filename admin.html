@@ -82,34 +82,19 @@ const productIdInput = document.getElementById('product-id');
 const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 
-let imageBase64 = "";
-
-// Convert image to Base64
-imageInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if(file){
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      imageBase64 = event.target.result;
-      preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
 // Logout
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
-    alert("You have been logged out successfully!");
+    alert("Logged out successfully!");
     window.location = 'index.html';
-  } catch (error) {
-    console.error(error);
-    alert("Error logging out.");
+  } catch (err) {
+    console.error(err);
+    alert("Error logging out");
   }
 };
 
-// Prefill for edit mode
+// Prefill edit mode
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
@@ -128,7 +113,6 @@ window.addEventListener('DOMContentLoaded', () => {
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
     if(p.image){
-      imageBase64 = p.image;
       preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
     }
   }
@@ -137,36 +121,36 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // Auth check
-auth.onAuthStateChanged(user => { if(!user) window.location='signin.html'; });
+auth.onAuthStateChanged(user => {
+  if(!user) window.location='signin.html';
+});
 
-// Save / Update Product with Apps Script upload → Sheet → Firestore
-form.onsubmit = async (e) => {
+// Save / Update Product with Apps Script → Sheet → Firestore
+form.onsubmit = async (e)=>{
   e.preventDefault();
   const user = auth.currentUser;
-  if(!user) return alert("Please login again.");
-  if(!imageBase64) return alert("Please select an image!");
+  if(!user) return alert("Please login again!");
+  if(!imageInput.files.length) return alert("Please select an image!");
 
-  try{
-    const fileName = `${Date.now()}_stone.png`;
+  const file = imageInput.files[0];
+  const fileName = `${Date.now()}_${file.name}`;
 
-    // Upload to Google Apps Script → Drive → get URL
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbzW1q5WQqFDszz0PoJ7bR6LNEGGhApK9ixcHEKQ6xM5HetN8LS_9NFDQasc8oRxYc5f/exec"; // Replace with your deployed script URL
-    const res = await fetch(scriptUrl, {
-      method: "POST",
-      body: new URLSearchParams({
-        stone_name: form.stone_name.value.trim(),
-        category: form.category.value.trim(),
-        filename: fileName,
-        file: imageBase64,
-        mimeType: "image/png"
-      })
-    });
+  try {
+    // 1️⃣ Upload image to Apps Script & Sheet
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzW1q5WQqFDszz0PoJ7bR6LNEGGhApK9ixcHEKQ6xM5HetN8LS_9NFDQasc8oRxYc5f/exec";
+    const formData = new FormData();
+    formData.append("stone_name", form.stone_name.value.trim());
+    formData.append("category", form.category.value.trim());
+    formData.append("fileName", fileName);
+    formData.append("file", file);
 
+    const res = await fetch(scriptUrl, { method:"POST", body: formData });
     const json = await res.json();
-    if(json.status !== "success") throw new Error(json.message);
+    if(json.status!=="success") throw new Error(json.message);
+
     const imageUrl = json.url;
 
-    // Save product to Firestore
+    // 2️⃣ Save product to Firestore
     const data = {
       stone_name: form.stone_name.value.trim(),
       category: form.category.value.trim(),
@@ -194,15 +178,15 @@ form.onsubmit = async (e) => {
     }
 
     form.reset();
-    preview.innerHTML = "";
-    imageBase64 = "";
-    productIdInput.value = "";
-
+    preview.innerHTML="";
+    productIdInput.value="";
+    
   } catch(err){
     console.error(err);
-    alert("❌ Upload failed: " + err.message);
+    alert("❌ Upload failed: "+err.message);
   }
 };
 </script>
+
 </body>
 </html>
