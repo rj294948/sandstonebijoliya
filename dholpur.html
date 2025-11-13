@@ -3,65 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stone Submission Form</title>
+<title>Stone Upload Form</title>
 <style>
-body {font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:0;}
-.container {max-width:500px; margin:50px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-h2 {text-align:center; color:#444;}
-input, textarea, select {width:100%; padding:10px; margin:10px 0; border-radius:6px; border:1px solid #ccc;}
-button {width:100%; padding:12px; background:#c7a97b; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;}
-button:hover {background:#b38c5f;}
+  body{font-family:sans-serif;padding:20px;}
+  input,button{padding:10px;margin:5px 0;width:100%;}
+  img{max-width:200px;margin-top:10px;}
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>Stone Submission Form</h2>
-  <form id="stoneForm">
-    <input type="text" name="stone_name" placeholder="Stone Name" required>
-    <input type="text" name="category" placeholder="Category" required>
-    <input type="text" name="sub_category" placeholder="Sub-category">
-    <input type="text" name="type" placeholder="Type" required>
-    <input type="text" name="color" placeholder="Color" required>
-    <textarea name="description" placeholder="Description" rows="3"></textarea>
-    <input type="number" name="price" placeholder="Price" required>
-    <input type="text" name="price_unit" placeholder="Unit (sqft, piece)" required>
-    <input type="text" name="contact_number" placeholder="Contact Number" required>
-    <input type="email" name="email" placeholder="Email">
-    <input type="text" name="factory_name" placeholder="Factory/Company Name" required>
-    <button type="submit">Submit</button>
-  </form>
-  <p id="status"></p>
-</div>
+<h2>Upload Stone Image</h2>
+<form id="stoneForm">
+  <input type="text" name="stone_name" placeholder="Stone Name" required>
+  <input type="text" name="category" placeholder="Category" required>
+  <input type="file" id="imageInput" accept="image/*" required>
+  <button type="submit">Upload</button>
+</form>
+
+<div id="preview"></div>
+<div id="result"></div>
 
 <script>
 const form = document.getElementById('stoneForm');
-const status = document.getElementById('status');
+const imageInput = document.getElementById('imageInput');
+const preview = document.getElementById('preview');
+let base64Image = "";
 
-form.addEventListener('submit', async (e) => {
+imageInput.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      base64Image = ev.target.result;
+      preview.innerHTML = `<img src="${base64Image}" alt="Preview">`;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+form.addEventListener('submit', async (e)=>{
   e.preventDefault();
-  const formData = new FormData(form);
-  const data = {};
-  formData.forEach((value, key) => { data[key] = value });
+  if(!base64Image){ alert("Select an image"); return; }
 
-  try {
-    const res = await fetch('https://script.google.com/macros/s/AKfycbzAXUxFwbvlmoAGVmB1GIPYJIXKDpybQj_lRw9VtdkGua9Cod0977b_KaR941Nv4Q4m/exec', {
+  const data = new FormData();
+  data.append('stone_name', form.stone_name.value);
+  data.append('category', form.category.value);
+  data.append('file', base64Image);
+  data.append('filename', form.stone_name.value + ".png");
+
+  try{
+    const res = await fetch("YOUR_APP_SCRIPT_URL_HERE", {
       method: 'POST',
-      body: new URLSearchParams(data)
+      body: data
     });
-    const result = await res.json();
-    if(result.status === "success") {
-      status.innerText = "✅ Data submitted successfully!";
+    const json = await res.json();
+    if(json.status === "success"){
+      document.getElementById('result').innerHTML = `Uploaded! URL: <a href="${json.url}" target="_blank">${json.url}</a>`;
       form.reset();
+      preview.innerHTML = "";
+      base64Image = "";
     } else {
-      status.innerText = "❌ Error: " + result.message;
+      document.getElementById('result').textContent = "Error: " + json.message;
     }
-  } catch(err) {
-    status.innerText = "❌ Submission failed: " + err.message;
+  }catch(err){
+    document.getElementById('result').textContent = "Error: " + err.message;
   }
 });
 </script>
 
 </body>
 </html>
-
