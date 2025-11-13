@@ -75,7 +75,7 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, storage, collection, addDoc, doc, updateDoc, signOut, serverTimestamp, ref, uploadBytesResumable, getDownloadURL
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
@@ -84,31 +84,19 @@ const productIdInput = document.getElementById('product-id');
 const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 
-let imageURL = "";
+let imageBase64 = "";
 
-// 🖼️ Upload image to Firebase Storage
+// 🖼️ Convert image to Base64
 imageInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
-  if (!file) return;
-
-  const storageRef = ref(storage, `stones/${Date.now()}_${file.name}`);
-  const uploadTask = uploadBytesResumable(storageRef, file);
-
-  uploadTask.on('state_changed', 
-    (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress.toFixed(0) + '% done');
-    }, 
-    (error) => {
-      console.error("Upload failed:", error);
-      alert("❌ Image upload failed. Try again.");
-    }, 
-    async () => {
-      imageURL = await getDownloadURL(uploadTask.snapshot.ref);
-      preview.innerHTML = `<img src="${imageURL}" alt="Preview">`;
-      console.log("Image uploaded. URL:", imageURL);
-    }
-  );
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      imageBase64 = event.target.result; // Base64 string
+      preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
+    };
+    reader.readAsDataURL(file);
+  }
 });
 
 // ✅ Logout
@@ -143,7 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
     if (p.image) {
-      imageURL = p.image;
+      imageBase64 = p.image;
       preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
     }
   }
@@ -175,7 +163,7 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim() || "",
     factory_name: form.factory_name.value.trim(),
-    image: imageURL || "",
+    image: imageBase64 || "",
     created_at: serverTimestamp(),
     userId: user.uid
   };
@@ -192,7 +180,7 @@ form.onsubmit = async (e) => {
 
     form.reset();
     preview.innerHTML = "";
-    imageURL = "";
+    imageBase64 = "";
     productIdInput.value = "";
   } catch (error) {
     console.error("Error:", error);
