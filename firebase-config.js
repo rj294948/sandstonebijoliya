@@ -1,42 +1,15 @@
-// ✅ firebase-config.js
+// firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-
-// Firestore
 import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  getDocs, 
-  query, 
-  orderBy, 
-  doc, 
-  deleteDoc, 
-  updateDoc,
-  where,
-  serverTimestamp
+  getFirestore, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc, where, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-// Auth
 import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  GoogleAuthProvider, 
-  signInWithPopup, 
-  onAuthStateChanged, 
-  updateProfile 
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, updateProfile 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-// Storage
 import { 
-  getStorage, 
-  ref, 
-  uploadBytes, 
-  getDownloadURL 
+  getStorage, ref, uploadBytes, getDownloadURL 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
 
-// ===== Firebase Config =====
 const firebaseConfig = {
   apiKey: "AIzaSyDxNMhU09mINvq_aDLtylBg3FucCK-MzYE",
   authDomain: "sandstonebijoliya-293d2.firebaseapp.com",
@@ -47,37 +20,15 @@ const firebaseConfig = {
   measurementId: "G-H7JMX9VNYF"
 };
 
-// ===== Initialize Firebase =====
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ===== Export =====
 export {
-  app,
-  db,
-  auth,
-  storage,
-  googleProvider,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  doc,
-  deleteDoc,
-  updateDoc,
-  where,
-  serverTimestamp,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  signInWithPopup,
-  onAuthStateChanged,
-  updateProfile,
-  ref,
-  uploadBytes,
-  getDownloadURL
+  app, db, auth, storage, googleProvider,
+  collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc, where, serverTimestamp,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, onAuthStateChanged, updateProfile,
+  ref, uploadBytes, getDownloadURL
 };
