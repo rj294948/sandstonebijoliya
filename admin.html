@@ -75,8 +75,15 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
+  auth, db, storage 
 } from './firebase-config.js';
+import { 
+  collection, addDoc, doc, updateDoc, serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+import { 
+  ref, uploadBytes, getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
@@ -84,18 +91,23 @@ const productIdInput = document.getElementById('product-id');
 const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 
-let imageBase64 = "";
+let imageFile = null;
 
-// 🖼️ Convert image to Base64
+// 🖼️ Preview selected image
 imageInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
+  imageFile = e.target.files[0];
+  if (imageFile) {
+    if (imageFile.size > 8 * 1024 * 1024) {
+      alert("⚠️ File size must be under 8 MB");
+      imageInput.value = "";
+      imageFile = null;
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (event) => {
-      imageBase64 = event.target.result; // Base64 string
-      preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
+      preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(imageFile);
   }
 });
 
@@ -106,12 +118,11 @@ logoutBtn.onclick = async () => {
     alert("You have been logged out successfully!");
     window.location = 'index.html';
   } catch (error) {
-    console.error("Logout failed:", error);
     alert("Error logging out. Try again.");
   }
 };
 
-// ✅ Prefill for Edit mode
+// ✅ Prefill for Edit
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
@@ -119,23 +130,9 @@ window.addEventListener('DOMContentLoaded', () => {
   if (editId && editData) {
     const p = JSON.parse(decodeURIComponent(editData));
     productIdInput.value = editId;
-    form.stone_name.value = p.stone_name || "";
-    form.category.value = p.category || "";
-    form.sub_category.value = p.sub_category || "";
-    form.type.value = p.type || "";
-    form.color.value = p.color || "";
-    form.description.value = p.description || "";
-    form.price.value = p.price || "";
-    form.price_unit.value = p.price_unit || "";
-    form.contact_number.value = p.contact_number || "";
-    form.email.value = p.email || "";
-    form.factory_name.value = p.factory_name || "";
-    if (p.image) {
-      imageBase64 = p.image;
-      preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
-    }
+    Object.keys(p).forEach(k => { if (form[k]) form[k].value = p[k]; });
+    if (p.image) preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
   }
-
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
@@ -163,13 +160,21 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim() || "",
     factory_name: form.factory_name.value.trim(),
-    image: imageBase64 || "",
     created_at: serverTimestamp(),
     userId: user.uid
   };
 
-  const id = productIdInput.value;
   try {
+    let imageUrl = "";
+    if (imageFile) {
+      const metadata = { contentType: imageFile.type || "image/png" };
+      const storageRef = ref(storage, `stone_images/${Date.now()}_${imageFile.name}`);
+      const uploadResult = await uploadBytes(storageRef, imageFile, metadata);
+      imageUrl = await getDownloadURL(uploadResult.ref);
+    }
+    if (imageUrl) data.image = imageUrl;
+
+    const id = productIdInput.value;
     if (id) {
       await updateDoc(doc(db, "products", id), data);
       alert("✅ Product updated successfully!");
@@ -180,7 +185,7 @@ form.onsubmit = async (e) => {
 
     form.reset();
     preview.innerHTML = "";
-    imageBase64 = "";
+    imageFile = null;
     productIdInput.value = "";
   } catch (error) {
     console.error("Error:", error);
