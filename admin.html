@@ -21,8 +21,6 @@ button {background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 
 button:hover {background:#b38c5f;}
 .preview {text-align:center;margin-bottom:15px;}
 .preview img {width:160px;border-radius:10px;}
-.progress {width:100%;background:#ddd;height:8px;border-radius:5px;margin-bottom:10px;}
-.progress-bar {height:8px;background:#c7a97b;border-radius:5px;width:0%;}
 footer {background:#333;color:white;text-align:center;padding:15px;margin-top:40px;}
 footer a {color:white;text-decoration:none;}
 </style>
@@ -66,7 +64,6 @@ footer a {color:white;text-decoration:none;}
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
     <input type="file" id="imageInput" accept="image/*">
     <div class="preview" id="preview"></div>
-    <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
     <button type="submit">Save Product</button>
   </form>
 </div>
@@ -78,7 +75,7 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, storage, collection, addDoc, doc, updateDoc, signOut, serverTimestamp, ref, uploadBytesResumable, getDownloadURL 
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
@@ -86,19 +83,19 @@ const logoutBtn = document.getElementById('logout-btn');
 const productIdInput = document.getElementById('product-id');
 const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
-const progressBar = document.getElementById('progress-bar');
 
-let selectedFile = null;
+let imageBase64 = "";
 
-// 🖼️ File Preview
+// 🖼️ Convert image to Base64
 imageInput.addEventListener("change", (e) => {
-  selectedFile = e.target.files[0];
-  if (selectedFile) {
+  const file = e.target.files[0];
+  if (file) {
     const reader = new FileReader();
     reader.onload = (event) => {
-      preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+      imageBase64 = event.target.result; // Base64 string
+      preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
     };
-    reader.readAsDataURL(selectedFile);
+    reader.readAsDataURL(file);
   }
 });
 
@@ -133,7 +130,10 @@ window.addEventListener('DOMContentLoaded', () => {
     form.contact_number.value = p.contact_number || "";
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
-    if (p.image) preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
+    if (p.image) {
+      imageBase64 = p.image;
+      preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
+    }
   }
 
   localStorage.removeItem("editProductId");
@@ -163,50 +163,25 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim() || "",
     factory_name: form.factory_name.value.trim(),
+    image: imageBase64 || "",
     created_at: serverTimestamp(),
     userId: user.uid
   };
 
   const id = productIdInput.value;
-
   try {
-    if (selectedFile) {
-      const imageRef = ref(storage, `product_images/${Date.now()}_${selectedFile.name}`);
-      const uploadTask = uploadBytesResumable(imageRef, selectedFile);
-
-      uploadTask.on('state_changed', (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        progressBar.style.width = `${progress}%`;
-      }, (error) => {
-        alert("Image upload failed: " + error.message);
-      }, async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        data.image = downloadURL;
-
-        if (id) {
-          await updateDoc(doc(db, "products", id), data);
-          alert("✅ Product updated successfully!");
-        } else {
-          await addDoc(collection(db, "products"), data);
-          alert("✅ Product added successfully!");
-        }
-
-        form.reset();
-        preview.innerHTML = "";
-        progressBar.style.width = "0%";
-        selectedFile = null;
-      });
+    if (id) {
+      await updateDoc(doc(db, "products", id), data);
+      alert("✅ Product updated successfully!");
     } else {
-      if (id) {
-        await updateDoc(doc(db, "products", id), data);
-        alert("✅ Product updated successfully!");
-      } else {
-        await addDoc(collection(db, "products"), data);
-        alert("✅ Product added successfully!");
-      }
-      form.reset();
-      preview.innerHTML = "";
+      await addDoc(collection(db, "products"), data);
+      alert("✅ Product added successfully!");
     }
+
+    form.reset();
+    preview.innerHTML = "";
+    imageBase64 = "";
+    productIdInput.value = "";
   } catch (error) {
     console.error("Error:", error);
     alert("❌ Upload failed: " + error.message);
