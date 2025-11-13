@@ -6,106 +6,23 @@
 <title>Admin Panel - Rajasthan SandStone Hub</title>
 <link rel="icon" href="stone-icon.png" type="image/png">
 <style>
-body {
-  font-family: "Poppins", sans-serif;
-  background: #f5f5f5;
-  margin: 0;
-}
-header {
-  background: #c7a97b;
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-header h1 {
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin: 0;
-}
-header div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-header button {
-  padding: 8px 15px;
-  border: none;
-  background: #fff;
-  color: #c7a97b;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  background: #f3f3f3;
-  padding: 10px;
-  flex-wrap: wrap;
-}
-nav a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 600;
-}
-.container {
-  padding: 20px;
-  max-width: 1200px;
-  margin: auto;
-}
-h2 {
-  color: #444;
-  text-align: center;
-  margin-bottom: 20px;
-}
-form {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-button {
-  background: #c7a97b;
-  color: white;
-  font-weight: 600;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-button:hover {
-  background: #b38c5f;
-}
-.preview {
-  text-align: center;
-  margin-bottom: 15px;
-}
-.preview img {
-  width: 160px;
-  border-radius: 10px;
-}
-footer {
-  background: #333;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  margin-top: 40px;
-}
-footer a {
-  color: white;
-  text-decoration: none;
-}
+body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
+header {background:#c7a97b;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+header h1 {font-size:1.5rem;cursor:pointer;margin:0;}
+header div {display:flex;flex-wrap:wrap;gap:10px;}
+header button {padding:8px 15px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
+nav {display:flex;justify-content:center;gap:15px;background:#f3f3f3;padding:10px;flex-wrap:wrap;}
+nav a {text-decoration:none;color:#333;font-weight:600;}
+.container {padding:20px;max-width:1200px;margin:auto;}
+h2 {color:#444;text-align:center;margin-bottom:20px;}
+form {background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+input,textarea {width:100%;padding:10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
+button {background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 20px;border-radius:6px;cursor:pointer;}
+button:hover {background:#b38c5f;}
+.preview {text-align:center;margin-bottom:15px;}
+.preview img {width:160px;border-radius:10px;}
+footer {background:#333;color:white;text-align:center;padding:15px;margin-top:40px;}
+footer a {color:white;text-decoration:none;}
 </style>
 </head>
 <body>
@@ -145,10 +62,8 @@ footer a {
     <input type="text" id="contact_number" placeholder="Contact Number" required>
     <input type="email" id="email" placeholder="Email (optional)">
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
-    
     <input type="file" id="imageInput" accept="image/*">
     <div class="preview" id="preview"></div>
-
     <button type="submit">Save Product</button>
   </form>
 </div>
@@ -160,9 +75,8 @@ footer a {
 
 <script type="module">
 import { 
-  auth, db, storage, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
@@ -170,21 +84,22 @@ const productIdInput = document.getElementById('product-id');
 const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 
-let imageFile = null;
+let imageBase64 = "";
 
-// 🖼️ Image preview
+// 🖼️ Convert image to Base64
 imageInput.addEventListener("change", (e) => {
-  imageFile = e.target.files[0];
-  if (imageFile) {
+  const file = e.target.files[0];
+  if (file) {
     const reader = new FileReader();
     reader.onload = (event) => {
-      preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+      imageBase64 = event.target.result; // Base64 string
+      preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
     };
-    reader.readAsDataURL(imageFile);
+    reader.readAsDataURL(file);
   }
 });
 
-// ✅ Logout function
+// ✅ Logout
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
@@ -196,7 +111,7 @@ logoutBtn.onclick = async () => {
   }
 };
 
-// ✅ Auto-fill data for editing
+// ✅ Prefill for Edit mode
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
@@ -215,7 +130,10 @@ window.addEventListener('DOMContentLoaded', () => {
     form.contact_number.value = p.contact_number || "";
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
-    if (p.image) preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
+    if (p.image) {
+      imageBase64 = p.image;
+      preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
+    }
   }
 
   localStorage.removeItem("editProductId");
@@ -227,46 +145,31 @@ auth.onAuthStateChanged(user => {
   if (!user) window.location = 'signin.html';
 });
 
-// ✅ Submit form (Add / Update)
+// ✅ Save / Update Product
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
-  let imageUrl = "";
+  const data = {
+    stone_name: form.stone_name.value.trim(),
+    category: form.category.value.trim(),
+    sub_category: form.sub_category.value.trim(),
+    type: form.type.value.trim(),
+    color: form.color.value.trim(),
+    description: form.description.value.trim(),
+    price: parseFloat(form.price.value),
+    price_unit: form.price_unit.value.trim(),
+    contact_number: form.contact_number.value.trim(),
+    email: form.email.value.trim() || "",
+    factory_name: form.factory_name.value.trim(),
+    image: imageBase64 || "",
+    created_at: serverTimestamp(),
+    userId: user.uid
+  };
 
+  const id = productIdInput.value;
   try {
-    if (imageFile) {
-      const storageRef = ref(storage, `stones/${Date.now()}_${imageFile.name}`);
-      const snapshot = await uploadBytes(storageRef, imageFile);
-      imageUrl = await getDownloadURL(snapshot.ref);
-    } else if (productIdInput.value) {
-      // Keep previous image if not changed
-      const editData = localStorage.getItem("editProductData");
-      if (editData) {
-        const p = JSON.parse(decodeURIComponent(editData));
-        imageUrl = p.image || "";
-      }
-    }
-
-    const data = {
-      stone_name: form.stone_name.value.trim(),
-      category: form.category.value.trim(),
-      sub_category: form.sub_category.value.trim(),
-      type: form.type.value.trim(),
-      color: form.color.value.trim(),
-      description: form.description.value.trim(),
-      price: parseFloat(form.price.value),
-      price_unit: form.price_unit.value.trim(),
-      contact_number: form.contact_number.value.trim(),
-      email: form.email.value.trim() || "",
-      factory_name: form.factory_name.value.trim(),
-      image: imageUrl,
-      created_at: serverTimestamp(),
-      userId: user.uid
-    };
-
-    const id = productIdInput.value;
     if (id) {
       await updateDoc(doc(db, "products", id), data);
       alert("✅ Product updated successfully!");
@@ -277,7 +180,7 @@ form.onsubmit = async (e) => {
 
     form.reset();
     preview.innerHTML = "";
-    imageFile = null;
+    imageBase64 = "";
     productIdInput.value = "";
   } catch (error) {
     console.error("Error:", error);
