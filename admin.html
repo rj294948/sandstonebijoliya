@@ -75,8 +75,7 @@ footer a {color:white;text-decoration:none;}
 
 <script type="module">
 import { 
-  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp,
-  storage, ref, uploadBytes, getDownloadURL
+  auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp 
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
@@ -85,17 +84,16 @@ const productIdInput = document.getElementById('product-id');
 const imageInput = document.getElementById('imageInput');
 const preview = document.getElementById('preview');
 
-let imageFile = null;
-let imageUrl = "";
+let imageBase64 = "";
 
-// 🖼️ Handle image selection
+// 🖼️ Convert image to Base64
 imageInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
-    imageFile = file;
     const reader = new FileReader();
     reader.onload = (event) => {
-      preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+      imageBase64 = event.target.result; // Base64 string
+      preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
     };
     reader.readAsDataURL(file);
   }
@@ -133,7 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
     if (p.image) {
-      imageUrl = p.image;
+      imageBase64 = p.image;
       preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
     }
   }
@@ -153,32 +151,25 @@ form.onsubmit = async (e) => {
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
+  const data = {
+    stone_name: form.stone_name.value.trim(),
+    category: form.category.value.trim(),
+    sub_category: form.sub_category.value.trim(),
+    type: form.type.value.trim(),
+    color: form.color.value.trim(),
+    description: form.description.value.trim(),
+    price: parseFloat(form.price.value),
+    price_unit: form.price_unit.value.trim(),
+    contact_number: form.contact_number.value.trim(),
+    email: form.email.value.trim() || "",
+    factory_name: form.factory_name.value.trim(),
+    image: imageBase64 || "",
+    created_at: serverTimestamp(),
+    userId: user.uid
+  };
+
+  const id = productIdInput.value;
   try {
-    // 🔹 Upload image if new selected
-    if (imageFile) {
-      const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
-      const snapshot = await uploadBytes(storageRef, imageFile);
-      imageUrl = await getDownloadURL(snapshot.ref);
-    }
-
-    const data = {
-      stone_name: form.stone_name.value.trim(),
-      category: form.category.value.trim(),
-      sub_category: form.sub_category.value.trim(),
-      type: form.type.value.trim(),
-      color: form.color.value.trim(),
-      description: form.description.value.trim(),
-      price: parseFloat(form.price.value),
-      price_unit: form.price_unit.value.trim(),
-      contact_number: form.contact_number.value.trim(),
-      email: form.email.value.trim() || "",
-      factory_name: form.factory_name.value.trim(),
-      image: imageUrl || "",
-      created_at: serverTimestamp(),
-      userId: user.uid
-    };
-
-    const id = productIdInput.value;
     if (id) {
       await updateDoc(doc(db, "products", id), data);
       alert("✅ Product updated successfully!");
@@ -189,10 +180,8 @@ form.onsubmit = async (e) => {
 
     form.reset();
     preview.innerHTML = "";
-    imageFile = null;
-    imageUrl = "";
+    imageBase64 = "";
     productIdInput.value = "";
-
   } catch (error) {
     console.error("Error:", error);
     alert("❌ Upload failed: " + error.message);
