@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel - Rajasthan SandStone Hub</title>
-<link rel="icon" href="stone-icon.png" onerror="this.href='https://cdn-icons-png.flaticon.com/512/4727/4727261.png'" type="image/png">
+<link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
 body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
@@ -62,11 +62,10 @@ footer a {color:white;text-decoration:none;}
     <input type="email" id="email" placeholder="Email (optional)">
     <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
 
-    <!-- 🆕 Image upload field -->
-    <label>Upload Image (from device):</label>
-    <input type="file" id="image_file" accept="image/*">
-    <input type="text" id="image_url" placeholder="Or paste Image URL (optional)">
-    <p id="upload-status" style="font-size:14px;color:#888;"></p>
+    <!-- ✅ New: Image Upload + Auto URL field -->
+    <label><strong>Upload Stone Image</strong></label>
+    <input type="file" id="image_upload" accept="image/*">
+    <input type="text" id="image_url" placeholder="Image URL (Auto-filled after upload)" readonly>
 
     <button type="submit">Save Product</button>
   </form>
@@ -77,18 +76,20 @@ footer a {color:white;text-decoration:none;}
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<!-- ✅ Firebase Config linked separately -->
 <script type="module">
 import { 
-  auth, db, storage, collection, addDoc, doc, updateDoc, signOut, serverTimestamp, ref, uploadBytes, getDownloadURL 
+  auth, db, storage,
+  collection, addDoc, doc, updateDoc, signOut, serverTimestamp,
+  ref, uploadBytes, getDownloadURL
 } from './firebase-config.js';
 
 const form = document.getElementById('product-form');
 const logoutBtn = document.getElementById('logout-btn');
 const productIdInput = document.getElementById('product-id');
-const uploadStatus = document.getElementById('upload-status');
+const imageInput = document.getElementById('image_upload');
+const imageUrlInput = document.getElementById('image_url');
 
-// ✅ Logout and redirect to Home
+// ✅ Logout
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
@@ -100,7 +101,7 @@ logoutBtn.onclick = async () => {
   }
 };
 
-// ✅ Auto-fill product if editing
+// ✅ Auto-fill for editing
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
@@ -127,48 +128,32 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // ✅ Auth check
 auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location = 'signin.html';
+  if (!user) window.location = 'signin.html';
+});
+
+// ✅ Upload image to Firebase Storage and get URL
+imageInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
+    const snapshot = await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(snapshot.ref);
+    imageUrlInput.value = url;
+    alert("✅ Image uploaded successfully!");
+  } catch (err) {
+    console.error("Image upload failed:", err);
+    alert("❌ Image upload failed. Please try again.");
   }
 });
 
-// ✅ Save / Update Product
+// ✅ Save / Update product
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
   const formattedCategory = form.category.value.trim().charAt(0).toUpperCase() + form.category.value.trim().slice(1).toLowerCase();
-
-  let imageURL = form.image_url.value.trim();
-  const file = document.getElementById('image_file').files[0];
-
-  // 🧠 Check image file size before upload (max ~3MB recommended)
-  if (file && file.size > 3 * 1024 * 1024) {
-    alert("❌ Image is too large. Please select a file under 3MB.");
-    return;
-  }
-
-  // ✅ Upload to Firebase Storage and get URL
-  if (file) {
-    try {
-      uploadStatus.textContent = "⏳ Uploading image...";
-      const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      imageURL = await getDownloadURL(storageRef);
-      uploadStatus.textContent = "✅ Image uploaded successfully!";
-    } catch (err) {
-      console.error("Image upload failed:", err);
-      uploadStatus.textContent = "❌ Image upload failed.";
-      return alert("Error uploading image. Check console.");
-    }
-  }
-
-  // ✅ Prevent storing base64 data
-  if (imageURL.length > 1000 && imageURL.startsWith("data:")) {
-    alert("❌ Invalid image data. Please upload again.");
-    return;
-  }
 
   const data = {
     stone_name: form.stone_name.value.trim(),
@@ -182,27 +167,22 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim() || "",
     factory_name: form.factory_name.value.trim(),
-    image: imageURL,
+    image: form.image_url.value.trim(),
     created_at: serverTimestamp(),
     userId: user.uid
   };
 
   const id = productIdInput.value;
-  try {
-    if (id) {
-      await updateDoc(doc(db, "products", id), data);
-      alert("✅ Product updated successfully!");
-    } else {
-      await addDoc(collection(db, "products"), data);
-      alert("✅ Product added successfully!");
-    }
-    form.reset();
-    productIdInput.value = "";
-    uploadStatus.textContent = "";
-  } catch (err) {
-    console.error("Firestore error:", err);
-    alert("❌ Failed to save product. See console for details.");
+  if (id) {
+    await updateDoc(doc(db, "products", id), data);
+    alert("✅ Product updated successfully!");
+  } else {
+    await addDoc(collection(db, "products"), data);
+    alert("✅ Product added successfully!");
   }
+
+  form.reset();
+  productIdInput.value = "";
 };
 </script>
 </body>
