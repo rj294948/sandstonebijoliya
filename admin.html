@@ -86,32 +86,32 @@ const preview = document.getElementById('preview');
 
 let imageBase64 = "";
 
-// 🖼️ Convert image to Base64
+// Convert image to Base64 for Apps Script
 imageInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = (event) => {
-      imageBase64 = event.target.result; // Base64 string
+      imageBase64 = event.target.result;
       preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
     };
     reader.readAsDataURL(file);
   }
 });
 
-// ✅ Logout
+// Logout
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
-    alert("You have been logged out successfully!");
+    alert("Logged out successfully!");
     window.location = 'index.html';
   } catch (error) {
-    console.error("Logout failed:", error);
-    alert("Error logging out. Try again.");
+    console.error(error);
+    alert("Logout failed!");
   }
 };
 
-// ✅ Prefill for Edit mode
+// Prefill Edit Mode
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
@@ -140,12 +140,12 @@ window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem("editProductData");
 });
 
-// ✅ Auth check
+// Auth check
 auth.onAuthStateChanged(user => {
   if (!user) window.location = 'signin.html';
 });
 
-// ✅ Save / Update Product with Apps Script Upload → Firestore
+// Save / Update Product with Apps Script → Google Sheet → Firestore
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
@@ -155,8 +155,8 @@ form.onsubmit = async (e) => {
   try {
     const fileName = `${Date.now()}_stone.png`;
 
-    // 1️⃣ Upload image to Apps Script → Drive → URL → Sheet
-    const uploadRes = await fetch("https://script.google.com/macros/s/AKfycbxFhjrME1H06oShCKSEwmGFwmQVAXWXlMfDmATM5qTmPoFJKozEQJ2UBu4n5OH-ATBu/exec", {
+    // 1️⃣ Upload to Apps Script
+    const res = await fetch("https://script.google.com/macros/s/AKfycbxFhjrME1H06oShCKSEwmGFwmQVAXWXlMfDmATM5qTmPoFJKozEQJ2UBu4n5OH-ATBu/exec", {
       method: "POST",
       body: new URLSearchParams({
         stone_name: form.stone_name.value.trim(),
@@ -167,10 +167,10 @@ form.onsubmit = async (e) => {
       })
     });
 
-    const uploadJson = await uploadRes.json();
-    if(uploadJson.status !== "success") throw new Error(uploadJson.message);
+    const json = await res.json();
+    if(json.status !== "success") throw new Error(json.message);
 
-    const imageUrl = uploadJson.url; // ✅ Generated URL from Apps Script & Sheet
+    const imageUrl = json.url;
 
     // 2️⃣ Save product to Firestore
     const data = {
@@ -193,10 +193,10 @@ form.onsubmit = async (e) => {
     const id = productIdInput.value;
     if (id) {
       await updateDoc(doc(db, "products", id), data);
-      alert("✅ Product updated successfully!");
+      alert("Product updated successfully!");
     } else {
       await addDoc(collection(db, "products"), data);
-      alert("✅ Product added successfully!");
+      alert("Product added successfully!");
     }
 
     form.reset();
@@ -206,7 +206,7 @@ form.onsubmit = async (e) => {
 
   } catch(err) {
     console.error(err);
-    alert("❌ Upload failed: " + err.message);
+    alert("Upload failed: " + err.message);
   }
 };
 </script>
