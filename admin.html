@@ -3,76 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel | RJ Services</title>
-<link rel="icon" href="images/stone-icon.png" type="image/png">
-<script type="module">
-  // Firebase import
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const storage = getStorage(app);
-
-  document.addEventListener("DOMContentLoaded", () => {
-    console.log("Initialized driver at:", new Date().toString());
-  });
-
-  async function submitForm(e) {
-    e.preventDefault();
-    const form = document.getElementById("myForm");
-    const data = new FormData(form);
-
-    try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbwrdeZ9W2QkAnVMvyRnLlSaeI4D-91zD2Iqlb2z5OaUQON1FIVWzbEHGBPA--Qw8aEf/exec", {
-        method: "POST",
-        body: data,
-        mode: "no-cors"
-      });
-      alert("Form submitted successfully!");
-    } catch (err) {
-      console.error("Form submit error:", err);
-    }
-  }
-
-  window.submitForm = submitForm;
-
-  window.uploadFile = async () => {
-    const fileInput = document.getElementById("fileInput");
-    const file = fileInput.files[0];
-
-    if (!file) {
-      alert("Please select a file first!");
-      return;
-    }
-
-    try {
-      const storageRef = ref(storage, "uploads/" + file.name);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
-      console.log("File uploaded:", downloadURL);
-      alert("File uploaded successfully!");
-    } catch (error) {
-      console.error("Upload failed:", error);
-    }
-  };
-</script>
+<title>Admin Panel - Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone-icon.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<style>
+body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
+header {background:#c7a97b;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+header h1 {font-size:1.5rem;cursor:pointer;margin:0;}
+header div {display:flex;flex-wrap:wrap;gap:10px;}
+header button {padding:8px 15px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
+nav {display:flex;justify-content:center;gap:15px;background:#f3f3f3;padding:10px;flex-wrap:wrap;}
+nav a {text-decoration:none;color:#333;font-weight:600;}
+.container {padding:20px;max-width:1200px;margin:auto;}
+h2 {color:#444;text-align:center;margin-bottom:20px;}
+form {background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+input,select,textarea {width:100%;padding:10px;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;}
+button {background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 20px;border-radius:6px;cursor:pointer;}
+button:hover {background:#b38c5f;}
+.preview img {width:120px;border-radius:8px;margin-top:10px;}
+footer {background:#333;color:white;text-align:center;padding:15px;margin-top:40px;}
+footer a {color:white;text-decoration:none;}
+</style>
 </head>
 <body>
-  <h2>Admin Panel</h2>
-  <form id="myForm" onsubmit="submitForm(event)">
-    <input type="text" name="productName" placeholder="Enter product name" required><br><br>
-    <input type="file" id="fileInput" required><br><br>
-    <button type="button" onclick="uploadFile()">Upload File</button><br><br>
-    <button type="submit">Submit Data</button>
+
+<header>
+  <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
+  <div>
+    <button onclick="window.location='index.html'">Home</button>
+    <button onclick="window.location='history.html'">My History</button>
+    <button id="logout-btn">Logout</button>
+  </div>
+</header>
+
+<nav>
+  <a href="bijoliya.html">Bijoliya</a>
+  <a href="dholpur.html">Dholpur</a>
+  <a href="mandana.html">Mandana</a>
+  <a href="kota.html">Kota</a>
+  <a href="other-stones.html">Other Stones</a>
+  <a href="factories.html">Factories</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+</nav>
+
+<div class="container">
+  <h2>Add / Edit Stone Product</h2>
+  <form id="product-form">
+    <input type="hidden" id="product-id">
+    <input type="text" id="stone_name" placeholder="Stone Name" required>
+    <input type="text" id="category" placeholder="Category (Bijoliya, Dholpur...)" required>
+    <input type="text" id="sub_category" placeholder="Sub-category (Optional)">
+    <input type="text" id="type" placeholder="Type (Farsi, Gitti, Poll...)" required>
+    <input type="text" id="color" placeholder="Color" required>
+    <textarea id="description" placeholder="Description" rows="3"></textarea>
+    <input type="number" id="price" placeholder="Price" required>
+    <input type="text" id="price_unit" placeholder="Unit (sqft, piece...)" required>
+    <input type="text" id="contact_number" placeholder="Contact Number" required>
+    <input type="email" id="email" placeholder="Email (optional)">
+    <input type="text" id="factory_name" placeholder="Factory/Company Name" required>
+    
+    <label>Upload Stone Image:</label>
+    <input type="file" id="image_file" accept="image/*">
+    <div class="preview" id="image_preview"></div>
+    
+    <button type="submit">Save Product</button>
   </form>
+</div>
+
+<footer>
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services |
+  <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
+</footer>
+
+<script type="module">
+import { 
+  auth, db, storage,
+} from './firebase-config.js';
+import { 
+  collection, addDoc, doc, updateDoc, serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+import { 
+  ref, uploadBytes, getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
+
+const form = document.getElementById('product-form');
+const logoutBtn = document.getElementById('logout-btn');
+const productIdInput = document.getElementById('product-id');
+const imageInput = document.getElementById('image_file');
+const previewDiv = document.getElementById('image_preview');
+
+let uploadedImageUrl = "";
+
+// ✅ Logout
+logoutBtn.onclick = async () => {
+  try {
+    await auth.signOut();
+    alert("Logged out successfully!");
+    window.location = 'index.html';
+  } catch (error) {
+    alert("Logout failed. Try again.");
+  }
+};
+
+// ✅ Preview image before upload
+imageInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      previewDiv.innerHTML = `<img src="${ev.target.result}" alt="Preview">`;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// ✅ Auth Check
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    console.log("Redirecting to sign in...");
+    window.location = 'signin.html';
+  }
+});
+
+// ✅ Form Submit - Upload Image + Save Data
+form.onsubmit = async (e) => {
+  e.preventDefault();
+  const user = auth.currentUser;
+  if (!user) return alert("Please login again.");
+
+  try {
+    let imageUrl = uploadedImageUrl;
+
+    // 🔹 Upload image if selected
+    if (imageInput.files[0]) {
+      const file = imageInput.files[0];
+      const storageRef = ref(storage, `stone_images/${Date.now()}_${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      imageUrl = await getDownloadURL(snapshot.ref);
+    }
+
+    const formattedCategory = form.category.value.trim().charAt(0).toUpperCase() + 
+                              form.category.value.trim().slice(1).toLowerCase();
+
+    const data = {
+      stone_name: form.stone_name.value.trim(),
+      category: formattedCategory,
+      sub_category: form.sub_category.value.trim() || "",
+      type: form.type.value.trim(),
+      color: form.color.value.trim(),
+      description: form.description.value.trim(),
+      price: parseFloat(form.price.value),
+      price_unit: form.price_unit.value.trim(),
+      contact_number: form.contact_number.value.trim(),
+      email: form.email.value.trim() || "",
+      factory_name: form.factory_name.value.trim(),
+      image: imageUrl,
+      created_at: serverTimestamp(),
+      userId: user.uid
+    };
+
+    const id = productIdInput.value;
+    if (id) {
+      await updateDoc(doc(db, "products", id), data);
+      alert("✅ Product updated successfully!");
+    } else {
+      await addDoc(collection(db, "products"), data);
+      alert("✅ Product added successfully!");
+    }
+
+    form.reset();
+    previewDiv.innerHTML = "";
+    uploadedImageUrl = "";
+
+  } catch (err) {
+    console.error("Error uploading:", err);
+    alert("❌ Error: " + err.message);
+  }
+};
+</script>
 </body>
 </html>
