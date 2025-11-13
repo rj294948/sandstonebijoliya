@@ -1,156 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel | RJ Services</title>
-  <link rel="icon" type="image/png" href="stone-icon.png" />
-  <script type="module" src="firebase-config.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 20px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel | RJ Services</title>
+<link rel="icon" href="images/stone-icon.png" type="image/png">
+<script type="module">
+  // Firebase import
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("Initialized driver at:", new Date().toString());
+  });
+
+  async function submitForm(e) {
+    e.preventDefault();
+    const form = document.getElementById("myForm");
+    const data = new FormData(form);
+
+    try {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbwrdeZ9W2QkAnVMvyRnLlSaeI4D-91zD2Iqlb2z5OaUQON1FIVWzbEHGBPA--Qw8aEf/exec", {
+        method: "POST",
+        body: data,
+        mode: "no-cors"
+      });
+      alert("Form submitted successfully!");
+    } catch (err) {
+      console.error("Form submit error:", err);
     }
-    .container {
-      max-width: 600px;
-      background: #fff;
-      padding: 20px;
-      margin: auto;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  window.submitForm = submitForm;
+
+  window.uploadFile = async () => {
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (!file) {
+      alert("Please select a file first!");
+      return;
     }
-    h2 {
-      text-align: center;
-      color: #333;
+
+    try {
+      const storageRef = ref(storage, "uploads/" + file.name);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      console.log("File uploaded:", downloadURL);
+      alert("File uploaded successfully!");
+    } catch (error) {
+      console.error("Upload failed:", error);
     }
-    input, textarea {
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .preview {
-      margin-top: 10px;
-      text-align: center;
-    }
-    .preview img {
-      width: 150px;
-      border-radius: 10px;
-      margin-top: 10px;
-    }
-  </style>
+  };
+</script>
 </head>
 <body>
-
-  <div class="container">
-    <h2>🛠 Admin Panel</h2>
-
-    <input type="text" id="title" placeholder="Enter Title" required />
-    <textarea id="description" placeholder="Enter Description" required></textarea>
-    <input type="file" id="imageInput" accept="image/*" />
-    <div class="preview" id="preview"></div>
-    <button id="uploadBtn">Upload Post</button>
-  </div>
-
-  <script type="module">
-    import { db, storage } from './firebase-config.js';
-    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
-    import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
-
-    const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrdeZ9W2QkAnVMvyRnLlSaeI4D-91zD2Iqlb2z5OaUQON1FIVWzbEHGBPA--Qw8aEf/exec";
-
-    const titleInput = document.getElementById("title");
-    const descInput = document.getElementById("description");
-    const imageInput = document.getElementById("imageInput");
-    const uploadBtn = document.getElementById("uploadBtn");
-    const preview = document.getElementById("preview");
-
-    let imageFile = null;
-
-    imageInput.addEventListener("change", (e) => {
-      imageFile = e.target.files[0];
-      if (imageFile) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          preview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
-        };
-        reader.readAsDataURL(imageFile);
-      }
-    });
-
-    uploadBtn.addEventListener("click", async () => {
-      try {
-        if (!titleInput.value || !descInput.value) {
-          alert("Please fill all fields!");
-          return;
-        }
-
-        uploadBtn.disabled = true;
-        uploadBtn.textContent = "Uploading...";
-
-        let imageUrl = "";
-
-        if (imageFile) {
-          // ✅ Upload image to Firebase Storage
-          const storageRef = ref(storage, `uploads/${Date.now()}_${imageFile.name}`);
-          const uploadResult = await uploadBytes(storageRef, imageFile);
-          imageUrl = await getDownloadURL(uploadResult.ref);
-        }
-
-        // ✅ Save post in Firestore
-        await addDoc(collection(db, "products"), {
-          title: titleInput.value,
-          description: descInput.value,
-          image: imageUrl,
-          created_at: serverTimestamp(),
-        });
-
-        // ✅ Send data to Google Sheet (CORS-safe)
-        const payload = {
-          title: titleInput.value,
-          description: descInput.value,
-          image: imageUrl,
-          created_at: new Date().toISOString(),
-        };
-
-        const response = await fetch(APP_SCRIPT_URL, {
-          method: "POST",
-          mode: "cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        const result = await response.json();
-        console.log("Google Sheet:", result);
-
-        alert("✅ Post uploaded successfully!");
-        titleInput.value = "";
-        descInput.value = "";
-        imageInput.value = "";
-        preview.innerHTML = "";
-      } catch (error) {
-        console.error("Error:", error);
-        alert("❌ Upload failed: " + error.message);
-      } finally {
-        uploadBtn.disabled = false;
-        uploadBtn.textContent = "Upload Post";
-      }
-    });
-  </script>
-
+  <h2>Admin Panel</h2>
+  <form id="myForm" onsubmit="submitForm(event)">
+    <input type="text" name="productName" placeholder="Enter product name" required><br><br>
+    <input type="file" id="fileInput" required><br><br>
+    <button type="button" onclick="uploadFile()">Upload File</button><br><br>
+    <button type="submit">Submit Data</button>
+  </form>
 </body>
 </html>
