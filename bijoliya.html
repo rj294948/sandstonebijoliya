@@ -7,50 +7,50 @@
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
-/* ===== Popup Modal Styles ===== */
-.modal {
-  display:none;
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.6); justify-content:center; align-items:center;
-  z-index:1000;
-}
-.modal-content {
-  background:white; padding:25px; border-radius:12px; width:350px; position:relative;
-}
+/* ===== Modal ===== */
+.modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
+.modal-content {background:white; padding:25px; border-radius:12px; width:350px; position:relative;}
 .modal-content h2 {text-align:center; color:#c7a97b; margin-bottom:15px;}
 .modal-content input {width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;}
 .modal-content button {width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px;}
 .modal-content button:hover {background:#b38c5f;}
-.modal-close {
-  position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;
-}
+.modal-close {position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;}
 .modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
 .feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
 
-/* ===== Header Buttons ===== */
-header button {margin-left:5px;}
+/* ===== Header ===== */
+header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
+header h1 {font-size:1.5rem; cursor:pointer; margin:0;}
+header div button {margin-left:5px;}
+
+/* ===== Navigation ===== */
+nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px; flex-wrap:wrap;}
+nav a{text-decoration:none;color:#333;font-weight:600;}
+
+/* ===== Banner ===== */
+.banner{background:#c7a97b;color:white;text-align:center;padding:30px;font-size:1.5rem;margin-bottom:10px;}
 
 /* ===== Grid ===== */
 .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin:20px;}
 .card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 .card img {width:100%; border-radius:8px;}
-.banner {background:#c7a97b;color:white;text-align:center;padding:30px;font-size:1.5rem;margin-bottom:10px;}
-section h2 {text-align:center; margin-bottom:15px;}
-nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px;}
-nav a{text-decoration:none;color:#333;font-weight:600;}
-footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
-/* ===== Filter Section ===== */
-.filter-container input, .filter-container button {
-  padding:6px; border-radius:6px; border:1px solid #ccc; min-width:120px;
-}
+.card .thumbnails {display:flex; gap:5px; justify-content:center; margin-top:5px;}
+.card .thumbnails img {width:50px; height:50px; object-fit:cover; border-radius:5px; cursor:pointer;}
+
+/* ===== Filter ===== */
+.filter-container {display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:10px 0;}
+.filter-container input, .filter-container button {padding:6px; border-radius:6px; border:1px solid #ccc; min-width:120px;}
 .filter-container button {border:none; cursor:pointer;}
 #filter-btn {background:#c7a97b; color:white;}
 #clear-filter-btn {background:#b38c5f; color:white;}
+
+/* ===== Footer ===== */
+footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
+footer a{color:white;text-decoration:none;}
 </style>
 </head>
 <body>
 
-<!-- ===== Header ===== -->
 <header>
   <h1 onclick="window.location='index.html'">🪨 Bijoliya Stone</h1>
   <div>
@@ -64,7 +64,6 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
   </div>
 </header>
 
-<!-- ===== Navigation Row ===== -->
 <nav>
   <a href="index.html">Home</a>
   <a href="dholpur.html">Dholpur Stone</a>
@@ -76,11 +75,9 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
   <a href="contact.html">Contact</a>
 </nav>
 
-<!-- ===== Banner ===== -->
 <div class="banner">Discover Natural Stones of Bijoliya</div>
 
-<!-- ===== Filter Section ===== -->
-<div class="filter-container" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:10px 0;">
+<div class="filter-container">
   <input type="text" id="filter-factory" placeholder="Filter by Company">
   <input type="text" id="filter-subcat" placeholder="Filter by Sub-category">
   <input type="text" id="filter-type" placeholder="Filter by Type">
@@ -90,16 +87,14 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
   <button id="clear-filter-btn">Clear</button>
 </div>
 
-<!-- ===== Products Grid ===== -->
 <section>
   <h2>Available Products</h2>
   <div class="grid" id="product-grid"></div>
 </section>
 
-<!-- ===== Footer ===== -->
 <footer>
   &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
-  <a href="about.html" style="color:white;">About Us</a> | <a href="contact.html" style="color:white;">Contact</a>
+  <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
 <!-- ===== Sign In Modal ===== -->
@@ -110,14 +105,10 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
     <input type="email" id="signin-email" placeholder="Email">
     <input type="password" id="signin-password" placeholder="Password">
     <button id="signin-btn">Sign In</button>
-
     <div style="text-align:center;margin:10px 0;">OR</div>
-
     <button id="modal-google-signin" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
-      <img src="download.png" alt="Google" style="width:20px; height:20px;">
-      Sign In with Google
+      <img src="download.png" alt="Google" style="width:20px; height:20px;"> Sign In with Google
     </button>
-
     <div class="feedback" id="signin-feedback"></div>
     <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
   </div>
@@ -138,7 +129,6 @@ footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20p
   </div>
 </div>
 
-<!-- ===== Scripts ===== -->
 <script type="module">
 import { db, auth } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
@@ -147,13 +137,8 @@ import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, creat
 /* ===== Modal Functions ===== */
 function openModal(id){ document.getElementById(id).style.display='flex'; }
 function closeModal(id){ document.getElementById(id).style.display='none'; }
-
-document.querySelectorAll('.modal-close').forEach(btn=>{
-  btn.addEventListener('click', ()=>{ btn.parentElement.parentElement.style.display='none'; });
-});
-document.addEventListener('keydown', (e)=>{
-  if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); }
-});
+document.querySelectorAll('.modal-close').forEach(btn=>{ btn.addEventListener('click', ()=>{ btn.parentElement.parentElement.style.display='none'; }); });
+document.addEventListener('keydown', (e)=>{ if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); } });
 
 /* ===== Header Buttons ===== */
 const btnOpenSignin = document.getElementById('btn-open-signin');
@@ -162,7 +147,6 @@ const btnGoogleSignin = document.getElementById('btn-google-signin');
 const btnSignOut = document.getElementById('btn-signout');
 const btnPost = document.getElementById('btn-post');
 const historyBtn = document.getElementById('history-btn');
-
 btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
 btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
 
@@ -173,21 +157,14 @@ const signinFeedback = document.getElementById('signin-feedback');
 
 modalGoogleBtn.addEventListener('click', async ()=>{
   signinFeedback.textContent = '';
-  try {
-    const result = await signInWithPopup(auth, provider);
-    signinFeedback.style.color = 'green';
-    signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
-    closeModal('signin-modal');
-  } catch(err) {
-    signinFeedback.style.color = 'red';
-    signinFeedback.textContent = '❌ ' + err.message;
-  }
+  try { const result = await signInWithPopup(auth, provider);
+        signinFeedback.style.color = 'green';
+        signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
+        closeModal('signin-modal');
+  } catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent = '❌ ' + err.message; }
 });
 
-btnGoogleSignin.addEventListener('click', async ()=>{
-  try { const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); } 
-  catch(err) { alert(err.message); }
-});
+btnGoogleSignin.addEventListener('click', async ()=>{ try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); } catch(err){ alert(err.message); } });
 
 btnSignOut.addEventListener('click', async ()=>{ await signOut(auth); alert('Signed out successfully'); });
 
@@ -204,7 +181,6 @@ signinBtn.addEventListener('click', async ()=>{
 
 const signupBtn = document.getElementById('signup-btn');
 const signupFeedback = document.getElementById('signup-feedback');
-
 signupBtn.addEventListener('click', async ()=>{
   const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
@@ -221,19 +197,11 @@ signupBtn.addEventListener('click', async ()=>{
 
 onAuthStateChanged(auth,user=>{
   if(user){
-    btnOpenSignin.style.display='none';
-    btnOpenSignup.style.display='none';
-    btnGoogleSignin.style.display='none';
-    btnSignOut.style.display='inline-block';
-    btnPost.style.display='inline-block';
-    historyBtn.style.display='inline-block';
+    btnOpenSignin.style.display='none'; btnOpenSignup.style.display='none'; btnGoogleSignin.style.display='none';
+    btnSignOut.style.display='inline-block'; btnPost.style.display='inline-block'; historyBtn.style.display='inline-block';
   }else{
-    btnOpenSignin.style.display='inline-block';
-    btnOpenSignup.style.display='inline-block';
-    btnGoogleSignin.style.display='inline-block';
-    btnSignOut.style.display='none';
-    btnPost.style.display='none';
-    historyBtn.style.display='none';
+    btnOpenSignin.style.display='inline-block'; btnOpenSignup.style.display='inline-block'; btnGoogleSignin.style.display='inline-block';
+    btnSignOut.style.display='none'; btnPost.style.display='none'; historyBtn.style.display='none';
   }
 });
 
@@ -249,18 +217,31 @@ async function loadProducts(){
 }
 
 function renderProducts(list){
-  productGrid.innerHTML='';
+  productGrid.innerHTML = '';
   list.forEach(p=>{
-    const card=document.createElement('div');
-    card.className='card';
-    card.innerHTML=`
-      <img src="${p.image}" alt="${p.stone_name}">
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    let imagesHtml = '';
+    if(p.images && p.images.length>0){
+      imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}">`;
+      if(p.images.length>1){
+        imagesHtml += `<div class="thumbnails">`;
+        p.images.forEach((img,idx)=>{ if(idx>0) imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="this.closest('.card').querySelector('img').src='${img}'">`; });
+        imagesHtml += `</div>`;
+      }
+    } else {
+      imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`;
+    }
+
+    card.innerHTML = `
+      ${imagesHtml}
       <h3>${p.stone_name}</h3>
       <p><strong>Category:</strong> ${p.category}</p>
-      <p><strong>Sub-category:</strong> ${p.sub_category}</p>
-      <p><strong>Type:</strong> ${p.type}</p>
-      <p><strong>Color:</strong> ${p.color}</p>
-      <p><strong>Price:</strong> ₹${p.price} / ${p.price_unit}</p>
+      <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
+      <p><strong>Type:</strong> ${p.type || '-'}</p>
+      <p><strong>Color:</strong> ${p.color || '-'}</p>
+      <p><strong>Price:</strong> ₹${p.price || '-'} / ${p.price_unit || '-'}</p>
       <p><strong>Factory:</strong> ${p.factory_name}</p>
       <p><a href="https://wa.me/${p.contact_number}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
     `;
@@ -279,26 +260,21 @@ const clearBtn = document.getElementById('clear-filter-btn');
 
 filterBtn.addEventListener('click', ()=>{
   const filtered = products.filter(p=>{
-    return (!filterFactory.value || p.factory_name.toLowerCase().includes(filterFactory.value.toLowerCase())) &&
-           (!filterSubcat.value || p.sub_category.toLowerCase().includes(filterSubcat.value.toLowerCase())) &&
-           (!filterType.value || p.type.toLowerCase().includes(filterType.value.toLowerCase())) &&
-           (!filterColor.value || p.color.toLowerCase().includes(filterColor.value.toLowerCase())) &&
-           (!filterPrice.value || p.price <= parseFloat(filterPrice.value));
+    return (!filterFactory.value || (p.factory_name && p.factory_name.toLowerCase().includes(filterFactory.value.toLowerCase()))) &&
+           (!filterSubcat.value || (p.sub_category && p.sub_category.toLowerCase().includes(filterSubcat.value.toLowerCase()))) &&
+           (!filterType.value || (p.type && p.type.toLowerCase().includes(filterType.value.toLowerCase()))) &&
+           (!filterColor.value || (p.color && p.color.toLowerCase().includes(filterColor.value.toLowerCase()))) &&
+           (!filterPrice.value || (p.price && p.price <= parseFloat(filterPrice.value)));
   });
   renderProducts(filtered);
 });
 
 clearBtn.addEventListener('click', ()=>{
-  filterFactory.value='';
-  filterSubcat.value='';
-  filterType.value='';
-  filterColor.value='';
-  filterPrice.value='';
+  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
   renderProducts(products);
 });
 
 window.onload = loadProducts;
 </script>
-
 </body>
 </html>
