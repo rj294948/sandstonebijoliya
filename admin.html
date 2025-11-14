@@ -71,11 +71,10 @@ footer a {color:white;text-decoration:none;}
       <option>Tiles</option>
       <option>Mandana</option>
       <option>Other Stones</option>
-      <option>Other</option>
     </select>
 
-    <!-- AUTO-FILL / MANUAL -->
-    <input type="text" id="stone_name" placeholder="Stone Name (auto-filled)" readonly>
+    <!-- STONE NAME -->
+    <input type="text" id="stone_name" placeholder="Stone Name" required readonly>
 
     <input type="text" id="sub_category" placeholder="Sub-category (Optional)">
     <input type="text" id="type" placeholder="Type (Optional)">
@@ -98,7 +97,7 @@ footer a {color:white;text-decoration:none;}
 
 <footer>
   &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services |
-  <a href="about.html">About Us</a> | 
+  <a href="about.html">About Us</a> |
   <a href="contact.html">Contact</a>
 </footer>
 
@@ -111,14 +110,14 @@ const productIdInput = document.getElementById("product-id");
 const preview = document.getElementById("preview");
 const imageInput = document.getElementById("imageInput");
 
-/* MULTIPLE IMAGE HANDLING */
+/* MULTIPLE IMAGES */
 let imagesBase64 = [];
 
 imageInput.addEventListener("change", () => {
   preview.innerHTML = "";
   imagesBase64 = [];
 
-  const files = Array.from(imageInput.files).slice(0, 5);
+  const files = Array.from(imageInput.files).slice(0, 10);
 
   files.forEach(file => {
     const reader = new FileReader();
@@ -134,7 +133,7 @@ imageInput.addEventListener("change", () => {
 document.getElementById("category").addEventListener("change", function () {
   const val = this.value;
 
-  if (val === "Other") {
+  if (val === "Other Stones") {
     document.getElementById("stone_name").value = "";
     document.getElementById("stone_name").readOnly = false;
   } else {
@@ -175,7 +174,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
     productIdInput.value = editId;
     form.category.value = p.category || "";
-    form.stone_name.value = p.stone_name || "";
+
+    if (p.category === "Other Stones") {
+      form.stone_name.readOnly = false;
+      form.stone_name.value = p.stone_name;
+    } else {
+      form.stone_name.readOnly = true;
+      form.stone_name.value = p.category;
+    }
+
     form.sub_category.value = p.sub_category || "";
     form.type.value = p.type || "";
     form.color.value = p.color || "";
