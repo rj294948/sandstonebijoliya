@@ -5,76 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bijoliya Stone - Rajasthan SandStone Hub</title>
 <link rel="icon" href="stone-icon.png" type="image/png">
-<link rel="stylesheet" href="style.css">
 <style>
-/* ===== Modal ===== */
-.modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
-.modal-content {background:white; padding:25px; border-radius:12px; width:350px; position:relative;}
-.modal-content h2 {text-align:center; color:#c7a97b; margin-bottom:15px;}
-.modal-content input {width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;}
-.modal-content button {width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px;}
-.modal-content button:hover {background:#b38c5f;}
-.modal-close {position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;}
-.modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
-.feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
-
-/* ===== Header ===== */
-header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
-header h1 {font-size:1.5rem; cursor:pointer; margin:0;}
-header div button {margin-left:5px;}
-
-/* ===== Navigation ===== */
-nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px; flex-wrap:wrap;}
-nav a{text-decoration:none;color:#333;font-weight:600;}
-
-/* ===== Banner ===== */
-.banner{background:#c7a97b;color:white;text-align:center;padding:30px;font-size:1.5rem;margin-bottom:10px;}
-
-/* ===== Grid ===== */
-.grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin:20px;}
-.card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s;}
-.card:hover{transform:scale(1.02);}
-.card img {width:100%; border-radius:8px; object-fit:cover; max-height:220px;}
-.card .thumbnails {display:flex; gap:5px; justify-content:center; margin-top:5px;}
-.card .thumbnails img {width:50px; height:50px; object-fit:cover; border-radius:5px; cursor:pointer; transition:0.2s;}
-.card .thumbnails img:hover{border:2px solid #c7a97b;}
-
-/* ===== Filter ===== */
-.filter-container {display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:15px 0;}
-.filter-container input, .filter-container button {padding:8px; border-radius:6px; border:1px solid #ccc; min-width:120px;}
-.filter-container button {border:none; cursor:pointer;}
-#filter-btn {background:#c7a97b; color:white;}
-#clear-filter-btn {background:#b38c5f; color:white;}
-
-/* ===== Footer ===== */
+body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
+header {background:#c7a97b;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+header h1 {font-size:1.5rem;cursor:pointer;margin:0;}
+header div {display:flex;flex-wrap:wrap;gap:10px;}
+header button {padding:8px 12px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
+nav {display:flex;justify-content:center;flex-wrap:wrap;gap:10px;background:#f3f3f3;padding:10px;}
+nav a {text-decoration:none;color:#333;font-weight:600;}
+.banner {background:#c7a97b;color:white;text-align:center;padding:25px;font-size:1.5rem;margin-bottom:10px;}
+.container {padding:20px;max-width:1200px;margin:auto;}
+.grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;}
+.card {background:white;border-radius:10px;padding:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);text-align:center;position:relative;}
+.card h3 {margin:10px 0 5px 0;}
+.card img.main-img {width:100%;height:200px;object-fit:cover;border-radius:8px;cursor:pointer;}
+.thumbnails {display:flex;justify-content:center;gap:5px;margin-top:5px;flex-wrap:wrap;}
+.thumbnails img {width:50px;height:50px;object-fit:cover;border-radius:5px;cursor:pointer;border:2px solid transparent;}
+.thumbnails img.active {border:2px solid #c7a97b;}
+.card p {margin:3px 0;font-size:0.9rem;}
+.card a {color:#c7a97b;text-decoration:none;margin-right:5px;}
+.filter-container {display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:20px;}
+.filter-container input, .filter-container select, .filter-container button {padding:8px;border-radius:6px;border:1px solid #ccc;}
+.filter-container button {border:none;cursor:pointer;}
+#filter-btn {background:#c7a97b;color:white;}
+#clear-filter-btn {background:#b38c5f;color:white;}
+.modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000;}
+.modal-content {position:relative;max-width:90%;max-height:90%;}
+.modal-content img {width:100%;height:auto;border-radius:8px;}
+.modal-close {position:absolute;top:10px;right:15px;font-size:28px;color:white;cursor:pointer;}
 footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
-footer a{color:white;text-decoration:none;}
+footer a {color:white;text-decoration:none;margin-left:5px;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1 onclick="window.location='index.html'">🪨 Bijoliya Stone</h1>
+  <h1 onclick="window.location='index.html'">🪨 Rajasthan SandStone Hub</h1>
   <div>
-    <button id="home-btn" onclick="window.location='index.html'">Home</button>
-    <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
-    <button id="btn-open-signin">Sign In</button>
-    <button id="btn-open-signup">Sign Up</button>
-    <button id="btn-google-signin">Sign In with Gmail</button>
-    <button id="btn-signout" style="display:none;">Sign Out</button>
-    <button id="btn-post" style="display:none;"><a href="admin.html">Post Product</a></button>
+    <button onclick="window.location='index.html'">Home</button>
+    <button onclick="window.location='history.html'">My History</button>
+    <button onclick="window.location='signin.html'">Sign In</button>
+    <button onclick="window.location='admin.html'">Post Product</button>
   </div>
 </header>
 
 <nav>
-  <a href="index.html">Home</a>
-  <a href="dholpur.html">Dholpur Stone</a>
-  <a href="mandana.html">Mandana Stone</a>
+  <a href="sandstone.html">Sand Stone</a>
   <a href="kota.html">Kota Stone</a>
+  <a href="granite.html">Granite</a>
+  <a href="marble.html">Marble</a>
+  <a href="bijoliya.html">Bijoliya</a>
+  <a href="dholpur.html">Dholpur</a>
+  <a href="tiles.html">Tiles</a>
+  <a href="mandana.html">Mandana</a>
   <a href="other-stones.html">Other Stones</a>
   <a href="factories.html">Factories</a>
   <a href="about.html">About Us</a>
   <a href="contact.html">Contact</a>
+  <a href="privacy.html">Privacy Policy</a>
+  <a href="terms.html">Terms & Conditions</a>
 </nav>
 
 <div class="banner">Discover Natural Stones of Bijoliya</div>
@@ -89,167 +78,93 @@ footer a{color:white;text-decoration:none;}
   <button id="clear-filter-btn">Clear</button>
 </div>
 
-<section>
-  <h2>Available Products</h2>
+<div class="container">
   <div class="grid" id="product-grid"></div>
-</section>
+</div>
+
+<div class="modal" id="img-modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    <img id="modal-img" src="">
+  </div>
+</div>
 
 <footer>
-  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services |
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<!-- ===== Sign In Modal ===== -->
-<div class="modal" id="signin-modal">
-  <div class="modal-content">
-    <span class="modal-close">&times;</span>
-    <h2>Sign In</h2>
-    <input type="email" id="signin-email" placeholder="Email">
-    <input type="password" id="signin-password" placeholder="Password">
-    <button id="signin-btn">Sign In</button>
-    <div style="text-align:center;margin:10px 0;">OR</div>
-    <button id="modal-google-signin" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
-      <img src="download.png" alt="Google" style="width:20px; height:20px;"> Sign In with Google
-    </button>
-    <div class="feedback" id="signin-feedback"></div>
-    <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
-  </div>
-</div>
-
-<!-- ===== Sign Up Modal ===== -->
-<div class="modal" id="signup-modal">
-  <div class="modal-content">
-    <span class="modal-close">&times;</span>
-    <h2>Create Account</h2>
-    <input type="text" id="signup-name" placeholder="Full Name">
-    <input type="email" id="signup-email" placeholder="Email">
-    <input type="password" id="signup-password" placeholder="Password">
-    <input type="text" id="signup-phone" placeholder="Phone Number">
-    <button id="signup-btn">Sign Up</button>
-    <div class="feedback" id="signup-feedback"></div>
-    <a href="#" onclick="openModal('signin-modal'); closeModal('signup-modal')">Already have an account? Sign In</a>
-  </div>
-</div>
-
 <script type="module">
-import { db, auth } from './firebase-config.js';
+import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-/* ===== Modal Functions ===== */
-function openModal(id){ document.getElementById(id).style.display='flex'; }
-function closeModal(id){ document.getElementById(id).style.display='none'; }
-document.querySelectorAll('.modal-close').forEach(btn=>{ btn.addEventListener('click', ()=>{ btn.parentElement.parentElement.style.display='none'; }); });
-document.addEventListener('keydown', (e)=>{ if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); } });
-
-/* ===== Header Buttons ===== */
-const btnOpenSignin = document.getElementById('btn-open-signin');
-const btnOpenSignup = document.getElementById('btn-open-signup');
-const btnGoogleSignin = document.getElementById('btn-google-signin');
-const btnSignOut = document.getElementById('btn-signout');
-const btnPost = document.getElementById('btn-post');
-const historyBtn = document.getElementById('history-btn');
-btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
-btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
-
-/* ===== Firebase Auth ===== */
-const provider = new GoogleAuthProvider();
-const modalGoogleBtn = document.getElementById('modal-google-signin');
-const signinFeedback = document.getElementById('signin-feedback');
-modalGoogleBtn.addEventListener('click', async ()=>{
-  signinFeedback.textContent = '';
-  try { const result = await signInWithPopup(auth, provider);
-        signinFeedback.style.color = 'green';
-        signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
-        closeModal('signin-modal');
-  } catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent = '❌ ' + err.message; }
-});
-btnGoogleSignin.addEventListener('click', async ()=>{ try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); } catch(err){ alert(err.message); } });
-btnSignOut.addEventListener('click', async ()=>{ await signOut(auth); alert('Signed out successfully'); });
-
-const signinBtn = document.getElementById('signin-btn');
-signinBtn.addEventListener('click', async ()=>{
-  const email = document.getElementById('signin-email').value.trim();
-  const password = document.getElementById('signin-password').value.trim();
-  signinFeedback.textContent='';
-  try{ await signInWithEmailAndPassword(auth,email,password);
-       signinFeedback.style.color='green'; signinFeedback.textContent='✅ Signed in successfully!';
-       closeModal('signin-modal');
-  }catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent='❌ '+err.message; }
-});
-
-const signupBtn = document.getElementById('signup-btn');
-const signupFeedback = document.getElementById('signup-feedback');
-signupBtn.addEventListener('click', async ()=>{
-  const name = document.getElementById('signup-name').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
-  const password = document.getElementById('signup-password').value.trim();
-  const phone = document.getElementById('signup-phone').value.trim();
-  signupFeedback.textContent='';
-  try{
-    const userCredential = await createUserWithEmailAndPassword(auth,email,password);
-    await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
-    signupFeedback.style.color='green'; signupFeedback.textContent='✅ Account created successfully!';
-    closeModal('signup-modal');
-  }catch(err){ signupFeedback.style.color='red'; signupFeedback.textContent='❌ '+err.message; }
-});
-
-onAuthStateChanged(auth,user=>{
-  if(user){
-    btnOpenSignin.style.display='none'; btnOpenSignup.style.display='none'; btnGoogleSignin.style.display='none';
-    btnSignOut.style.display='inline-block'; btnPost.style.display='inline-block'; historyBtn.style.display='inline-block';
-  }else{
-    btnOpenSignin.style.display='inline-block'; btnOpenSignup.style.display='inline-block'; btnGoogleSignin.style.display='inline-block';
-    btnSignOut.style.display='none'; btnPost.style.display='none'; historyBtn.style.display='none';
-  }
-});
-
-/* ===== Firestore Products ===== */
 const productGrid = document.getElementById('product-grid');
+const modal = document.getElementById('img-modal');
+const modalImg = document.getElementById('modal-img');
+
 let products = [];
 
-async function loadProducts(){
- const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
- const snapshot = await getDocs(q);
- products = snapshot.docs.map(doc=>doc.data());
- renderProducts(products);
+async function loadProducts() {
+  const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
+  const snapshot = await getDocs(q);
+  products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  renderProducts(products);
 }
 
-function renderProducts(list){
+function renderProducts(list) {
   productGrid.innerHTML = '';
-  list.forEach(p=>{
+  list.forEach(p => {
     const card = document.createElement('div');
     card.className = 'card';
 
-    let imagesHtml = '';
-    if(p.images && p.images.length>0){
-      imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}">`;
-      if(p.images.length>1){
-        imagesHtml += `<div class="thumbnails">`;
-        p.images.forEach((img,idx)=>{ if(idx>0) imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="this.closest('.card').querySelector('img').src='${img}'">`; });
-        imagesHtml += `</div>`;
-      }
-    } else {
-      imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`;
+    // First image as main
+    let mainImage = p.images && p.images.length ? p.images[0] : '';
+    let thumbnailsHTML = '';
+    if(p.images && p.images.length > 1){
+      thumbnailsHTML = '<div class="thumbnails">';
+      p.images.forEach((img, idx)=>{
+        thumbnailsHTML += `<img src="${img}" class="${idx===0?'active':''}" onclick="changeMain(this,'${p.id}',${idx})">`;
+      });
+      thumbnailsHTML += '</div>';
     }
 
+    const dateObj = p.created_at && p.created_at.toDate ? p.created_at.toDate() : new Date();
+    const dateTime = `${dateObj.toLocaleDateString()} ${dateObj.toLocaleTimeString()}`;
+
     card.innerHTML = `
-      ${imagesHtml}
+      <img src="${mainImage}" alt="${p.stone_name}" class="main-img" onclick="openModal('${mainImage}')">
+      ${thumbnailsHTML}
       <h3>${p.stone_name}</h3>
       <p><strong>Category:</strong> ${p.category}</p>
       <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
       <p><strong>Type:</strong> ${p.type || '-'}</p>
       <p><strong>Color:</strong> ${p.color || '-'}</p>
       <p><strong>Price:</strong> ₹${p.price || '-'} / ${p.price_unit || '-'}</p>
-      <p><strong>Factory:</strong> ${p.factory_name}</p>
-      <p><strong>Email:</strong> <a href="mailto:${p.email}">${p.email}</a></p>
-      <p><a href="https://wa.me/${p.contact_number}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
+      <p><strong>Factory:</strong> ${p.factory_name || '-'}</p>
+      <p><strong>Email:</strong> <a href="mailto:${p.email || ''}">${p.email || '-'}</a></p>
+      <p><strong>WhatsApp:</strong> <a href="https://wa.me/${p.contact_number}" target="_blank">${p.contact_number || '-'}</a></p>
+      <p><strong>Date:</strong> ${dateTime}</p>
     `;
     productGrid.appendChild(card);
   });
 }
 
-/* ===== Filter Logic ===== */
+window.changeMain = (thumb,imgId,idx) => {
+  const card = thumb.closest('.card');
+  const mainImg = card.querySelector('.main-img');
+  mainImg.src = thumb.src;
+  card.querySelectorAll('.thumbnails img').forEach(t=>t.classList.remove('active'));
+  thumb.classList.add('active');
+}
+
+window.openModal = (imgSrc) => {
+  modal.style.display = 'flex';
+  modalImg.src = imgSrc;
+}
+
+window.closeModal = () => { modal.style.display='none'; }
+
+/* ===== Filters ===== */
 const filterFactory = document.getElementById('filter-factory');
 const filterSubcat = document.getElementById('filter-subcat');
 const filterType = document.getElementById('filter-type');
@@ -258,8 +173,8 @@ const filterPrice = document.getElementById('filter-price');
 const filterBtn = document.getElementById('filter-btn');
 const clearBtn = document.getElementById('clear-filter-btn');
 
-filterBtn.addEventListener('click', ()=>{
-  const filtered = products.filter(p=>{
+filterBtn.addEventListener('click', () => {
+  const filtered = products.filter(p => {
     return (!filterFactory.value || (p.factory_name && p.factory_name.toLowerCase().includes(filterFactory.value.toLowerCase()))) &&
            (!filterSubcat.value || (p.sub_category && p.sub_category.toLowerCase().includes(filterSubcat.value.toLowerCase()))) &&
            (!filterType.value || (p.type && p.type.toLowerCase().includes(filterType.value.toLowerCase()))) &&
@@ -269,12 +184,17 @@ filterBtn.addEventListener('click', ()=>{
   renderProducts(filtered);
 });
 
-clearBtn.addEventListener('click', ()=>{
-  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
+clearBtn.addEventListener('click', () => {
+  filterFactory.value='';
+  filterSubcat.value='';
+  filterType.value='';
+  filterColor.value='';
+  filterPrice.value='';
   renderProducts(products);
 });
 
 window.onload = loadProducts;
 </script>
+
 </body>
 </html>
