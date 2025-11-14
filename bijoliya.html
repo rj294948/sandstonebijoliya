@@ -7,10 +7,20 @@
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
+/* ===== Modal ===== */
+.modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
+.modal-content {background:white; padding:25px; border-radius:12px; width:350px; position:relative;}
+.modal-content h2 {text-align:center; color:#c7a97b; margin-bottom:15px;}
+.modal-content input, .modal-content select {width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;}
+.modal-content button {width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px;}
+.modal-content button:hover {background:#b38c5f;}
+.modal-close {position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;}
+.modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
+.feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
+
 /* ===== Header ===== */
 header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
-header h1 {font-size:1.5rem; cursor:pointer; margin:0; display:flex; align-items:center; gap:10px;}
-header h1 img {height:40px; border-radius:5px;}
+header h1 {font-size:1.5rem; cursor:pointer; margin:0;}
 header div button {margin-left:5px;}
 
 /* ===== Navigation ===== */
@@ -49,17 +59,12 @@ footer a{color:white;text-decoration:none;}
 #image-modal .close-btn {top:10%; right:5%;}
 #image-modal .prev-btn {left:5%;}
 #image-modal .next-btn {right:5%;}
-/* ===== Date & Time ===== */
-#datetime {text-align:center; margin:10px 0; font-weight:600;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1 onclick="window.location='index.html'">
-    <img src="logo.png" alt="SandStone Logo">
-    Rajasthan SandStone Hub
-  </h1>
+  <h1 onclick="window.location='index.html'">🪨 Bijoliya Stone</h1>
   <div>
     <button id="home-btn" onclick="window.location='index.html'">Home</button>
     <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
@@ -88,8 +93,7 @@ footer a{color:white;text-decoration:none;}
   <a href="terms.html">Terms & Conditions</a>
 </nav>
 
-<div class="banner">Explore All Natural Stones</div>
-<div id="datetime"></div>
+<div class="banner">Discover Natural Stones of Bijoliya</div>
 
 <div class="filter-container">
   <select id="filter-factory"><option value="">All Factories</option></select>
@@ -111,7 +115,7 @@ footer a{color:white;text-decoration:none;}
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<!-- Sign In & Sign Up Modals -->
+<!-- ===== Sign In Modal ===== -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
@@ -128,6 +132,7 @@ footer a{color:white;text-decoration:none;}
   </div>
 </div>
 
+<!-- ===== Sign Up Modal ===== -->
 <div class="modal" id="signup-modal">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
@@ -142,7 +147,7 @@ footer a{color:white;text-decoration:none;}
   </div>
 </div>
 
-<!-- Image Modal -->
+<!-- ===== Image Modal ===== -->
 <div id="image-modal">
   <button class="prev-btn">&#10094;</button>
   <img id="modal-img" src="">
@@ -152,161 +157,206 @@ footer a{color:white;text-decoration:none;}
 
 <script type="module">
 import { db, auth } from './firebase-config.js';
-import { collection, getDocs, query } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-/* ===== Date & Time ===== */
-const dtElem = document.getElementById('datetime');
-function updateDateTime(){ const now = new Date(); dtElem.textContent = now.toLocaleString(); }
-setInterval(updateDateTime,1000); updateDateTime();
 
 /* ===== Modal Functions ===== */
 function openModal(id){ document.getElementById(id).style.display='flex'; }
 function closeModal(id){ document.getElementById(id).style.display='none'; }
 document.querySelectorAll('.modal-close').forEach(btn=>{ btn.addEventListener('click', ()=>{ btn.closest('.modal').style.display='none'; }); });
-document.addEventListener('keydown', e=>{ if(e.key==="Escape"){ document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); } });
+document.addEventListener('keydown', (e)=>{ if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); } });
 
 /* ===== Header Buttons ===== */
-const btnOpenSignin=document.getElementById('btn-open-signin');
-const btnOpenSignup=document.getElementById('btn-open-signup');
-const btnGoogleSignin=document.getElementById('btn-google-signin');
-const btnSignOut=document.getElementById('btn-signout');
-const btnPost=document.getElementById('btn-post');
-const historyBtn=document.getElementById('history-btn');
-
-btnOpenSignin.addEventListener('click',()=>openModal('signin-modal'));
-btnOpenSignup.addEventListener('click',()=>openModal('signup-modal'));
+const btnOpenSignin = document.getElementById('btn-open-signin');
+const btnOpenSignup = document.getElementById('btn-open-signup');
+const btnGoogleSignin = document.getElementById('btn-google-signin');
+const btnSignOut = document.getElementById('btn-signout');
+const btnPost = document.getElementById('btn-post');
+const historyBtn = document.getElementById('history-btn');
+btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
+btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
 
 /* ===== Firebase Auth ===== */
 const provider = new GoogleAuthProvider();
-document.getElementById('modal-google-signin').addEventListener('click', async ()=>{
-  try{ const result = await signInWithPopup(auth, provider);
-       document.getElementById('signin-feedback').textContent = `✅ Signed in as ${result.user.displayName}`;
-       document.getElementById('signin-feedback').style.color='green';
-       closeModal('signin-modal');
-  }catch(err){ document.getElementById('signin-feedback').textContent='❌ '+err.message; document.getElementById('signin-feedback').style.color='red'; }
+const modalGoogleBtn = document.getElementById('modal-google-signin');
+const signinFeedback = document.getElementById('signin-feedback');
+modalGoogleBtn.addEventListener('click', async ()=>{
+  signinFeedback.textContent = '';
+  try { const result = await signInWithPopup(auth, provider);
+        signinFeedback.style.color = 'green';
+        signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
+        closeModal('signin-modal');
+  } catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent = '❌ ' + err.message; }
 });
-btnGoogleSignin.addEventListener('click', async ()=>{
-  try{ const result = await signInWithPopup(auth, provider);
-       alert(`Signed in as ${result.user.displayName}`);
-  }catch(err){ alert(err.message); }
-});
+btnGoogleSignin.addEventListener('click', async ()=>{ try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); } catch(err){ alert(err.message); } });
 btnSignOut.addEventListener('click', async ()=>{ await signOut(auth); alert('Signed out successfully'); });
 
-document.getElementById('signin-btn').addEventListener('click', async ()=>{
-  const email=document.getElementById('signin-email').value.trim();
-  const password=document.getElementById('signin-password').value.trim();
-  const feedback=document.getElementById('signin-feedback'); feedback.textContent='';
-  try{ await signInWithEmailAndPassword(auth,email,password); feedback.style.color='green'; feedback.textContent='✅ Signed in successfully!'; closeModal('signin-modal');
-  }catch(err){ feedback.style.color='red'; feedback.textContent='❌ '+err.message; }
+const signinBtn = document.getElementById('signin-btn');
+signinBtn.addEventListener('click', async ()=>{
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value.trim();
+  signinFeedback.textContent='';
+  try{ await signInWithEmailAndPassword(auth,email,password);
+       signinFeedback.style.color='green'; signinFeedback.textContent='✅ Signed in successfully!';
+       closeModal('signin-modal');
+  }catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent='❌ '+err.message; }
 });
 
-document.getElementById('signup-btn').addEventListener('click', async ()=>{
-  const name=document.getElementById('signup-name').value.trim();
-  const email=document.getElementById('signup-email').value.trim();
-  const password=document.getElementById('signup-password').value.trim();
-  const phone=document.getElementById('signup-phone').value.trim();
-  const feedback=document.getElementById('signup-feedback'); feedback.textContent='';
-  try{ const userCredential=await createUserWithEmailAndPassword(auth,email,password);
-       await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
-       feedback.style.color='green'; feedback.textContent='✅ Account created successfully!'; closeModal('signup-modal');
-  }catch(err){ feedback.style.color='red'; feedback.textContent='❌ '+err.message; }
+const signupBtn = document.getElementById('signup-btn');
+const signupFeedback = document.getElementById('signup-feedback');
+signupBtn.addEventListener('click', async ()=>{
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  signupFeedback.textContent='';
+  try{
+    const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
+    signupFeedback.style.color='green'; signupFeedback.textContent='✅ Account created successfully!';
+    closeModal('signup-modal');
+  }catch(err){ signupFeedback.style.color='red'; signupFeedback.textContent='❌ '+err.message; }
 });
 
 onAuthStateChanged(auth,user=>{
-  if(user){ btnOpenSignin.style.display='none'; btnOpenSignup.style.display='none'; btnGoogleSignin.style.display='none';
-            btnSignOut.style.display='inline-block'; btnPost.style.display='inline-block'; historyBtn.style.display='inline-block';
-  }else{ btnOpenSignin.style.display='inline-block'; btnOpenSignup.style.display='inline-block'; btnGoogleSignin.style.display='inline-block';
-         btnSignOut.style.display='none'; btnPost.style.display='none'; historyBtn.style.display='none';
+  if(user){
+    btnOpenSignin.style.display='none'; btnOpenSignup.style.display='none'; btnGoogleSignin.style.display='none';
+    btnSignOut.style.display='inline-block'; btnPost.style.display='inline-block'; historyBtn.style.display='inline-block';
+  }else{
+    btnOpenSignin.style.display='inline-block'; btnOpenSignup.style.display='inline-block'; btnGoogleSignin.style.display='inline-block';
+    btnSignOut.style.display='none'; btnPost.style.display='none'; historyBtn.style.display='none';
   }
 });
 
 /* ===== Firestore Products ===== */
-const productGrid=document.getElementById('product-grid');
-let products=[];
+const productGrid = document.getElementById('product-grid');
+let products = [];
+
+/* ===== Dropdown Options ===== */
+const filterFactory = document.getElementById('filter-factory');
+const filterSubcat = document.getElementById('filter-subcat');
+const filterType = document.getElementById('filter-type');
+const filterColor = document.getElementById('filter-color');
+const filterPrice = document.getElementById('filter-price');
+const filterBtn = document.getElementById('filter-btn');
+const clearBtn = document.getElementById('clear-filter-btn');
 
 async function loadProducts(){
-  const snapshot = await getDocs(collection(db,"products"));
-  products = snapshot.docs.map(doc=>doc.data());
-  populateFilters(); renderProducts(products);
+ const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
+ const snapshot = await getDocs(q);
+ products = snapshot.docs.map(doc=>doc.data());
+
+ populateFilterOptions();
+ renderProducts(products);
 }
 
-/* ===== Filters ===== */
-const filterFactory=document.getElementById('filter-factory');
-const filterSubcat=document.getElementById('filter-subcat');
-const filterType=document.getElementById('filter-type');
-const filterColor=document.getElementById('filter-color');
-const filterPrice=document.getElementById('filter-price');
-
-function populateFilters(){
-  const factories=new Set(), subcats=new Set(), types=new Set(), colors=new Set(), prices=[];
-  products.forEach(p=>{ if(p.factory_name) factories.add(p.factory_name); if(p.sub_category) subcats.add(p.sub_category); if(p.type) types.add(p.type); if(p.color) colors.add(p.color); if(p.price) prices.push(p.price); });
-  addOptions(filterFactory,Array.from(factories));
-  addOptions(filterSubcat,Array.from(subcats));
-  addOptions(filterType,Array.from(types));
-  addOptions(filterColor,Array.from(colors));
-  addOptions(filterPrice,prices.sort((a,b)=>a-b));
-}
-function addOptions(sel,arr){ sel.innerHTML=`<option value="">All</option>`; arr.forEach(v=>{ sel.innerHTML+=`<option value="${v}">${v}</option>`; }); }
-
-document.getElementById('filter-btn').addEventListener('click',()=>{
-  const filtered=products.filter(p=>{
-    return (!filterFactory.value || (p.factory_name===filterFactory.value)) &&
-           (!filterSubcat.value || (p.sub_category===filterSubcat.value)) &&
-           (!filterType.value || (p.type===filterType.value)) &&
-           (!filterColor.value || (p.color===filterColor.value)) &&
-           (!filterPrice.value || (p.price && p.price<=parseFloat(filterPrice.value)));
+/* ===== Populate filter dropdowns dynamically ===== */
+function populateFilterOptions(){
+  const factories = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), prices = [];
+  products.forEach(p=>{
+    if(p.factory_name) factories.add(p.factory_name);
+    if(p.sub_category) subcats.add(p.sub_category);
+    if(p.type) types.add(p.type);
+    if(p.color) colors.add(p.color);
+    if(p.price) prices.push(p.price);
   });
-  renderProducts(filtered);
-});
+  addOptions(filterFactory, Array.from(factories));
+  addOptions(filterSubcat, Array.from(subcats));
+  addOptions(filterType, Array.from(types));
+  addOptions(filterColor, Array.from(colors));
+  addOptions(filterPrice, prices.sort((a,b)=>a-b));
+}
 
-document.getElementById('clear-filter-btn').addEventListener('click',()=>{
-  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
-  renderProducts(products);
-});
+function addOptions(select, arr){
+  select.innerHTML = `<option value="">All</option>`;
+  arr.forEach(val=>{ select.innerHTML += `<option value="${val}">${val}</option>`; });
+}
 
 /* ===== Render Products ===== */
 function renderProducts(list){
-  productGrid.innerHTML='';
-  list.forEach((p,pi)=>{
-    const card=document.createElement('div'); card.className='card';
-    let imagesHtml='';
-    if(p.images && p.images.length>0){ imagesHtml+=`<img src="${p.images[0]}" onclick="openImageModal(${pi},0)">`;
-      if(p.images.length>1){ imagesHtml+=`<div class="thumbnails">`; p.images.forEach((img,idx)=>{ if(idx>0) imagesHtml+=`<img src="${img}" onclick="openImageModal(${pi},${idx})">`; }); imagesHtml+=`</div>`; }
-    }else{ imagesHtml=`<img src="stone-placeholder.png">`; }
-    card.innerHTML=`${imagesHtml}<h3>${p.stone_name}</h3>
+  productGrid.innerHTML = '';
+  list.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    let imagesHtml = '';
+    if(p.images && p.images.length>0){
+      imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)}, 0)">`;
+      if(p.images.length>1){
+        imagesHtml += `<div class="thumbnails">`;
+        p.images.forEach((img,idx)=>{ 
+          if(idx>0) imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)}, ${idx})">`; 
+        });
+        imagesHtml += `</div>`;
+      }
+    } else {
+      imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`;
+    }
+
+    card.innerHTML = `
+      ${imagesHtml}
+      <h3>${p.stone_name}</h3>
       <p><strong>Category:</strong> ${p.category}</p>
-      <p><strong>Sub-category:</strong> ${p.sub_category||'-'}</p>
-      <p><strong>Type:</strong> ${p.type||'-'}</p>
-      <p><strong>Color:</strong> ${p.color||'-'}</p>
-      <p><strong>Price:</strong> ₹${p.price||'-'} / ${p.price_unit||'-'}</p>
-      <p><strong>Factory:</strong> ${p.factory_name||'-'}</p>
-      <p><strong>Email:</strong> <a href="mailto:${p.email}">${p.email||'-'}</a></p>
-      <p><a href="https://wa.me/${p.contact_number}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>`;
+      <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
+      <p><strong>Type:</strong> ${p.type || '-'}</p>
+      <p><strong>Color:</strong> ${p.color || '-'}</p>
+      <p><strong>Price:</strong> ₹${p.price || '-'} / ${p.price_unit || '-'}</p>
+      <p><strong>Factory:</strong> ${p.factory_name}</p>
+      <p><strong>Email:</strong> <a href="mailto:${p.email}">${p.email}</a></p>
+      <p><a href="https://wa.me/${p.contact_number}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
+    `;
     productGrid.appendChild(card);
   });
 }
 
-/* ===== Image Modal ===== */
-const imageModal=document.getElementById('image-modal');
-const modalImg=document.getElementById('modal-img');
-const closeBtn=document.querySelector('#image-modal .close-btn');
-const prevBtn=document.querySelector('#image-modal .prev-btn');
-const nextBtn=document.querySelector('#image-modal .next-btn');
-let currentProductIndex=0, currentImageIndex=0;
+/* ===== Filter Logic ===== */
+filterBtn.addEventListener('click', ()=>{
+  const filtered = products.filter(p=>{
+    return (!filterFactory.value || (p.factory_name && p.factory_name === filterFactory.value)) &&
+           (!filterSubcat.value || (p.sub_category && p.sub_category === filterSubcat.value)) &&
+           (!filterType.value || (p.type && p.type === filterType.value)) &&
+           (!filterColor.value || (p.color && p.color === filterColor.value)) &&
+           (!filterPrice.value || (p.price && p.price <= parseFloat(filterPrice.value)));
+  });
+  renderProducts(filtered);
+});
 
-window.openImageModal=(prodIdx,imgIdx)=>{
-  currentProductIndex=prodIdx; currentImageIndex=imgIdx;
-  modalImg.src=products[prodIdx].images[imgIdx];
-  imageModal.style.display='flex';
+clearBtn.addEventListener('click', ()=>{
+  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
+  renderProducts(products);
+});
+
+/* ===== Image Modal ===== */
+const imageModal = document.getElementById('image-modal');
+const modalImg = document.getElementById('modal-img');
+const closeBtn = document.querySelector('#image-modal .close-btn');
+const prevBtn = document.querySelector('#image-modal .prev-btn');
+const nextBtn = document.querySelector('#image-modal .next-btn');
+
+let currentProductIndex = 0;
+let currentImageIndex = 0;
+
+window.openImageModal = (prodIdx,imgIdx)=>{
+  currentProductIndex = prodIdx;
+  currentImageIndex = imgIdx;
+  modalImg.src = products[currentProductIndex].images[currentImageIndex];
+  imageModal.style.display = 'flex';
 };
 
-closeBtn.addEventListener('click',()=>{ imageModal.style.display='none'; });
-imageModal.addEventListener('click', e=>{ if(e.target===imageModal) imageModal.style.display='none'; });
-prevBtn.addEventListener('click', ()=>{ const imgs=products[currentProductIndex].images; currentImageIndex=(currentImageIndex-1+imgs.length)%imgs.length; modalImg.src=imgs[currentImageIndex]; });
-nextBtn.addEventListener('click', ()=>{ const imgs=products[currentProductIndex].images; currentImageIndex=(currentImageIndex+1)%imgs.length; modalImg.src=imgs[currentImageIndex]; });
+closeBtn.addEventListener('click', ()=>{ imageModal.style.display='none'; });
+imageModal.addEventListener('click', e=>{ if(e.target === imageModal) imageModal.style.display='none'; });
+prevBtn.addEventListener('click', ()=>{ 
+  const imgs = products[currentProductIndex].images;
+  currentImageIndex = (currentImageIndex-1+imgs.length)%imgs.length;
+  modalImg.src = imgs[currentImageIndex];
+});
+nextBtn.addEventListener('click', ()=>{ 
+  const imgs = products[currentProductIndex].images;
+  currentImageIndex = (currentImageIndex+1)%imgs.length;
+  modalImg.src = imgs[currentImageIndex];
+});
 
-window.onload=loadProducts;
+window.onload = loadProducts;
 </script>
 </body>
 </html>
