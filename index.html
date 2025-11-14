@@ -152,150 +152,225 @@ import { db, auth } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-/* ===== Modals ===== */
+/* ===== Modal Functions ===== */
+function openModal(id){ document.getElementById(id).style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+document.querySelectorAll('.modal-close').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ btn.closest('.modal').style.display='none'; });
+});
+document.addEventListener('keydown', (e)=>{ if(e.key==="Escape"){ document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); } });
+
+/* ===== Header Buttons ===== */
 const btnOpenSignin = document.getElementById('btn-open-signin');
 const btnOpenSignup = document.getElementById('btn-open-signup');
-document.querySelectorAll('.modal-close').forEach(btn=>{ btn.addEventListener('click', ()=>{ btn.closest('.modal').style.display='none'; }); });
-btnOpenSignin.addEventListener('click',()=>document.getElementById('signin-modal').style.display='flex');
-btnOpenSignup.addEventListener('click',()=>document.getElementById('signup-modal').style.display='flex');
-window.addEventListener('click', e=>{ if(e.target.classList.contains('modal')) e.target.style.display='none'; });
+const btnGoogleSignin = document.getElementById('btn-google-signin');
+const btnSignOut = document.getElementById('btn-signout');
+const btnPost = document.getElementById('btn-post');
+const historyBtn = document.getElementById('history-btn');
+
+btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
+btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
 
 /* ===== Firebase Auth ===== */
 const provider = new GoogleAuthProvider();
-document.getElementById('btn-google-signin').addEventListener('click', async ()=>{
-  try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); } 
-  catch(err){ alert(err.message); }
+const modalGoogleBtn = document.getElementById('modal-google-signin');
+const signinFeedback = document.getElementById('signin-feedback');
+const signupFeedback = document.getElementById('signup-feedback');
+
+/* ===== Google Sign-In ===== */
+modalGoogleBtn.addEventListener('click', async ()=>{
+    signinFeedback.textContent = '';
+    try{
+        const result = await signInWithPopup(auth, provider);
+        signinFeedback.style.color = 'green';
+        signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
+        closeModal('signin-modal');
+    }catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent='❌ ' + err.message; }
 });
-const signinBtn = document.getElementById('signin-btn');
-signinBtn.addEventListener('click', async ()=>{
-  const email = document.getElementById('signin-email').value.trim();
-  const password = document.getElementById('signin-password').value.trim();
-  try{ await signInWithEmailAndPassword(auth,email,password); alert('Signed in successfully'); document.getElementById('signin-modal').style.display='none'; }
-  catch(err){ alert(err.message); }
+
+btnGoogleSignin.addEventListener('click', async ()=>{
+    try{
+        const result = await signInWithPopup(auth, provider);
+        alert(`Signed in as ${result.user.displayName}`);
+    }catch(err){ alert(err.message); }
 });
-const signupBtn = document.getElementById('signup-btn');
-signupBtn.addEventListener('click', async ()=>{
-  const name=document.getElementById('signup-name').value.trim();
-  const email=document.getElementById('signup-email').value.trim();
-  const password=document.getElementById('signup-password').value.trim();
-  const phone=document.getElementById('signup-phone').value.trim();
-  try{ const userCredential=await createUserWithEmailAndPassword(auth,email,password);
-       await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
-       alert('Account created successfully'); document.getElementById('signup-modal').style.display='none';
-  }catch(err){ alert(err.message); }
+
+/* ===== Sign In with Email/Password ===== */
+document.getElementById('signin-btn').addEventListener('click', async ()=>{
+    const email = document.getElementById('signin-email').value.trim();
+    const password = document.getElementById('signin-password').value.trim();
+    signinFeedback.textContent='';
+    try{
+        await signInWithEmailAndPassword(auth,email,password);
+        signinFeedback.style.color='green'; 
+        signinFeedback.textContent='✅ Signed in successfully!';
+        closeModal('signin-modal');
+    }catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent='❌ '+err.message; }
 });
+
+/* ===== Sign Up with Email/Password ===== */
+document.getElementById('signup-btn').addEventListener('click', async ()=>{
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value.trim();
+    const phone = document.getElementById('signup-phone').value.trim();
+    signupFeedback.textContent='';
+    try{
+        const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+        await updateProfile(userCredential.user,{displayName:name, phoneNumber:phone});
+        signupFeedback.style.color='green'; 
+        signupFeedback.textContent='✅ Account created successfully!';
+        closeModal('signup-modal');
+    }catch(err){ signupFeedback.style.color='red'; signupFeedback.textContent='❌ '+err.message; }
+});
+
+/* ===== Update Header Based on Auth ===== */
 onAuthStateChanged(auth,user=>{
-  document.getElementById('btn-signout').style.display = user?'inline-block':'none';
+    if(user){
+        btnOpenSignin.style.display='none'; 
+        btnOpenSignup.style.display='none'; 
+        btnGoogleSignin.style.display='none';
+        btnSignOut.style.display='inline-block'; 
+        btnPost.style.display='inline-block'; 
+        historyBtn.style.display='inline-block';
+    }else{
+        btnOpenSignin.style.display='inline-block'; 
+        btnOpenSignup.style.display='inline-block'; 
+        btnGoogleSignin.style.display='inline-block';
+        btnSignOut.style.display='none'; 
+        btnPost.style.display='none'; 
+        historyBtn.style.display='none';
+    }
+});
+
+/* ===== Sign Out ===== */
+btnSignOut.addEventListener('click', async ()=>{
+    await signOut(auth);
+    alert('Signed out successfully');
 });
 
 /* ===== Firestore Products ===== */
 const productGrid = document.getElementById('product-grid');
 let products = [];
 
+/* ===== Filter Elements ===== */
+const filterFactory = document.getElementById('filter-factory');
+const filterSubcat = document.getElementById('filter-subcat');
+const filterType = document.getElementById('filter-type');
+const filterColor = document.getElementById('filter-color');
+const filterPrice = document.getElementById('filter-price');
+const filterBtn = document.getElementById('filter-btn');
+const clearBtn = document.getElementById('clear-filter-btn');
+
+/* ===== Load Products from Firestore ===== */
 async function loadProducts(){
- const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
- const snapshot = await getDocs(q);
- products = snapshot.docs.map(doc=>doc.data());
- populateFilters();
- renderProducts(products);
+    const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
+    const snapshot = await getDocs(q);
+    products = snapshot.docs.map(doc=>doc.data());
+    populateFilterOptions();
+    renderProducts(products);
 }
 
-function populateFilters(){
-  const factories=new Set(), subcats=new Set(), types=new Set(), colors=new Set(), prices=[];
-  products.forEach(p=>{
-    if(p.factory_name) factories.add(p.factory_name);
-    if(p.sub_category) subcats.add(p.sub_category);
-    if(p.type) types.add(p.type);
-    if(p.color) colors.add(p.color);
-    if(p.price) prices.push(p.price);
-  });
-  addOptions('filter-factory', Array.from(factories));
-  addOptions('filter-subcat', Array.from(subcats));
-  addOptions('filter-type', Array.from(types));
-  addOptions('filter-color', Array.from(colors));
-  addOptions('filter-price', prices.sort((a,b)=>a-b));
+/* ===== Populate Filter Options ===== */
+function populateFilterOptions(){
+    const factories = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), prices = [];
+    products.forEach(p=>{
+        if(p.factory_name) factories.add(p.factory_name);
+        if(p.sub_category) subcats.add(p.sub_category);
+        if(p.type) types.add(p.type);
+        if(p.color) colors.add(p.color);
+        if(p.price) prices.push(p.price);
+    });
+    addOptions(filterFactory, Array.from(factories));
+    addOptions(filterSubcat, Array.from(subcats));
+    addOptions(filterType, Array.from(types));
+    addOptions(filterColor, Array.from(colors));
+    addOptions(filterPrice, prices.sort((a,b)=>a-b));
 }
-function addOptions(id, arr){
-  const select=document.getElementById(id); select.innerHTML=`<option value="">All</option>`;
-  arr.forEach(v=>select.innerHTML+=`<option value="${v}">${v}</option>`);
+function addOptions(select, arr){
+    select.innerHTML = `<option value="">All</option>`;
+    arr.forEach(val=> select.innerHTML += `<option value="${val}">${val}</option>`);
 }
 
+/* ===== Render Products ===== */
 function renderProducts(list){
-  productGrid.innerHTML='';
-  list.forEach((p,i)=>{
-    const card=document.createElement('div'); card.className='card';
-    let imagesHtml='';
-    if(p.images && p.images.length>0){
-      imagesHtml+=`<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${i},0)">`;
-      if(p.images.length>1){
-        imagesHtml+=`<div class="thumbnails">`;
-        p.images.forEach((img,idx)=>{ if(idx>0) imagesHtml+=`<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${i},${idx})">`; });
-        imagesHtml+=`</div>`;
-      }
-    } else { imagesHtml=`<img src="stone-placeholder.png" alt="${p.stone_name}">`; }
-    card.innerHTML=`
-      ${imagesHtml}
-      <h3>${p.stone_name}</h3>
-      <p><strong>Category:</strong> ${p.category}</p>
-      <p><strong>Sub-category:</strong> ${p.sub_category||'-'}</p>
-      <p><strong>Type:</strong> ${p.type||'-'}</p>
-      <p><strong>Color:</strong> ${p.color||'-'}</p>
-      <p><strong>Price:</strong> ₹${p.price||'-'} / ${p.price_unit||'-'}</p>
-      <p><strong>Factory:</strong> ${p.factory_name}</p>
-      <p><strong>Email:</strong> <a href="mailto:${p.email}">${p.email}</a></p>
-      <p><a href="https://wa.me/${p.contact_number}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
-    `;
-    productGrid.appendChild(card);
-  });
+    productGrid.innerHTML = '';
+    list.forEach(p=>{
+        const card = document.createElement('div');
+        card.className='card';
+
+        let imagesHtml = '';
+        if(p.images && p.images.length>0){
+            imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},0)">`;
+            if(p.images.length>1){
+                imagesHtml += `<div class="thumbnails">`;
+                p.images.forEach((img,idx)=>{ if(idx>0) imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; });
+                imagesHtml += `</div>`;
+            }
+        } else { imagesHtml=`<img src="stone-placeholder.png" alt="${p.stone_name}">`; }
+
+        card.innerHTML = `
+            ${imagesHtml}
+            <h3>${p.stone_name}</h3>
+            <p><strong>Category:</strong> ${p.category}</p>
+            <p><strong>Sub-category:</strong> ${p.sub_category||'-'}</p>
+            <p><strong>Type:</strong> ${p.type||'-'}</p>
+            <p><strong>Color:</strong> ${p.color||'-'}</p>
+            <p><strong>Price:</strong> ₹${p.price||'-'} / ${p.price_unit||'-'}</p>
+            <p><strong>Factory:</strong> ${p.factory_name}</p>
+            <p><strong>Email:</strong> <a href="mailto:${p.email}">${p.email}</a></p>
+            <p><a href="https://wa.me/${p.contact_number}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
+        `;
+        productGrid.appendChild(card);
+    });
 }
 
-/* ===== Filters ===== */
-document.getElementById('filter-btn').addEventListener('click',()=>{
-  const f1=document.getElementById('filter-factory').value;
-  const f2=document.getElementById('filter-subcat').value;
-  const f3=document.getElementById('filter-type').value;
-  const f4=document.getElementById('filter-color').value;
-  const f5=document.getElementById('filter-price').value;
-  const filtered=products.filter(p=>{
-    return (!f1||p.factory_name===f1)&&(!f2||p.sub_category===f2)&&(!f3||p.type===f3)&&(!f4||p.color===f4)&&(!f5||p.price<=f5);
-  });
-  renderProducts(filtered);
+/* ===== Filter Logic ===== */
+filterBtn.addEventListener('click', ()=>{
+    const filtered = products.filter(p=>{
+        return (!filterFactory.value || (p.factory_name && p.factory_name===filterFactory.value)) &&
+               (!filterSubcat.value || (p.sub_category && p.sub_category===filterSubcat.value)) &&
+               (!filterType.value || (p.type && p.type===filterType.value)) &&
+               (!filterColor.value || (p.color && p.color===filterColor.value)) &&
+               (!filterPrice.value || (p.price && p.price<=parseFloat(filterPrice.value)));
+    });
+    renderProducts(filtered);
 });
-document.getElementById('clear-filter-btn').addEventListener('click',()=>{
-  document.getElementById('filter-factory').value='';
-  document.getElementById('filter-subcat').value='';
-  document.getElementById('filter-type').value='';
-  document.getElementById('filter-color').value='';
-  document.getElementById('filter-price').value='';
-  renderProducts(products);
+
+clearBtn.addEventListener('click', ()=>{
+    filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
+    renderProducts(products);
 });
 
 /* ===== Image Modal ===== */
-const imageModal=document.getElementById('image-modal');
-const modalImg=document.getElementById('modal-img');
-const closeBtn=document.querySelector('#image-modal .close-btn');
-const prevBtn=document.querySelector('#image-modal .prev-btn');
-const nextBtn=document.querySelector('#image-modal .next-btn');
+const imageModal = document.getElementById('image-modal');
+const modalImg = document.getElementById('modal-img');
+const closeBtn = document.querySelector('#image-modal .close-btn');
+const prevBtn = document.querySelector('#image-modal .prev-btn');
+const nextBtn = document.querySelector('#image-modal .next-btn');
 let currentProductIndex=0, currentImageIndex=0;
+
 window.openImageModal=(prodIdx,imgIdx)=>{
-  currentProductIndex=prodIdx; currentImageIndex=imgIdx;
-  modalImg.src=products[prodIdx].images[imgIdx];
-  imageModal.style.display='flex';
+    currentProductIndex=prodIdx; currentImageIndex=imgIdx;
+    modalImg.src=products[currentProductIndex].images[currentImageIndex];
+    imageModal.style.display='flex';
 };
-closeBtn.addEventListener('click',()=>imageModal.style.display='none');
-imageModal.addEventListener('click',e=>{ if(e.target===imageModal) imageModal.style.display='none'; });
-prevBtn.addEventListener('click',()=>{ 
-  const imgs=products[currentProductIndex].images;
-  currentImageIndex=(currentImageIndex-1+imgs.length)%imgs.length;
-  modalImg.src=imgs[currentImageIndex];
+
+closeBtn.addEventListener('click', ()=>{ imageModal.style.display='none'; });
+imageModal.addEventListener('click', e=>{ if(e.target===imageModal) imageModal.style.display='none'; });
+prevBtn.addEventListener('click', ()=>{
+    const imgs = products[currentProductIndex].images;
+    currentImageIndex=(currentImageIndex-1+imgs.length)%imgs.length;
+    modalImg.src=imgs[currentImageIndex];
 });
-nextBtn.addEventListener('click',()=>{ 
-  const imgs=products[currentProductIndex].images;
-  currentImageIndex=(currentImageIndex+1)%imgs.length;
-  modalImg.src=imgs[currentImageIndex];
+nextBtn.addEventListener('click', ()=>{
+    const imgs = products[currentProductIndex].images;
+    currentImageIndex=(currentImageIndex+1)%imgs.length;
+    modalImg.src=imgs[currentImageIndex];
 });
 
-window.onload=loadProducts;
+/* ===== Initialize ===== */
+window.onload = loadProducts;
 </script>
 </body>
 </html>
