@@ -5,8 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rajasthan Stones - SandStone Hub</title>
 <link rel="icon" href="stone-icon.png" type="image/png">
-<link rel="stylesheet" href="style.css">
 <style>
+/* ===== General ===== */
+body {margin:0; font-family:Arial, sans-serif;}
+header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
+header h1 {font-size:1.5rem; cursor:pointer; margin:0; display:flex; align-items:center; gap:10px;}
+header h1 img {height:40px; border-radius:5px;}
+header div button, header div a {margin-left:5px;}
+nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px; flex-wrap:wrap;}
+nav a{text-decoration:none;color:#333;font-weight:600;}
+.banner{background:#c7a97b;color:white;text-align:center;padding:30px;font-size:1.5rem;margin-bottom:10px;}
+.grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin:20px;}
+.card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; background:white;}
+.card:hover{transform:scale(1.02);}
+.card img {width:100%; border-radius:8px; object-fit:cover; max-height:220px; cursor:pointer;}
+.card .thumbnails {display:flex; gap:5px; justify-content:center; margin-top:5px;}
+.card .thumbnails img {width:50px; height:50px; object-fit:cover; border-radius:5px; cursor:pointer; transition:0.2s;}
+.card .thumbnails img:hover{border:2px solid #c7a97b;}
+.filter-container {display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin:15px 0;}
+.filter-container .filter-box {display:flex; flex-direction:column; gap:5px;}
+.filter-container select, .filter-container input, .filter-container button {padding:8px; border-radius:6px; border:1px solid #ccc; min-width:150px;}
+.filter-container button {border:none; cursor:pointer;}
+#filter-btn {background:#c7a97b; color:white;}
+#clear-filter-btn {background:#b38c5f; color:white;}
+footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
+footer a{color:white;text-decoration:none;}
+
 /* ===== Modal ===== */
 .modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
 .modal-content {background:white; padding:25px; border-radius:12px; width:350px; position:relative;}
@@ -17,40 +41,6 @@
 .modal-close {position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;}
 .modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
 .feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
-
-/* ===== Header ===== */
-header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
-header h1 {font-size:1.5rem; cursor:pointer; margin:0; display:flex; align-items:center; gap:10px;}
-header h1 img {height:40px; border-radius:5px;}
-header div button {margin-left:5px;}
-
-/* ===== Navigation ===== */
-nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px; flex-wrap:wrap;}
-nav a{text-decoration:none;color:#333;font-weight:600;}
-
-/* ===== Banner ===== */
-.banner{background:#c7a97b;color:white;text-align:center;padding:30px;font-size:1.5rem;margin-bottom:10px;}
-
-/* ===== Grid ===== */
-.grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin:20px;}
-.card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s;}
-.card:hover{transform:scale(1.02);}
-.card img {width:100%; border-radius:8px; object-fit:cover; max-height:220px; cursor:pointer;}
-.card .thumbnails {display:flex; gap:5px; justify-content:center; margin-top:5px;}
-.card .thumbnails img {width:50px; height:50px; object-fit:cover; border-radius:5px; cursor:pointer; transition:0.2s;}
-.card .thumbnails img:hover{border:2px solid #c7a97b;}
-
-/* ===== Filter ===== */
-.filter-container {display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin:15px 0;}
-.filter-container .filter-box {display:flex; flex-direction:column; gap:5px;}
-.filter-container select, .filter-container input, .filter-container button {padding:8px; border-radius:6px; border:1px solid #ccc; min-width:150px;}
-.filter-container button {border:none; cursor:pointer;}
-#filter-btn {background:#c7a97b; color:white;}
-#clear-filter-btn {background:#b38c5f; color:white;}
-
-/* ===== Footer ===== */
-footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
-footer a{color:white;text-decoration:none;}
 
 /* ===== Image Modal ===== */
 #image-modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:2000;}
@@ -248,13 +238,12 @@ const clearBtn = document.getElementById('clear-filter-btn');
 
 async function loadProducts(){
  const snapshot = await getDocs(collection(db, "products"));
- products = snapshot.docs.map(doc=>doc.data());
-
+ products = snapshot.docs.map(doc=> ({id: doc.id, ...doc.data()}));
  populateFilterOptions();
  renderProducts(products);
 }
 
-/* ===== Populate filter dropdowns dynamically ===== */
+/* ===== Populate Filter ===== */
 function populateFilterOptions(){
   const factories = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), units = new Set();
   products.forEach(p=>{
@@ -262,7 +251,7 @@ function populateFilterOptions(){
     if(p.sub_category) subcats.add(p.sub_category);
     if(p.type) types.add(p.type);
     if(p.color) colors.add(p.color);
-    if(p.unit) units.add(p.unit);
+    if(p.price_unit) units.add(p.price_unit);
   });
   addOptions(filterFactory, Array.from(factories));
   addOptions(filterSubcat, Array.from(subcats));
@@ -270,7 +259,6 @@ function populateFilterOptions(){
   addOptions(filterColor, Array.from(colors));
   addOptions(filterUnit, Array.from(units));
 }
-
 function addOptions(select, arr){
   select.innerHTML = `<option value="">All</option>`;
   arr.forEach(val=>{ select.innerHTML += `<option value="${val}">${val}</option>`; });
@@ -285,48 +273,58 @@ function renderProducts(list){
 
     let imagesHtml = '';
     if(p.images && p.images.length>0){
-      imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)}, 0)">`;
+      imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},0)">`;
       if(p.images.length>1){
         imagesHtml += `<div class="thumbnails">`;
-        p.images.forEach((img,idx)=>{ 
-          if(idx>0) imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)}, ${idx})">`; 
-        });
+        p.images.forEach((img,idx)=>{ imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; });
         imagesHtml += `</div>`;
       }
-    } else {
-      imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`;
+    } else { imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`; }
+
+    const whatsappLink = `https://wa.me/${p.contact_number}?text=Hello, I am interested in your product: ${p.stone_name} (${p.price} per ${p.price_unit})`;
+    const emailLink = `mailto:${p.email}?subject=Interested in ${p.stone_name}&body=Hello,%0D%0A%0D%0AI am interested in your product: ${p.stone_name} (%0D%0APrice: ₹${p.price} per ${p.price_unit}%0D%0AType: ${p.type}%0D%0AColor: ${p.color}%0D%0AFactory: ${p.factory_name}%0D%0AAddress: ${p.address})%0D%0A%0D%0ARegards`;
+
+    let uploaderHtml = '';
+    if(p.uploader_name || p.uploader_image){
+      uploaderHtml = `<p><strong>Uploaded by:</strong> ${p.uploader_name || '-'} <img src="${p.uploader_image || 'avatar.png'}" style="width:30px; height:30px; border-radius:50%; vertical-align:middle;"></p>`;
     }
 
     card.innerHTML = `
       ${imagesHtml}
       <h3>${p.stone_name}</h3>
-      <p><strong>Category:</strong> ${p.category}</p>
+      <p><strong>Category:</strong> ${p.category || '-'}</p>
       <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
       <p><strong>Type:</strong> ${p.type || '-'}</p>
       <p><strong>Color:</strong> ${p.color || '-'}</p>
       <p><strong>Factory:</strong> ${p.factory_name || '-'}</p>
-      <p><strong>Price:</strong> ₹${p.price} per ${p.unit}</p>
-      <p><strong>Unit:</strong> ${p.unit}</p>
+      <p><strong>Price:</strong> ₹${p.price} per ${p.price_unit}</p>
+      <p><strong>Address:</strong> ${p.address || '-'}</p>
+      <p><strong>Description:</strong> ${p.description || '-'}</p>
+      ${uploaderHtml}
+      <p>
+        <strong>Contact:</strong> 
+        <a href="${whatsappLink}" target="_blank">WhatsApp</a> | 
+        <a href="${emailLink}" target="_blank">Email</a>
+      </p>
     `;
     productGrid.appendChild(card);
   });
 }
 
-/* ===== Filter Logic ===== */
+/* ===== Filter Products ===== */
 filterBtn.addEventListener('click', ()=>{
-  let filtered = products;
-  if(filterFactory.value) filtered = filtered.filter(p=>p.factory_name===filterFactory.value);
-  if(filterSubcat.value) filtered = filtered.filter(p=>p.sub_category===filterSubcat.value);
-  if(filterType.value) filtered = filtered.filter(p=>p.type===filterType.value);
-  if(filterColor.value) filtered = filtered.filter(p=>p.color===filterColor.value);
-  if(filterUnit.value) filtered = filtered.filter(p=>p.unit===filterUnit.value);
-  if(filterPrice.value) filtered = filtered.filter(p=>p.price <= parseFloat(filterPrice.value));
+  const filtered = products.filter(p=>{
+    return (!filterFactory.value || p.factory_name === filterFactory.value)
+        && (!filterSubcat.value || p.sub_category === filterSubcat.value)
+        && (!filterType.value || p.type === filterType.value)
+        && (!filterColor.value || p.color === filterColor.value)
+        && (!filterUnit.value || p.price_unit === filterUnit.value)
+        && (!filterPrice.value || p.price <= parseFloat(filterPrice.value));
+  });
   renderProducts(filtered);
 });
-
 clearBtn.addEventListener('click', ()=>{
-  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value='';
-  filterUnit.value=''; filterPrice.value='';
+  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterUnit.value=''; filterPrice.value='';
   renderProducts(products);
 });
 
@@ -338,27 +336,22 @@ const prevBtn = document.querySelector('#image-modal .prev-btn');
 const nextBtn = document.querySelector('#image-modal .next-btn');
 const closeBtn = document.querySelector('#image-modal .close-btn');
 
-function openImageModal(productIdx,imgIdx){
+window.openImageModal = function(productIdx,imgIdx){
   currentIndex = productIdx; currentImgIndex = imgIdx;
   modalImg.src = products[productIdx].images[imgIdx];
   imageModal.style.display='flex';
 }
 
 prevBtn.addEventListener('click', ()=>{
-  if(products[currentIndex].images.length>1){
-    currentImgIndex = (currentImgIndex-1+products[currentIndex].images.length)%products[currentIndex].images.length;
-    modalImg.src = products[currentIndex].images[currentImgIndex];
-  }
+  currentImgIndex = (currentImgIndex-1+products[currentIndex].images.length) % products[currentIndex].images.length;
+  modalImg.src = products[currentIndex].images[currentImgIndex];
 });
-
 nextBtn.addEventListener('click', ()=>{
-  if(products[currentIndex].images.length>1){
-    currentImgIndex = (currentImgIndex+1)%products[currentIndex].images.length;
-    modalImg.src = products[currentIndex].images[currentImgIndex];
-  }
+  currentImgIndex = (currentImgIndex+1) % products[currentIndex].images.length;
+  modalImg.src = products[currentIndex].images[currentImgIndex];
 });
-
 closeBtn.addEventListener('click', ()=>{ imageModal.style.display='none'; });
+imageModal.addEventListener('click',(e)=>{ if(e.target===imageModal) imageModal.style.display='none'; });
 
 loadProducts();
 </script>
