@@ -88,38 +88,57 @@ const preview = document.getElementById('preview');
 
 let imageBase64 = "";
 
-// ==========================
-//  Image Base64 Preview
-// ==========================
+// 🖼️ Convert image to Base64
 imageInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = (event) => {
-      imageBase64 = event.target.result;
+      imageBase64 = event.target.result; 
       preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
     };
     reader.readAsDataURL(file);
   }
 });
 
-// ==========================
-//  Logout
-// ==========================
+// 🚀 Upload image to Cloudflare Worker → imgbb → get URL
+async function uploadImageToWorker() {
+  if (!imageBase64) return "";
+
+  try {
+    const response = await fetch("https://mute-frost-eefa.ravijain236129.workers.dev", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ base64: imageBase64 })
+    });
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      return result.url;
+    } else {
+      alert("Image upload failed!");
+      return "";
+    }
+  } catch (err) {
+    console.error("Worker Upload Error:", err);
+    alert("Image upload error: " + err);
+    return "";
+  }
+}
+
+// 🔐 Logout
 logoutBtn.onclick = async () => {
   try {
     await signOut(auth);
-    alert("Logged out successfully!");
+    alert("You have been logged out successfully!");
     window.location = 'index.html';
   } catch (error) {
-    console.error(error);
-    alert("Error logging out");
+    alert("Logout error.");
   }
 };
 
-// ==========================
-//  Prefill for Editing
-// ==========================
+// Prefill Edit Mode
 window.addEventListener('DOMContentLoaded', () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
@@ -138,49 +157,26 @@ window.addEventListener('DOMContentLoaded', () => {
     form.contact_number.value = p.contact_number || "";
     form.email.value = p.email || "";
     form.factory_name.value = p.factory_name || "";
-    if (p.image) {
-      preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
-      imageBase64 = p.image;
-    }
+    if (p.image) preview.innerHTML = `<img src="${p.image}" alt="Preview">`;
   }
 
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
 
-// Auth
+// Auth Check
 auth.onAuthStateChanged(user => {
   if (!user) window.location = 'signin.html';
 });
 
-// ========================================
-//        SAVE / UPDATE PRODUCT
-// ========================================
+// 🔥 Save / Update Product
 form.onsubmit = async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
   if (!user) return alert("Please login again.");
 
-  let imageUrl = "";
-
-  // Upload image via Cloudflare Worker
-  if (imageBase64) {
-    try {
-      const response = await fetch("https://mute-frost-eefa.ravijain236129.workers.dev", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ base64: imageBase64 })
-      });
-
-      const result = await response.json();
-      if (result.status !== "success") throw new Error("Image upload failed");
-
-      imageUrl = result.url;
-    } catch (err) {
-      console.error(err);
-      return alert("Image upload failed: " + err.message);
-    }
-  }
+  // first upload image
+  const imageUrl = await uploadImageToWorker();
 
   const data = {
     stone_name: form.stone_name.value.trim(),
@@ -194,7 +190,7 @@ form.onsubmit = async (e) => {
     contact_number: form.contact_number.value.trim(),
     email: form.email.value.trim() || "",
     factory_name: form.factory_name.value.trim(),
-    image: imageUrl || imageBase64,
+    image: imageUrl,                    // IMPORTANT: URL saved
     created_at: serverTimestamp(),
     userId: user.uid
   };
@@ -204,20 +200,18 @@ form.onsubmit = async (e) => {
   try {
     if (id) {
       await updateDoc(doc(db, "products", id), data);
-      alert("Product updated!");
+      alert("✅ Product updated successfully!");
     } else {
       await addDoc(collection(db, "products"), data);
-      alert("Product added!");
+      alert("✅ Product added successfully!");
     }
 
     form.reset();
     preview.innerHTML = "";
     imageBase64 = "";
     productIdInput.value = "";
-
   } catch (error) {
-    console.error(error);
-    alert("Error: " + error.message);
+    alert("❌ Upload failed: " + error.message);
   }
 };
 </script>
