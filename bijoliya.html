@@ -25,14 +25,17 @@ nav a {text-decoration:none;color:#333;font-weight:600;}
 .card p {margin:3px 0;font-size:0.9rem;}
 .card a {color:#c7a97b;text-decoration:none;margin-right:5px;}
 .filter-container {display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:20px;}
-.filter-container input, .filter-container select, .filter-container button {padding:8px;border-radius:6px;border:1px solid #ccc;}
+.filter-container select, .filter-container button {padding:8px;border-radius:6px;border:1px solid #ccc;}
 .filter-container button {border:none;cursor:pointer;}
 #filter-btn {background:#c7a97b;color:white;}
 #clear-filter-btn {background:#b38c5f;color:white;}
-.modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000;}
-.modal-content {position:relative;max-width:90%;max-height:90%;}
-.modal-content img {width:100%;height:auto;border-radius:8px;}
+.modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:1000;}
+.modal-content {position:relative;max-width:90%;max-height:90%;display:flex;align-items:center;justify-content:center;}
+.modal-content img {width:auto;max-width:100%;max-height:80vh;border-radius:8px;}
 .modal-close {position:absolute;top:10px;right:15px;font-size:28px;color:white;cursor:pointer;}
+.modal-arrow {position:absolute;top:50%;transform:translateY(-50%);font-size:40px;color:white;cursor:pointer;padding:10px;user-select:none;}
+.modal-left {left:10px;}
+.modal-right {right:10px;}
 footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
 footer a {color:white;text-decoration:none;margin-left:5px;}
 </style>
@@ -69,10 +72,10 @@ footer a {color:white;text-decoration:none;margin-left:5px;}
 <div class="banner">Discover Natural Stones of Bijoliya</div>
 
 <div class="filter-container">
-  <input type="text" id="filter-factory" placeholder="Filter by Company">
-  <input type="text" id="filter-subcat" placeholder="Filter by Sub-category">
-  <input type="text" id="filter-type" placeholder="Filter by Type">
-  <input type="text" id="filter-color" placeholder="Filter by Color">
+  <select id="filter-factory"><option value="">All Companies</option></select>
+  <select id="filter-subcat"><option value="">All Sub-categories</option></select>
+  <select id="filter-type"><option value="">All Types</option></select>
+  <select id="filter-color"><option value="">All Colors</option></select>
   <input type="number" id="filter-price" placeholder="Max Price">
   <button id="filter-btn">Apply</button>
   <button id="clear-filter-btn">Clear</button>
@@ -85,7 +88,9 @@ footer a {color:white;text-decoration:none;margin-left:5px;}
 <div class="modal" id="img-modal">
   <div class="modal-content">
     <span class="modal-close" onclick="closeModal()">&times;</span>
+    <span class="modal-arrow modal-left" onclick="prevImage()">&#10094;</span>
     <img id="modal-img" src="">
+    <span class="modal-arrow modal-right" onclick="nextImage()">&#10095;</span>
   </div>
 </div>
 
@@ -103,12 +108,38 @@ const modal = document.getElementById('img-modal');
 const modalImg = document.getElementById('modal-img');
 
 let products = [];
+let currentImages = [];
+let currentIndex = 0;
 
 async function loadProducts() {
   const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
   const snapshot = await getDocs(q);
   products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  renderFilters();
   renderProducts(products);
+}
+
+// Render filter dropdowns dynamically
+function renderFilters() {
+  const factories = [...new Set(products.map(p=>p.factory_name).filter(Boolean))];
+  const subcats = [...new Set(products.map(p=>p.sub_category).filter(Boolean))];
+  const types = [...new Set(products.map(p=>p.type).filter(Boolean))];
+  const colors = [...new Set(products.map(p=>p.color).filter(Boolean))];
+
+  const setOptions = (id, arr)=>{
+    const select = document.getElementById(id);
+    arr.forEach(val=>{
+      const opt = document.createElement('option');
+      opt.value = val;
+      opt.textContent = val;
+      select.appendChild(opt);
+    });
+  }
+
+  setOptions('filter-factory', factories);
+  setOptions('filter-subcat', subcats);
+  setOptions('filter-type', types);
+  setOptions('filter-color', colors);
 }
 
 function renderProducts(list) {
@@ -117,7 +148,6 @@ function renderProducts(list) {
     const card = document.createElement('div');
     card.className = 'card';
 
-    // First image as main
     let mainImage = p.images && p.images.length ? p.images[0] : '';
     let thumbnailsHTML = '';
     if(p.images && p.images.length > 1){
@@ -132,7 +162,7 @@ function renderProducts(list) {
     const dateTime = `${dateObj.toLocaleDateString()} ${dateObj.toLocaleTimeString()}`;
 
     card.innerHTML = `
-      <img src="${mainImage}" alt="${p.stone_name}" class="main-img" onclick="openModal('${mainImage}')">
+      <img src="${mainImage}" alt="${p.stone_name}" class="main-img" onclick="openModalImages('${p.id}',0)">
       ${thumbnailsHTML}
       <h3>${p.stone_name}</h3>
       <p><strong>Category:</strong> ${p.category}</p>
@@ -149,6 +179,7 @@ function renderProducts(list) {
   });
 }
 
+// Thumbnail click to change main image
 window.changeMain = (thumb,imgId,idx) => {
   const card = thumb.closest('.card');
   const mainImg = card.querySelector('.main-img');
@@ -157,14 +188,31 @@ window.changeMain = (thumb,imgId,idx) => {
   thumb.classList.add('active');
 }
 
-window.openModal = (imgSrc) => {
+// Open modal for multiple images
+window.openModalImages = (productId,startIdx) => {
+  const prod = products.find(p=>p.id===productId);
+  if(!prod || !prod.images) return;
+  currentImages = prod.images;
+  currentIndex = startIdx;
   modal.style.display = 'flex';
-  modalImg.src = imgSrc;
+  modalImg.src = currentImages[currentIndex];
 }
 
 window.closeModal = () => { modal.style.display='none'; }
 
-/* ===== Filters ===== */
+window.prevImage = () => {
+  if(currentImages.length ===0) return;
+  currentIndex = (currentIndex-1+currentImages.length)%currentImages.length;
+  modalImg.src = currentImages[currentIndex];
+}
+
+window.nextImage = () => {
+  if(currentImages.length ===0) return;
+  currentIndex = (currentIndex+1)%currentImages.length;
+  modalImg.src = currentImages[currentIndex];
+}
+
+/* Filters */
 const filterFactory = document.getElementById('filter-factory');
 const filterSubcat = document.getElementById('filter-subcat');
 const filterType = document.getElementById('filter-type');
@@ -175,10 +223,10 @@ const clearBtn = document.getElementById('clear-filter-btn');
 
 filterBtn.addEventListener('click', () => {
   const filtered = products.filter(p => {
-    return (!filterFactory.value || (p.factory_name && p.factory_name.toLowerCase().includes(filterFactory.value.toLowerCase()))) &&
-           (!filterSubcat.value || (p.sub_category && p.sub_category.toLowerCase().includes(filterSubcat.value.toLowerCase()))) &&
-           (!filterType.value || (p.type && p.type.toLowerCase().includes(filterType.value.toLowerCase()))) &&
-           (!filterColor.value || (p.color && p.color.toLowerCase().includes(filterColor.value.toLowerCase()))) &&
+    return (!filterFactory.value || p.factory_name === filterFactory.value) &&
+           (!filterSubcat.value || p.sub_category === filterSubcat.value) &&
+           (!filterType.value || p.type === filterType.value) &&
+           (!filterColor.value || p.color === filterColor.value) &&
            (!filterPrice.value || (p.price && p.price <= parseFloat(filterPrice.value)));
   });
   renderProducts(filtered);
