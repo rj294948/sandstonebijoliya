@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bijoliya Stone - Rajasthan SandStone Hub</title>
+<title>Rajasthan Stones - SandStone Hub</title>
 <link rel="icon" href="stone-icon.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <style>
@@ -21,7 +21,7 @@
 /* ===== Header ===== */
 header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
 header h1 {font-size:1.5rem; cursor:pointer; margin:0; display:flex; align-items:center; gap:10px;}
-header h1 img {height:40px; width:auto; border-radius:6px;}
+header h1 img {height:40px; border-radius:5px;}
 header div button {margin-left:5px;}
 
 /* ===== Navigation ===== */
@@ -41,8 +41,9 @@ nav a{text-decoration:none;color:#333;font-weight:600;}
 .card .thumbnails img:hover{border:2px solid #c7a97b;}
 
 /* ===== Filter ===== */
-.filter-container {display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:15px 0;}
-.filter-container select, .filter-container button {padding:8px; border-radius:6px; border:1px solid #ccc; min-width:150px;}
+.filter-container {display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin:15px 0;}
+.filter-container .filter-box {display:flex; flex-direction:column; gap:5px;}
+.filter-container select, .filter-container input, .filter-container button {padding:8px; border-radius:6px; border:1px solid #ccc; min-width:150px;}
 .filter-container button {border:none; cursor:pointer;}
 #filter-btn {background:#c7a97b; color:white;}
 #clear-filter-btn {background:#b38c5f; color:white;}
@@ -65,7 +66,7 @@ footer a{color:white;text-decoration:none;}
 <body>
 
 <header>
-  <h1><img src="logo.png" alt="Logo"> 🪨 Bijoliya Stone</h1>
+  <h1><img src="stone-icon.png" alt="Logo"> Rajasthan Stones</h1>
   <div>
     <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
     <button id="btn-open-signin">Sign In</button>
@@ -93,16 +94,19 @@ footer a{color:white;text-decoration:none;}
   <a href="terms.html">Terms & Conditions</a>
 </nav>
 
-<div class="banner">Discover Natural Stones of Bijoliya</div>
+<div class="banner">Discover Natural Stones of Rajasthan</div>
 
 <div class="filter-container">
-  <select id="filter-factory" title="Factory"></select>
-  <select id="filter-subcat" title="Sub-category"></select>
-  <select id="filter-type" title="Type"></select>
-  <select id="filter-color" title="Color"></select>
-  <select id="filter-price" title="Price Up To"></select>
-  <button id="filter-btn">Apply</button>
-  <button id="clear-filter-btn">Clear</button>
+  <div class="filter-box"><label>Factory</label><select id="filter-factory"><option value="">All Factories</option></select></div>
+  <div class="filter-box"><label>Sub-category</label><select id="filter-subcat"><option value="">All Sub-categories</option></select></div>
+  <div class="filter-box"><label>Type</label><select id="filter-type"><option value="">All Types</option></select></div>
+  <div class="filter-box"><label>Color</label><select id="filter-color"><option value="">All Colors</option></select></div>
+  <div class="filter-box"><label>Max Price (₹)</label><input type="number" id="filter-price" placeholder="Up to ₹"></div>
+  <div class="filter-box"><label>Unit</label><select id="filter-unit"><option value="">All Units</option></select></div>
+  <div class="filter-box" style="align-self:flex-end; display:flex; gap:5px;">
+    <button id="filter-btn">Apply</button>
+    <button id="clear-filter-btn">Clear</button>
+  </div>
 </div>
 
 <section>
@@ -157,7 +161,7 @@ footer a{color:white;text-decoration:none;}
 
 <script type="module">
 import { db, auth } from './firebase-config.js';
-import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 /* ===== Modal Functions ===== */
@@ -238,12 +242,12 @@ const filterSubcat = document.getElementById('filter-subcat');
 const filterType = document.getElementById('filter-type');
 const filterColor = document.getElementById('filter-color');
 const filterPrice = document.getElementById('filter-price');
+const filterUnit = document.getElementById('filter-unit');
 const filterBtn = document.getElementById('filter-btn');
 const clearBtn = document.getElementById('clear-filter-btn');
 
 async function loadProducts(){
- const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
- const snapshot = await getDocs(q);
+ const snapshot = await getDocs(collection(db, "products"));
  products = snapshot.docs.map(doc=>doc.data());
 
  populateFilterOptions();
@@ -252,36 +256,24 @@ async function loadProducts(){
 
 /* ===== Populate filter dropdowns dynamically ===== */
 function populateFilterOptions(){
-  const factories = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), prices = [];
+  const factories = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), units = new Set();
   products.forEach(p=>{
     if(p.factory_name) factories.add(p.factory_name);
     if(p.sub_category) subcats.add(p.sub_category);
     if(p.type) types.add(p.type);
     if(p.color) colors.add(p.color);
-    if(p.price) prices.push(p.price);
+    if(p.unit) units.add(p.unit);
   });
-  addOptions(filterFactory, Array.from(factories), "Factory");
-  addOptions(filterSubcat, Array.from(subcats), "Sub-category");
-  addOptions(filterType, Array.from(types), "Type");
-  addOptions(filterColor, Array.from(colors), "Color");
-  addPriceOptions(filterPrice, prices);
+  addOptions(filterFactory, Array.from(factories));
+  addOptions(filterSubcat, Array.from(subcats));
+  addOptions(filterType, Array.from(types));
+  addOptions(filterColor, Array.from(colors));
+  addOptions(filterUnit, Array.from(units));
 }
 
-function addOptions(select, arr, title){
-  select.innerHTML = '';
-  arr.forEach(val=>{
-    select.innerHTML += `<option value="${val}" title="${val}">${val}</option>`;
-  });
-}
-
-function addPriceOptions(select, prices){
-  select.innerHTML = '';
-  const sorted = prices.sort((a,b)=>a-b);
-  sorted.forEach(p=>{
-    if(p <= 100000){ // Up to 100k as example
-      select.innerHTML += `<option value="${p}">Up to ₹${p}</option>`;
-    }
-  });
+function addOptions(select, arr){
+  select.innerHTML = `<option value="">All</option>`;
+  arr.forEach(val=>{ select.innerHTML += `<option value="${val}">${val}</option>`; });
 }
 
 /* ===== Render Products ===== */
@@ -313,60 +305,61 @@ function renderProducts(list){
       <p><strong>Type:</strong> ${p.type || '-'}</p>
       <p><strong>Color:</strong> ${p.color || '-'}</p>
       <p><strong>Factory:</strong> ${p.factory_name || '-'}</p>
-      <p><strong>Price:</strong> ₹${p.price}</p>
+      <p><strong>Price:</strong> ₹${p.price} per ${p.unit}</p>
+      <p><strong>Unit:</strong> ${p.unit}</p>
     `;
     productGrid.appendChild(card);
   });
 }
 
-/* ===== Filter Function ===== */
+/* ===== Filter Logic ===== */
 filterBtn.addEventListener('click', ()=>{
-  const fFactory = filterFactory.value;
-  const fSubcat = filterSubcat.value;
-  const fType = filterType.value;
-  const fColor = filterColor.value;
-  const fPrice = filterPrice.value;
-  const filtered = products.filter(p=>{
-    return (!fFactory || p.factory_name===fFactory)
-        && (!fSubcat || p.sub_category===fSubcat)
-        && (!fType || p.type===fType)
-        && (!fColor || p.color===fColor)
-        && (!fPrice || p.price <= fPrice);
-  });
+  let filtered = products;
+  if(filterFactory.value) filtered = filtered.filter(p=>p.factory_name===filterFactory.value);
+  if(filterSubcat.value) filtered = filtered.filter(p=>p.sub_category===filterSubcat.value);
+  if(filterType.value) filtered = filtered.filter(p=>p.type===filterType.value);
+  if(filterColor.value) filtered = filtered.filter(p=>p.color===filterColor.value);
+  if(filterUnit.value) filtered = filtered.filter(p=>p.unit===filterUnit.value);
+  if(filterPrice.value) filtered = filtered.filter(p=>p.price <= parseFloat(filterPrice.value));
   renderProducts(filtered);
 });
 
 clearBtn.addEventListener('click', ()=>{
+  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value='';
+  filterUnit.value=''; filterPrice.value='';
   renderProducts(products);
 });
 
-/* ===== Image Modal ===== */
-let currentIndex = 0;
-let currentImageIndex = 0;
+/* ===== Image Modal Logic ===== */
+let currentIndex = 0, currentImgIndex = 0;
 const imageModal = document.getElementById('image-modal');
 const modalImg = document.getElementById('modal-img');
 const prevBtn = document.querySelector('#image-modal .prev-btn');
 const nextBtn = document.querySelector('#image-modal .next-btn');
 const closeBtn = document.querySelector('#image-modal .close-btn');
 
-window.openImageModal = (productIdx,imgIdx)=>{
-  currentIndex = productIdx;
-  currentImageIndex = imgIdx;
+function openImageModal(productIdx,imgIdx){
+  currentIndex = productIdx; currentImgIndex = imgIdx;
   modalImg.src = products[productIdx].images[imgIdx];
-  imageModal.style.display = 'flex';
-};
+  imageModal.style.display='flex';
+}
 
 prevBtn.addEventListener('click', ()=>{
-  currentImageIndex = (currentImageIndex-1+products[currentIndex].images.length)%products[currentIndex].images.length;
-  modalImg.src = products[currentIndex].images[currentImageIndex];
+  if(products[currentIndex].images.length>1){
+    currentImgIndex = (currentImgIndex-1+products[currentIndex].images.length)%products[currentIndex].images.length;
+    modalImg.src = products[currentIndex].images[currentImgIndex];
+  }
 });
+
 nextBtn.addEventListener('click', ()=>{
-  currentImageIndex = (currentImageIndex+1)%products[currentIndex].images.length;
-  modalImg.src = products[currentIndex].images[currentImageIndex];
+  if(products[currentIndex].images.length>1){
+    currentImgIndex = (currentImgIndex+1)%products[currentIndex].images.length;
+    modalImg.src = products[currentIndex].images[currentImgIndex];
+  }
 });
+
 closeBtn.addEventListener('click', ()=>{ imageModal.style.display='none'; });
 
-/* ===== Initialize ===== */
 loadProducts();
 </script>
 
