@@ -87,7 +87,6 @@ footer a{color:white;text-decoration:none;}
 
 <div class="banner">Discover Natural Stones of Rajasthan</div>
 
-<!-- ===== Filter Section (Updated) ===== -->
 <div class="filter-container">
   <div class="filter-box">
     <label>Company Name</label>
@@ -129,7 +128,6 @@ footer a{color:white;text-decoration:none;}
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<!-- ===== Sign In Modal ===== -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
@@ -146,7 +144,6 @@ footer a{color:white;text-decoration:none;}
   </div>
 </div>
 
-<!-- ===== Sign Up Modal ===== -->
 <div class="modal" id="signup-modal">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
@@ -161,7 +158,6 @@ footer a{color:white;text-decoration:none;}
   </div>
 </div>
 
-<!-- ===== Image Modal ===== -->
 <div id="image-modal">
   <button class="prev-btn">&#10094;</button>
   <img id="modal-img" src="">
@@ -283,7 +279,7 @@ function addOptions(select, arr){
   arr.forEach(val=>{ select.innerHTML += `<option value="${val}">${val}</option>`; });
 }
 
-/* ===== Render Products ===== */
+/* ===== Render Products (FULL UPDATE) ===== */
 function renderProducts(list){
   productGrid.innerHTML = '';
   list.forEach(p=>{
@@ -295,76 +291,91 @@ function renderProducts(list){
       imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},0)">`;
       if(p.images.length>1){
         imagesHtml += `<div class="thumbnails">`;
-        p.images.forEach((img,idx)=>{ imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; });
+        p.images.forEach((img,idx)=>{ 
+          imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; 
+        });
         imagesHtml += `</div>`;
       }
-    } else { imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`; }
+    } else { 
+      imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`; 
+    }
 
     const whatsappLink = `https://wa.me/${p.contact_number}?text=Hello, I am interested in ${p.stone_name}`;
+    const gmailLink = `mailto:${p.contact_email || ''}?subject=Inquiry about ${p.stone_name}&body=Hello`;
+
+    let createdDate = '';
+    if(p.created_at){
+      if(typeof p.created_at.toDate === 'function'){
+        createdDate = p.created_at.toDate().toLocaleString();
+      } else if(p.created_at.seconds){
+               createdDate = new Date(p.created_at.seconds * 1000).toLocaleString();
+      }
+    }
+
     card.innerHTML = `
       ${imagesHtml}
-      <h3>${p.stone_name}</h3>
-      <p>Company: ${p.factory_name || '-'}</p>
-      <p>Type: ${p.type || '-'}</p>
-      <p>Color: ${p.color || '-'}</p>
-      <p>Unit: ${p.price_unit || '-'}</p>
-      <p>Price: ₹${p.price || '-'}</p>
-      <a href="${whatsappLink}" target="_blank"><button style="background:#25D366;color:white;width:100%;border:none;padding:8px;border-radius:6px;">Contact via WhatsApp</button></a>
+      <h3>${p.stone_name || 'Stone Name'}</h3>
+      <p><strong>Company:</strong> ${p.factory_name || '-'}</p>
+      <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
+      <p><strong>Type:</strong> ${p.type || '-'}</p>
+      <p><strong>Color:</strong> ${p.color || '-'}</p>
+      <p><strong>Price:</strong> ₹${p.price || '-'} per ${p.price_unit || '-'}</p>
+      <p><strong>Address:</strong> ${p.address || '-'}</p>
+      <p><strong>Created At:</strong> ${createdDate}</p>
+      <div style="margin-top:10px; display:flex; justify-content:center; gap:10px;">
+        <a href="${whatsappLink}" target="_blank"><button style="background:#25D366;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">WhatsApp</button></a>
+        <a href="${gmailLink}" target="_blank"><button style="background:#D44638;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">Email</button></a>
+      </div>
+      <p style="margin-top:10px;">${p.description || ''}</p>
     `;
     productGrid.appendChild(card);
   });
 }
 
-/* ===== Filter Logic ===== */
-filterBtn.addEventListener('click', ()=>{
-  const f = filterFactory.value.trim().toLowerCase();
-  const s = filterSubcat.value.trim().toLowerCase();
-  const t = filterType.value.trim().toLowerCase();
-  const c = filterColor.value.trim().toLowerCase();
-  const u = filterUnit.value.trim().toLowerCase();
-  const pMax = parseFloat(filterPrice.value) || Infinity;
+/* ===== Image Modal ===== */
+let currentProductIndex = 0;
+let currentImageIndex = 0;
+const imageModal = document.getElementById('image-modal');
+const modalImg = document.getElementById('modal-img');
 
-  const filtered = products.filter(prod=>{
-    return (!f || (prod.factory_name && prod.factory_name.toLowerCase()===f)) &&
-           (!s || (prod.sub_category && prod.sub_category.toLowerCase()===s)) &&
-           (!t || (prod.type && prod.type.toLowerCase()===t)) &&
-           (!c || (prod.color && prod.color.toLowerCase()===c)) &&
-           (!u || (prod.price_unit && prod.price_unit.toLowerCase()===u)) &&
-           (!isNaN(pMax) && (!prod.price || prod.price<=pMax));
-  });
-  renderProducts(filtered);
+window.openImageModal = function(productIndex, imageIndex){
+  currentProductIndex = productIndex;
+  currentImageIndex = imageIndex;
+  modalImg.src = products[productIndex].images[imageIndex];
+  imageModal.style.display = 'flex';
+}
+
+document.querySelector('#image-modal .close-btn').addEventListener('click', ()=>{ imageModal.style.display='none'; });
+document.querySelector('#image-modal .prev-btn').addEventListener('click', ()=>{
+  const imgs = products[currentProductIndex].images;
+  currentImageIndex = (currentImageIndex-1+imgs.length)%imgs.length;
+  modalImg.src = imgs[currentImageIndex];
+});
+document.querySelector('#image-modal .next-btn').addEventListener('click', ()=>{
+  const imgs = products[currentProductIndex].images;
+  currentImageIndex = (currentImageIndex+1)%imgs.length;
+  modalImg.src = imgs[currentImageIndex];
 });
 
+/* ===== Filtering ===== */
+filterBtn.addEventListener('click', ()=>{
+  let filtered = products;
+  if(filterFactory.value) filtered = filtered.filter(p=>p.factory_name===filterFactory.value);
+  if(filterSubcat.value) filtered = filtered.filter(p=>p.sub_category===filterSubcat.value);
+  if(filterType.value) filtered = filtered.filter(p=>p.type===filterType.value);
+  if(filterColor.value) filtered = filtered.filter(p=>p.color===filterColor.value);
+  if(filterUnit.value) filtered = filtered.filter(p=>p.price_unit===filterUnit.value);
+  if(filterPrice.value) filtered = filtered.filter(p=>p.price<=parseFloat(filterPrice.value));
+  renderProducts(filtered);
+});
 clearBtn.addEventListener('click', ()=>{
   filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterUnit.value=''; filterPrice.value='';
   renderProducts(products);
 });
 
-/* ===== Image Modal Logic ===== */
-const imageModal = document.getElementById('image-modal');
-const modalImg = document.getElementById('modal-img');
-const closeImgBtn = document.querySelector('#image-modal .close-btn');
-const prevBtn = document.querySelector('#image-modal .prev-btn');
-const nextBtn = document.querySelector('#image-modal .next-btn');
-let currentProductIndex=0, currentImageIndex=0;
-
-window.openImageModal = function(prodIdx,imgIdx){
-  currentProductIndex=prodIdx; currentImageIndex=imgIdx;
-  modalImg.src = products[prodIdx].images[imgIdx];
-  imageModal.style.display='flex';
-}
-closeImgBtn.addEventListener('click', ()=>{ imageModal.style.display='none'; });
-prevBtn.addEventListener('click', ()=>{
-  currentImageIndex = (currentImageIndex-1 + products[currentProductIndex].images.length)%products[currentProductIndex].images.length;
-  modalImg.src = products[currentProductIndex].images[currentImageIndex];
-});
-nextBtn.addEventListener('click', ()=>{
-  currentImageIndex = (currentImageIndex+1)%products[currentProductIndex].images.length;
-  modalImg.src = products[currentProductIndex].images[currentImageIndex];
-});
-
+/* ===== Load products initially ===== */
 loadProducts();
 </script>
-
 </body>
 </html>
+
