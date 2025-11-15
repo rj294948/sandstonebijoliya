@@ -13,151 +13,8 @@ header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justif
 header h1 {font-size:1.5rem; cursor:pointer; margin:0; display:flex; align-items:center; gap:10px;}
 header h1 img {height:40px; border-radius:5px;}
 header div button, header div a {margin-left:5px;}
-/* ===== Navigation ===== */
-nav { 
-  display: flex; 
-  justify-content: center; 
-  gap: 4px; 
-  background: #f8f9fa;
-  padding: 12px 15px; 
-  flex-wrap: nowrap; 
-  overflow-x: auto; 
-  white-space: nowrap; 
-  border-bottom: 2px solid #c7a97b;
-  position: relative;
-  z-index: 1000; /* Increased z-index */
-}
-
-nav a { 
-  text-decoration: none; 
-  color: #2c3e50;
-  font-weight: 600; 
-  font-size: 0.85rem; 
-  padding: 8px 16px; 
-  border-radius: 6px; 
-  transition: all 0.3s ease; 
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  flex-shrink: 0; 
-}
-
-nav a:hover { 
-  background: #c7a97b;
-  color: #ffffff;
-  border-color: #c7a97b;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(199, 169, 123, 0.3);
-}
-
-/* Dropdown Container */
-.dropdown { 
-  position: relative; 
-  display: inline-block; 
-}
-
-/* Dropdown Button */
-.dropbtn { 
-  text-decoration: none; 
-  color: #2c3e50;
-  font-weight: 600; 
-  font-size: 0.85rem; 
-  padding: 8px 16px; 
-  border-radius: 6px; 
-  transition: all 0.3s ease; 
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.dropbtn:hover,
-.dropbtn.active { 
-  background: #c7a97b;
-  color: #ffffff;
-  border-color: #c7a97b;
-}
-
-/* Dropdown Content */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background: #ffffff;
-  min-width: 180px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  border-radius: 8px;
-  z-index: 1001; /* Higher than nav */
-  top: 100%;
-  left: 0;
-  margin-top: 5px;
-  border: 1px solid #e0e0e0;
-  animation: fadeIn 0.3s ease;
-}
-
-.dropdown-content.show {
-  display: block;
-}
-
-.dropdown-content a {
-  color: #2c3e50;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  border-bottom: 1px solid #f0f0f0;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-  background: #ffffff;
-}
-
-.dropdown-content a:last-child {
-  border-bottom: none;
-}
-
-.dropdown-content a:hover {
-  background: #c7a97b;
-  color: #ffffff;
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Scrollbar styling */
-nav::-webkit-scrollbar {
-  height: 4px;
-}
-
-nav::-webkit-scrollbar-track {
-  background: rgba(199, 169, 123, 0.1);
-}
-
-nav::-webkit-scrollbar-thumb {
-  background: #c7a97b;
-  border-radius: 2px;
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  nav {
-    padding: 10px 12px;
-    gap: 3px;
-  }
-  
-  nav a, .dropbtn {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-  }
-  
-  .dropdown-content {
-    position: fixed;
-    top: auto;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 200px;
-  }
-}
+nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px; flex-wrap:wrap;}
+nav a{text-decoration:none;color:#333;font-weight:600;}
 .banner{background:#c7a97b;color:white;text-align:center;padding:30px;font-size:1.5rem;margin-bottom:10px;}
 .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin:20px;}
 .card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; background:white;}
@@ -278,62 +135,22 @@ footer a{color:white;text-decoration:none;}
 </header>
 
 <nav>
-  <a href="sandstone.html">Sand&nbsp;Stone</a>
-  <a href="kota.html">Kota&nbsp;Stone</a>
+  <a href="sandstone.html">Sand Stone</a>
+  <a href="kota.html">Kota Stone</a>
   <a href="granite.html">Granite</a>
   <a href="marble.html">Marble</a>
   <a href="bijoliya.html">Bijoliya</a>
   <a href="dholpur.html">Dholpur</a>
   <a href="tiles.html">Tiles</a>
   <a href="mandana.html">Mandana</a>
-  <a href="other-stones.html">Other&nbsp;Stones</a>
+  <a href="other-stones.html">Other Stones</a>
   <a href="factories.html">Factories</a>
-  
-  <!-- More Dropdown -->
-  <div class="dropdown">
-    <a href="javascript:void(0)" class="dropbtn" id="more-btn">More ▾</a>
-    <div class="dropdown-content" id="more-dropdown">
-      <a href="about.html">About Us</a>
-      <a href="contact.html">Contact</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms & Conditions</a>
-    </div>
-  </div>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Privacy Policy</a>
+  <a href="terms.html">Terms & Conditions</a>
 </nav>
-<script> // Dropdown functionality
-const moreBtn = document.getElementById('more-btn');
-const moreDropdown = document.getElementById('more-dropdown');
 
-// Toggle dropdown on More button click
-moreBtn.addEventListener('click', function(e) {
-  e.stopPropagation();
-  moreDropdown.classList.toggle('show');
-  moreBtn.classList.toggle('active');
-});
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.dropdown')) {
-    moreDropdown.classList.remove('show');
-    moreBtn.classList.remove('active');
-  }
-});
-
-// Close dropdown when clicking on dropdown items
-moreDropdown.addEventListener('click', function(e) {
-  if (e.target.tagName === 'A') {
-    moreDropdown.classList.remove('show');
-    moreBtn.classList.remove('active');
-  }
-});
-
-// Close dropdown on Escape key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    moreDropdown.classList.remove('show');
-    moreBtn.classList.remove('active');
-  }
-}); </script>
 <div class="banner">Discover Natural Stones of Rajasthan</div>
 
 <!-- ===== Filter Section with Category ===== -->
