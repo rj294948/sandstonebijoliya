@@ -8,7 +8,7 @@ header button:hover{background:#d1b68d;color:white;}
 nav{background:#b38c5f;display:flex;justify-content:center;gap:20px;padding:10px 0;}
 nav a{color:white;text-decoration:none;font-weight:600;padding:6px 12px;border-radius:6px;transition:0.3s;}
 nav a:hover{background:#d1b68d;color:white;}
-.banner{background:url('assets/images/header-bg.jpg') center/cover no-repeat;height:20vh;display:flex;align-items:center;justify-content:center;color:white;text-shadow:2px 2px 8px rgba(0,0,0,0.7);font-size:2rem;font-weight:bold;}
+.banner{background:url('assets/images/header-bg.jpg') center/cover no-repeat;height:5vh;display:flex;align-items:center;justify-content:center;color:white;text-shadow:2px 2px 8px rgba(0,0,0,0.7);font-size:2rem;font-weight:bold;}
 section{padding:30px 20px;}
 section h2{font-size:1.5rem;margin-bottom:15px;color:#c7a97b;text-align:center;}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
