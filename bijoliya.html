@@ -50,71 +50,246 @@ nav a{text-decoration:none;color:#333;font-weight:600;}
 footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
 footer a{color:white;text-decoration:none;}
 
-/* ===== Image Modal Fullscreen with Details ===== */
+/* ===== UPDATED Image Modal Fullscreen ===== */
 #image-modal {
-  display:none; 
-  position:fixed; 
-  top:0; left:0; 
-  width:100%; height:100%; 
-  background:rgba(0,0,0,0.85); 
-  justify-content:center; 
-  align-items:center; 
-  z-index:2000;
-  padding:20px; 
-  box-sizing:border-box;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+  overflow: hidden;
 }
 
-#image-modal .modal-box {
-  background:white;
-  border-radius:12px;
-  max-width:90%;
-  max-height:90%;
-  display:flex;
-  flex-direction:row;
-  flex-wrap:wrap;
-  overflow:auto;
-  position:relative;
-  padding:15px;
+#image-modal .modal-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#image-modal .image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+}
+
+#image-modal .image-wrapper {
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #image-modal img {
-  max-width:500px;
-  max-height:80vh;
-  border-radius:8px;
-  object-fit:contain;
-  margin-bottom:10px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-.modal-details {
-  max-width:400px;
-  font-size:0.95rem;
-  margin-left:20px;
+#image-modal .details-section {
+  width: 400px;
+  background: white;
+  padding: 25px;
+  overflow-y: auto;
+  border-left: 1px solid #eee;
 }
-
-.modal-details h3 { margin-top:0; color:#c7a97b; }
-.modal-details p { margin:5px 0; }
 
 #image-modal .close-btn,
 #image-modal .prev-btn,
 #image-modal .next-btn {
-  position:absolute;
-  font-size:2rem;
-  color:white;
-  background:rgba(0,0,0,0.4);
-  border:none;
-  padding:10px;
-  border-radius:5px;
-  cursor:pointer;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2001;
 }
 
-#image-modal .close-btn {top:10px; right:5%;}
-#image-modal .prev-btn {top:50%; left:5%; transform:translateY(-50%);}
-#image-modal .next-btn {top:50%; right:5%; transform:translateY(-50%);}
+#image-modal .close-btn {
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+}
 
-/* Responsive for Mobile */
-@media(max-width:768px){
-  #image-modal .modal-box {flex-direction:column; align-items:center;}
-  .modal-details {margin-left:0; margin-top:15px;}
+#image-modal .prev-btn,
+#image-modal .next-btn {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+}
+
+#image-modal .prev-btn {
+  left: 20px;
+}
+
+#image-modal .next-btn {
+  right: 420px; /* Adjust based on details section width */
+}
+
+#image-modal .close-btn:hover,
+#image-modal .prev-btn:hover,
+#image-modal .next-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
+#image-modal .image-counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 2001;
+}
+
+.modal-details h3 {
+  margin-top: 0;
+  color: #c7a97b;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #c7a97b;
+  padding-bottom: 10px;
+}
+
+.modal-details p {
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.modal-details strong {
+  color: #333;
+  min-width: 120px;
+  display: inline-block;
+}
+
+.modal-details a {
+  color: #c7a97b;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.modal-details a:hover {
+  text-decoration: underline;
+}
+
+.contact-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.contact-buttons button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.whatsapp-btn {
+  background: #25D366;
+  color: white;
+}
+
+.email-btn {
+  background: #D44638;
+  color: white;
+}
+
+.contact-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  #image-modal .modal-container {
+    flex-direction: column;
+  }
+  
+  #image-modal .details-section {
+    width: 100%;
+    max-height: 40%;
+    border-left: none;
+    border-top: 1px solid #eee;
+  }
+  
+  #image-modal .next-btn {
+    right: 20px;
+  }
+  
+  #image-modal .image-section {
+    height: 60%;
+  }
+}
+
+@media (max-width: 768px) {
+  #image-modal .prev-btn,
+  #image-modal .next-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  
+  #image-modal .close-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  
+  .modal-details {
+    padding: 15px;
+  }
+  
+  .contact-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Loading animation for images */
+.image-loading {
+  background: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #c7a97b;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
 </head>
@@ -204,25 +379,46 @@ footer a{color:white;text-decoration:none;}
   </div>
 </div>
 
-<!-- ===== Image Modal with Details ===== -->
+<!-- ===== UPDATED Image Modal with Details ===== -->
 <div id="image-modal">
-  <button class="prev-btn">&#10094;</button>
-  <div class="modal-box">
-    <img id="modal-img" src="">
-    <div class="modal-details">
-      <h3 id="modal-stone-name"></h3>
-      <p><strong>Company:</strong> <span id="modal-company"></span></p>
-      <p><strong>Sub-category:</strong> <span id="modal-subcat"></span></p>
-      <p><strong>Type:</strong> <span id="modal-type"></span></p>
-      <p><strong>Color:</strong> <span id="modal-color"></span></p>
-      <p><strong>Price:</strong> ₹<span id="modal-price"></span></p>
-      <p><strong>Address:</strong> <span id="modal-address"></span></p>
-      <p><strong>Contact:</strong> <a href="#" id="modal-whatsapp" target="_blank">WhatsApp</a> | <a href="#" id="modal-email" target="_blank">Email</a></p>
-      <p id="modal-description"></p>
+  <div class="modal-container">
+    <div class="image-section">
+      <div class="image-wrapper">
+        <img id="modal-img" src="" alt="Stone Image" onload="hideLoading()">
+        <div id="image-loading" class="image-loading" style="display:none;">
+          <div class="spinner"></div>
+        </div>
+      </div>
+      <button class="prev-btn">&#10094;</button>
+      <button class="next-btn">&#10095;</button>
+      <button class="close-btn">&times;</button>
+      <div class="image-counter" id="image-counter">1 / 1</div>
+    </div>
+    
+    <div class="details-section">
+      <div class="modal-details">
+        <h3 id="modal-stone-name">Stone Name</h3>
+        <p><strong>Company:</strong> <span id="modal-company">-</span></p>
+        <p><strong>Sub-category:</strong> <span id="modal-subcat">-</span></p>
+        <p><strong>Type:</strong> <span id="modal-type">-</span></p>
+        <p><strong>Color:</strong> <span id="modal-color">-</span></p>
+        <p><strong>Price:</strong> ₹<span id="modal-price">-</span> per <span id="modal-unit">-</span></p>
+        <p><strong>Address:</strong> <span id="modal-address">-</span></p>
+        <p><strong>Contact:</strong> <span id="modal-contact">-</span></p>
+        <p><strong>Email:</strong> <span id="modal-email-text">-</span></p>
+        <p id="modal-description"><strong>Description:</strong> <span id="modal-desc-text">No description available</span></p>
+        
+        <div class="contact-buttons">
+          <button class="whatsapp-btn" id="modal-whatsapp-btn">
+            📱 WhatsApp
+          </button>
+          <button class="email-btn" id="modal-email-btn">
+            ✉️ Email
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-  <button class="next-btn">&#10095;</button>
-  <button class="close-btn">&times;</button>
 </div>
 
 <script type="module">
@@ -306,11 +502,17 @@ const filterBtn = document.getElementById('filter-btn');
 const clearBtn = document.getElementById('clear-filter-btn');
 
 async function loadProducts(){
- const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
- const snapshot = await getDocs(q);
- products = snapshot.docs.map(doc=>doc.data());
- populateFilterOptions();
- renderProducts(products);
+ try {
+   const q = query(collection(db, "products"), where("category", "==", "Bijoliya"));
+   const snapshot = await getDocs(q);
+   products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+   console.log('Loaded products:', products.length);
+   populateFilterOptions();
+   renderProducts(products);
+ } catch (error) {
+   console.error('Error loading products:', error);
+   productGrid.innerHTML = '<p>Error loading products. Please try again later.</p>';
+ }
 }
 
 function populateFilterOptions(){
@@ -326,46 +528,86 @@ function populateFilterOptions(){
   addOptions(filterSubcat, Array.from(subcats));
   addOptions(filterType, Array.from(types));
   addOptions(filterColor, Array.from(colors));
-  addOptions(filterPrice, prices.sort((a,b)=>a-b));
+  
+  // Price filter with ranges
+  filterPrice.innerHTML = '<option value="">All Prices</option>';
+  if(prices.length > 0) {
+    const maxPrice = Math.max(...prices);
+    const priceRanges = [
+      {max: 1000, label: "Up to ₹1000"},
+      {max: 5000, label: "Up to ₹5000"},
+      {max: 10000, label: "Up to ₹10000"},
+      {max: 20000, label: "Up to ₹20000"},
+      {max: 50000, label: "Up to ₹50000"},
+      {max: maxPrice, label: `Up to ₹${maxPrice}`}
+    ];
+    priceRanges.forEach(range => {
+      if(range.max <= maxPrice) {
+        filterPrice.innerHTML += `<option value="${range.max}">${range.label}</option>`;
+      }
+    });
+  }
 }
 
 function addOptions(select, arr){
   select.innerHTML = `<option value="">All</option>`;
-  arr.forEach(val=>{ select.innerHTML += `<option value="${val}">${val}</option>`; });
+  arr.forEach(val=>{ 
+    if(val && val.trim() !== '') {
+      select.innerHTML += `<option value="${val}">${val}</option>`;
+    }
+  });
 }
 
 /* ===== Render Products ===== */
 function renderProducts(list){
   productGrid.innerHTML = '';
-  list.forEach(p=>{
-    const card = document.createElement('div'); card.className='card';
+  
+  if(list.length === 0) {
+    productGrid.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:40px; color:#666;">No products found matching your criteria.</p>';
+    return;
+  }
+  
+  list.forEach((p, index)=>{
+    const card = document.createElement('div'); 
+    card.className='card';
+    
     let imagesHtml='';
     if(p.images && p.images.length>0){
-      imagesHtml+=`<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},0)">`;
-      if(p.images.length>1){ imagesHtml+=`<div class="thumbnails">`; p.images.forEach((img,idx)=>{ imagesHtml+=`<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; }); imagesHtml+=`</div>`; }
-    } else { imagesHtml=`<img src="stone-placeholder.png" alt="${p.stone_name}">`; }
+      // Preload first image for better performance
+      const img = new Image();
+      img.src = p.images[0];
+      
+      imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}" loading="lazy" onclick="openImageModal(${index},0)">`;
+      
+      if(p.images.length>1){
+        imagesHtml += `<div class="thumbnails">`;
+        p.images.forEach((img,idx)=>{ 
+          imagesHtml += `<img src="${img}" alt="${p.stone_name}" loading="lazy" onclick="openImageModal(${index},${idx})">`; 
+        });
+        imagesHtml += `</div>`;
+      }
+    } else { 
+      imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}" style="background:#f0f0f0; padding:20px;">`;
+    }
 
     const whatsappNumber = p.contact_number || '';
     const whatsappMessage = encodeURIComponent(`Hello, I am interested in your product: ${p.stone_name}.\nCompany: ${p.factory_name || '-'}\nPrice: ₹${p.price || '-'} per ${p.price_unit || '-'}`);
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+    
     const emailAddress = p.email || 'info@example.com';
     const emailSubject = encodeURIComponent(`Inquiry about ${p.stone_name}`);
     const emailBody = encodeURIComponent(`Hello,\n\nI am interested in your product:\n\nStone Name: ${p.stone_name}\nCompany: ${p.factory_name || '-'}\nType: ${p.type || '-'}\nColor: ${p.color || '-'}\nPrice: ₹${p.price || '-'} per ${p.price_unit || '-'}\nAddress: ${p.address || '-'}\n\nPlease provide more details.\n\nThanks.`);
     const gmailLink = `mailto:${emailAddress}?subject=${emailSubject}&body=${emailBody}`;
 
-    card.innerHTML=`${imagesHtml}
+    card.innerHTML = `${imagesHtml}
       <h3>${p.stone_name || 'Stone Name'}</h3>
       <p><strong>Company:</strong> ${p.factory_name || '-'}</p>
-      <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
       <p><strong>Type:</strong> ${p.type || '-'}</p>
       <p><strong>Color:</strong> ${p.color || '-'}</p>
       <p><strong>Price:</strong> ₹${p.price || '-'} per ${p.price_unit || '-'}</p>
-      <p><strong>Address:</strong> ${p.address || '-'}</p>
-      <p><strong>Contact Number:</strong> <a href="${whatsappLink}" target="_blank">${whatsappNumber}</a></p>
-      <p><strong>Email:</strong> <a href="${gmailLink}" target="_blank">${emailAddress}</a></p>
-      <div style="margin-top:10px; display:flex; justify-content:center; gap:10px;">
-        <a href="${whatsappLink}" target="_blank"><button style="background:#25D366;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">WhatsApp</button></a>
-        <a href="${gmailLink}" target="_blank"><button style="background:#D44638;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">Email</button></a>
+      <div style="margin-top:15px; display:flex; justify-content:center; gap:10px;">
+        <a href="${whatsappLink}" target="_blank"><button style="background:#25D366;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.9rem;">WhatsApp</button></a>
+        <a href="${gmailLink}" target="_blank"><button style="background:#D44638;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.9rem;">Email</button></a>
       </div>`;
     productGrid.appendChild(card);
   });
@@ -382,64 +624,149 @@ filterBtn.addEventListener('click', ()=>{
   });
   renderProducts(filtered);
 });
+
 clearBtn.addEventListener('click', ()=>{
   filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
   renderProducts(products);
 });
 
-/* ===== Image Modal with Details ===== */
+/* ===== UPDATED Image Modal with Full Image Display ===== */
 const imageModal = document.getElementById('image-modal');
 const modalImg = document.getElementById('modal-img');
 const closeBtn = document.querySelector('#image-modal .close-btn');
 const prevBtn = document.querySelector('#image-modal .prev-btn');
 const nextBtn = document.querySelector('#image-modal .next-btn');
+const imageCounter = document.getElementById('image-counter');
+const imageLoading = document.getElementById('image-loading');
 
+// Detail elements
 const modalStoneName = document.getElementById('modal-stone-name');
 const modalCompany = document.getElementById('modal-company');
 const modalSubcat = document.getElementById('modal-subcat');
 const modalType = document.getElementById('modal-type');
 const modalColor = document.getElementById('modal-color');
 const modalPrice = document.getElementById('modal-price');
+const modalUnit = document.getElementById('modal-unit');
 const modalAddress = document.getElementById('modal-address');
-const modalWhatsapp = document.getElementById('modal-whatsapp');
-const modalEmail = document.getElementById('modal-email');
-const modalDescription = document.getElementById('modal-description');
+const modalContact = document.getElementById('modal-contact');
+const modalEmailText = document.getElementById('modal-email-text');
+const modalDescText = document.getElementById('modal-desc-text');
+const modalWhatsappBtn = document.getElementById('modal-whatsapp-btn');
+const modalEmailBtn = document.getElementById('modal-email-btn');
 
-let currentProductIndex=0;
-let currentImageIndex=0;
+let currentProductIndex = 0;
+let currentImageIndex = 0;
 
-window.openImageModal=(prodIdx,imgIdx)=>{
-  currentProductIndex=prodIdx; currentImageIndex=imgIdx;
+// Show loading when image is loading
+function showLoading() {
+  imageLoading.style.display = 'flex';
+  modalImg.style.display = 'none';
+}
+
+function hideLoading() {
+  imageLoading.style.display = 'none';
+  modalImg.style.display = 'block';
+}
+
+window.openImageModal = (prodIdx, imgIdx) => {
+  currentProductIndex = prodIdx;
+  currentImageIndex = imgIdx;
   const p = products[currentProductIndex];
-  modalImg.src = p.images[currentImageIndex];
-  modalStoneName.textContent = p.stone_name || '-';
-  modalCompany.textContent = p.factory_name || '-';
-  modalSubcat.textContent = p.sub_category || '-';
-  modalType.textContent = p.type || '-';
-  modalColor.textContent = p.color || '-';
-  modalPrice.textContent = p.price || '-';
-  modalAddress.textContent = p.address || '-';
-  modalDescription.textContent = p.description || '';
-  const whatsappLink = `https://wa.me/${p.contact_number || ''}?text=${encodeURIComponent(`Hello, I'm interested in ${p.stone_name}`)}`;
+  
+  showLoading();
+  
+  // Preload image for better user experience
+  const img = new Image();
+  img.onload = () => {
+    modalImg.src = p.images[currentImageIndex];
+    hideLoading();
+  };
+  img.onerror = () => {
+    modalImg.src = 'stone-placeholder.png';
+    hideLoading();
+  };
+  img.src = p.images[currentImageIndex];
+  
+  // Update details
+  modalStoneName.textContent = p.stone_name || 'Stone Name';
+  modalCompany.textContent = p.factory_name || 'Not specified';
+  modalSubcat.textContent = p.sub_category || 'Not specified';
+  modalType.textContent = p.type || 'Not specified';
+  modalColor.textContent = p.color || 'Not specified';
+  modalPrice.textContent = p.price || 'Not specified';
+  modalUnit.textContent = p.price_unit || 'unit';
+  modalAddress.textContent = p.address || 'Not specified';
+  modalContact.textContent = p.contact_number || 'Not specified';
+  modalEmailText.textContent = p.email || 'Not specified';
+  modalDescText.textContent = p.description || 'No description available';
+  
+  // Update contact links
+  const whatsappMessage = encodeURIComponent(`Hello, I am interested in your product: ${p.stone_name}`);
+  const whatsappLink = `https://wa.me/${p.contact_number || ''}?text=${whatsappMessage}`;
   const emailLink = `mailto:${p.email || 'info@example.com'}?subject=${encodeURIComponent(`Inquiry about ${p.stone_name}`)}`;
-  modalWhatsapp.href = whatsappLink; modalEmail.href=emailLink;
-  imageModal.style.display='flex';
+  
+  modalWhatsappBtn.onclick = () => window.open(whatsappLink, '_blank');
+  modalEmailBtn.onclick = () => window.open(emailLink, '_blank');
+  
+  // Update image counter
+  updateImageCounter();
+  
+  // Show modal
+  imageModal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
 };
 
-closeBtn.addEventListener('click', ()=>{ imageModal.style.display='none'; });
-imageModal.addEventListener('click', e=>{ if(e.target === imageModal) imageModal.style.display='none'; });
-prevBtn.addEventListener('click', ()=>{ 
-  const imgs = products[currentProductIndex].images;
-  currentImageIndex = (currentImageIndex-1+imgs.length)%imgs.length;
-  modalImg.src = imgs[currentImageIndex];
-});
-nextBtn.addEventListener('click', ()=>{ 
-  const imgs = products[currentProductIndex].images;
-  currentImageIndex = (currentImageIndex+1)%imgs.length;
-  modalImg.src = imgs[currentImageIndex];
+function updateImageCounter() {
+  const totalImages = products[currentProductIndex].images.length;
+  imageCounter.textContent = `${currentImageIndex + 1} / ${totalImages}`;
+}
+
+// Event listeners for modal navigation
+closeBtn.addEventListener('click', () => {
+  imageModal.style.display = 'none';
+  document.body.style.overflow = 'auto';
 });
 
-window.onload=loadProducts;
+prevBtn.addEventListener('click', () => {
+  const imgs = products[currentProductIndex].images;
+  currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
+  showLoading();
+  modalImg.src = imgs[currentImageIndex];
+  updateImageCounter();
+});
+
+nextBtn.addEventListener('click', () => {
+  const imgs = products[currentProductIndex].images;
+  currentImageIndex = (currentImageIndex + 1) % imgs.length;
+  showLoading();
+  modalImg.src = imgs[currentImageIndex];
+  updateImageCounter();
+});
+
+// Close modal when clicking on background
+imageModal.addEventListener('click', (e) => {
+  if (e.target === imageModal) {
+    imageModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (imageModal.style.display === 'block') {
+    if (e.key === 'ArrowLeft') prevBtn.click();
+    if (e.key === 'ArrowRight') nextBtn.click();
+    if (e.key === 'Escape') closeBtn.click();
+  }
+});
+
+// Handle image load errors
+modalImg.addEventListener('error', () => {
+  modalImg.src = 'stone-placeholder.png';
+  hideLoading();
+});
+
+window.onload = loadProducts;
 </script>
 </body>
 </html>
