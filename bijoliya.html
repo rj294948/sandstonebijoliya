@@ -152,6 +152,7 @@ footer a{color:white;text-decoration:none;}
 
 <div class="banner">Discover Natural Stones of Bijoliya</div>
 
+<!-- ===== Filter Updated: Category Box Removed ===== -->
 <div class="filter-container">
   <select id="filter-factory"><option value="">All Factories</option></select>
   <select id="filter-subcat"><option value="">All Sub-categories</option></select>
@@ -341,37 +342,19 @@ function renderProducts(list){
     const card = document.createElement('div'); card.className='card';
     let imagesHtml='';
     if(p.images && p.images.length>0){
-      imagesHtml+=`<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},0)">`;
-      if(p.images.length>1){ imagesHtml+=`<div class="thumbnails">`; p.images.forEach((img,idx)=>{ imagesHtml+=`<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; }); imagesHtml+=`</div>`; }
-    } else { imagesHtml=`<img src="stone-placeholder.png" alt="${p.stone_name}">`; }
-
-    const whatsappNumber = p.contact_number || '';
-    const whatsappMessage = encodeURIComponent(`Hello, I am interested in your product: ${p.stone_name}.\nCompany: ${p.factory_name || '-'}\nPrice: ₹${p.price || '-'} per ${p.price_unit || '-'}`);
-    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-    const emailAddress = p.email || 'info@example.com';
-    const emailSubject = encodeURIComponent(`Inquiry about ${p.stone_name}`);
-    const emailBody = encodeURIComponent(`Hello,\n\nI am interested in your product:\n\nStone Name: ${p.stone_name}\nCompany: ${p.factory_name || '-'}\nType: ${p.type || '-'}\nColor: ${p.color || '-'}\nPrice: ₹${p.price || '-'} per ${p.price_unit || '-'}\nAddress: ${p.address || '-'}\n\nPlease provide more details.\n\nThanks.`);
-    const gmailLink = `mailto:${emailAddress}?subject=${emailSubject}&body=${emailBody}`;
-
-    card.innerHTML=`${imagesHtml}
-      <h3>${p.stone_name || 'Stone Name'}</h3>
-      <p><strong>Company:</strong> ${p.factory_name || '-'}</p>
-      <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
-      <p><strong>Type:</strong> ${p.type || '-'}</p>
-      <p><strong>Color:</strong> ${p.color || '-'}</p>
-      <p><strong>Price:</strong> ₹${p.price || '-'} per ${p.price_unit || '-'}</p>
-      <p><strong>Address:</strong> ${p.address || '-'}</p>
-      <p><strong>Contact Number:</strong> <a href="${whatsappLink}" target="_blank">${whatsappNumber}</a></p>
-      <p><strong>Email:</strong> <a href="${gmailLink}" target="_blank">${emailAddress}</a></p>
-      <div style="margin-top:10px; display:flex; justify-content:center; gap:10px;">
-        <a href="${whatsappLink}" target="_blank"><button style="background:#25D366;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">WhatsApp</button></a>
-        <a href="${gmailLink}" target="_blank"><button style="background:#D44638;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">Email</button></a>
-      </div>`;
+      imagesHtml+=`<img src="${p.images[0]}" alt="${p.name}" class="main-img" onclick="openImageModal('${p.images[0]}','${p.name}','${p.factory_name}','${p.sub_category}','${p.type}','${p.color}','${p.price}','${p.address}','${p.whatsapp}','${p.email}','${p.description}')">`;
+      if(p.images.length>1){
+        imagesHtml+=`<div class="thumbnails">`;
+        p.images.forEach(img=> imagesHtml+=`<img src="${img}" onclick="openImageModal('${img}','${p.name}','${p.factory_name}','${p.sub_category}','${p.type}','${p.color}','${p.price}','${p.address}','${p.whatsapp}','${p.email}','${p.description}')">`);
+        imagesHtml+=`</div>`;
+      }
+    }
+    card.innerHTML = `<h3>${p.name}</h3>`+imagesHtml+`<p>Price: ₹${p.price}</p>`;
     productGrid.appendChild(card);
   });
 }
 
-/* ===== Filter Logic ===== */
+/* ===== Filter Logic (Category Removed) ===== */
 filterBtn.addEventListener('click', ()=>{
   const filtered = products.filter(p=>{
     return (!filterFactory.value || (p.factory_name && p.factory_name === filterFactory.value)) &&
@@ -382,19 +365,16 @@ filterBtn.addEventListener('click', ()=>{
   });
   renderProducts(filtered);
 });
+
 clearBtn.addEventListener('click', ()=>{
   filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
   renderProducts(products);
 });
 
-/* ===== Image Modal with Details ===== */
+/* ===== Image Modal Functions ===== */
 const imageModal = document.getElementById('image-modal');
 const modalImg = document.getElementById('modal-img');
-const closeBtn = document.querySelector('#image-modal .close-btn');
-const prevBtn = document.querySelector('#image-modal .prev-btn');
-const nextBtn = document.querySelector('#image-modal .next-btn');
-
-const modalStoneName = document.getElementById('modal-stone-name');
+const modalName = document.getElementById('modal-stone-name');
 const modalCompany = document.getElementById('modal-company');
 const modalSubcat = document.getElementById('modal-subcat');
 const modalType = document.getElementById('modal-type');
@@ -403,43 +383,19 @@ const modalPrice = document.getElementById('modal-price');
 const modalAddress = document.getElementById('modal-address');
 const modalWhatsapp = document.getElementById('modal-whatsapp');
 const modalEmail = document.getElementById('modal-email');
-const modalDescription = document.getElementById('modal-description');
+const modalDesc = document.getElementById('modal-description');
 
-let currentProductIndex=0;
-let currentImageIndex=0;
-
-window.openImageModal=(prodIdx,imgIdx)=>{
-  currentProductIndex=prodIdx; currentImageIndex=imgIdx;
-  const p = products[currentProductIndex];
-  modalImg.src = p.images[currentImageIndex];
-  modalStoneName.textContent = p.stone_name || '-';
-  modalCompany.textContent = p.factory_name || '-';
-  modalSubcat.textContent = p.sub_category || '-';
-  modalType.textContent = p.type || '-';
-  modalColor.textContent = p.color || '-';
-  modalPrice.textContent = p.price || '-';
-  modalAddress.textContent = p.address || '-';
-  modalDescription.textContent = p.description || '';
-  const whatsappLink = `https://wa.me/${p.contact_number || ''}?text=${encodeURIComponent(`Hello, I'm interested in ${p.stone_name}`)}`;
-  const emailLink = `mailto:${p.email || 'info@example.com'}?subject=${encodeURIComponent(`Inquiry about ${p.stone_name}`)}`;
-  modalWhatsapp.href = whatsappLink; modalEmail.href=emailLink;
+function openImageModal(img,name,company,subcat,type,color,price,address,whatsapp,email,desc){
+  modalImg.src=img; modalName.textContent=name; modalCompany.textContent=company;
+  modalSubcat.textContent=subcat; modalType.textContent=type; modalColor.textContent=color;
+  modalPrice.textContent=price; modalAddress.textContent=address;
+  modalWhatsapp.href=`https://wa.me/${whatsapp}`; modalEmail.href=`mailto:${email}`; modalDesc.textContent=desc;
   imageModal.style.display='flex';
-};
+}
+document.querySelector('#image-modal .close-btn').addEventListener('click',()=>imageModal.style.display='none');
 
-closeBtn.addEventListener('click', ()=>{ imageModal.style.display='none'; });
-imageModal.addEventListener('click', e=>{ if(e.target === imageModal) imageModal.style.display='none'; });
-prevBtn.addEventListener('click', ()=>{ 
-  const imgs = products[currentProductIndex].images;
-  currentImageIndex = (currentImageIndex-1+imgs.length)%imgs.length;
-  modalImg.src = imgs[currentImageIndex];
-});
-nextBtn.addEventListener('click', ()=>{ 
-  const imgs = products[currentProductIndex].images;
-  currentImageIndex = (currentImageIndex+1)%imgs.length;
-  modalImg.src = imgs[currentImageIndex];
-});
-
-window.onload=loadProducts;
+/* ===== Load ===== */
+loadProducts();
 </script>
 </body>
 </html>
