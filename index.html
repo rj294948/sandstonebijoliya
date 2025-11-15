@@ -18,32 +18,32 @@ nav {
   display: flex; 
   justify-content: center; 
   gap: 4px; 
-  background: #f8f9fa;  /* Off-white background */
+  background: #f8f9fa;
   padding: 12px 15px; 
   flex-wrap: nowrap; 
   overflow-x: auto; 
   white-space: nowrap; 
   border-bottom: 2px solid #c7a97b;
   position: relative;
-  z-index: 100;
+  z-index: 1000; /* Increased z-index */
 }
 
 nav a { 
   text-decoration: none; 
-  color: #2c3e50;  /* Dark text color */
+  color: #2c3e50;
   font-weight: 600; 
   font-size: 0.85rem; 
   padding: 8px 16px; 
   border-radius: 6px; 
   transition: all 0.3s ease; 
-  background: #ffffff;  /* White background */
+  background: #ffffff;
   border: 1px solid #e0e0e0;
   flex-shrink: 0; 
 }
 
 nav a:hover { 
-  background: #c7a97b;  /* Your site's brown color */
-  color: #ffffff;  /* White text on hover */
+  background: #c7a97b;
+  color: #ffffff;
   border-color: #c7a97b;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(199, 169, 123, 0.3);
@@ -58,21 +58,22 @@ nav a:hover {
 /* Dropdown Button */
 .dropbtn { 
   text-decoration: none; 
-  color: #2c3e50; 
+  color: #2c3e50;
   font-weight: 600; 
   font-size: 0.85rem; 
   padding: 8px 16px; 
   border-radius: 6px; 
   transition: all 0.3s ease; 
-  background: #ffffff; 
+  background: #ffffff;
   border: 1px solid #e0e0e0;
   cursor: pointer;
   flex-shrink: 0;
 }
 
-.dropbtn:hover { 
-  background: #c7a97b; 
-  color: #ffffff; 
+.dropbtn:hover,
+.dropbtn.active { 
+  background: #c7a97b;
+  color: #ffffff;
   border-color: #c7a97b;
 }
 
@@ -84,11 +85,16 @@ nav a:hover {
   min-width: 180px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
   border-radius: 8px;
-  z-index: 1000;
+  z-index: 1001; /* Higher than nav */
   top: 100%;
   left: 0;
   margin-top: 5px;
   border: 1px solid #e0e0e0;
+  animation: fadeIn 0.3s ease;
+}
+
+.dropdown-content.show {
+  display: block;
 }
 
 .dropdown-content a {
@@ -111,9 +117,10 @@ nav a:hover {
   color: #ffffff;
 }
 
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
-  display: block;
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Scrollbar styling */
@@ -284,8 +291,8 @@ footer a{color:white;text-decoration:none;}
   
   <!-- More Dropdown -->
   <div class="dropdown">
-    <a href="javascript:void(0)" class="dropbtn">More ▾</a>
-    <div class="dropdown-content">
+    <a href="javascript:void(0)" class="dropbtn" id="more-btn">More ▾</a>
+    <div class="dropdown-content" id="more-dropdown">
       <a href="about.html">About Us</a>
       <a href="contact.html">Contact</a>
       <a href="privacy.html">Privacy Policy</a>
@@ -293,6 +300,40 @@ footer a{color:white;text-decoration:none;}
     </div>
   </div>
 </nav>
+<script> // Dropdown functionality
+const moreBtn = document.getElementById('more-btn');
+const moreDropdown = document.getElementById('more-dropdown');
+
+// Toggle dropdown on More button click
+moreBtn.addEventListener('click', function(e) {
+  e.stopPropagation();
+  moreDropdown.classList.toggle('show');
+  moreBtn.classList.toggle('active');
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.dropdown')) {
+    moreDropdown.classList.remove('show');
+    moreBtn.classList.remove('active');
+  }
+});
+
+// Close dropdown when clicking on dropdown items
+moreDropdown.addEventListener('click', function(e) {
+  if (e.target.tagName === 'A') {
+    moreDropdown.classList.remove('show');
+    moreBtn.classList.remove('active');
+  }
+});
+
+// Close dropdown on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    moreDropdown.classList.remove('show');
+    moreBtn.classList.remove('active');
+  }
+}); </script>
 <div class="banner">Discover Natural Stones of Rajasthan</div>
 
 <!-- ===== Filter Section with Category ===== -->
