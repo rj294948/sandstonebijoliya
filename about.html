@@ -1,219 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact | Rajasthan SandStone Hub</title>
-  <meta name="description" content="Get in touch with Rajasthan SandStone Hub for sandstone factory listings, collaborations, and product inquiries in Bijoliya, Rajasthan.">
-  <meta name="keywords" content="Bijoliya Sandstone, Rajasthan Stone, Contact, RJ Services, Sandstone Factory">
-  <meta name="author" content="RJ Services">
-  <meta name="robots" content="index, follow">
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3b/Sandstone_icon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us - Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone-stone.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== Modal ===== */
+.modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
+.modal-content {background:white; padding:25px; border-radius:12px; width:350px; position:relative;}
+.modal-content h2 {text-align:center; color:#c7a97b; margin-bottom:15px;}
+.modal-content input, .modal-content select {width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;}
+.modal-content button {width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px;}
+.modal-content button:hover {background:#b38c5f;}
+.modal-close {position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;}
+.modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
+.feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
 
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8089328615109878" crossorigin="anonymous"></script>
+/* ===== Header ===== */
+body {margin:0; font-family:Arial, sans-serif;}
+header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
+header h1 {font-size:1.5rem; cursor:pointer; display:flex; align-items:center; gap:10px;}
+header h1 img {height:40px; border-radius:5px;}
+header div button {margin-left:5px;}
 
-  <style>
-    /* === Global Styles === */
-    body {
-      font-family: "Segoe UI", Arial, sans-serif;
-      margin: 0;
-      background: #fff8f0;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+/* ===== Navigation ===== */
+nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px; flex-wrap:wrap;}
+nav a{text-decoration:none;color:#333;font-weight:600;}
 
-    /* === Header === */
-    header {
-      background: linear-gradient(135deg, #c49a6c, #a67b5b);
-      color: white;
-      text-align: center;
-      padding: 25px 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
+/* ===== Content Section ===== */
+.content-section {max-width:1200px; margin:30px auto; padding:20px;}
+.content-section h2 {color:#c7a97b; text-align:center; margin-bottom:30px;}
+.about-grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-top:40px;}
+.about-card {background:white; padding:25px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); text-align:center;}
+.about-card h3 {color:#c7a97b; margin-bottom:15px;}
+.about-card p {line-height:1.6; color:#555;}
 
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: 0.5px;
-    }
-
-    header p {
-      font-size: 15px;
-      margin-top: 5px;
-      opacity: 0.9;
-    }
-
-    /* === Navigation === */
-    nav {
-      background: #a67b5b;
-      padding: 10px 0;
-      text-align: center;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 12px;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-
-    nav a:hover,
-    nav a.active {
-      color: #ffe6cc;
-      text-decoration: underline;
-    }
-
-    /* === Main Section === */
-    section {
-      flex: 1;
-      max-width: 700px;
-      margin: 40px auto;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      padding: 35px 25px;
-      text-align: center;
-    }
-
-    section h2 {
-      color: #a67b5b;
-      font-size: 22px;
-      margin-bottom: 10px;
-    }
-
-    section p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #444;
-    }
-
-    section a {
-      color: #c49a6c;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    section a:hover {
-      text-decoration: underline;
-    }
-
-    /* === Buttons === */
-    .contact-btns {
-      margin-top: 25px;
-    }
-
-    .contact-btns a {
-      display: inline-block;
-      margin: 10px;
-      background: #c49a6c;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
-      transition: 0.3s;
-      font-weight: 600;
-    }
-
-    .contact-btns a:hover {
-      background: #a67b5b;
-    }
-
-    /* === Ad Section === */
-    .ad-container {
-      text-align: center;
-      margin: 30px auto;
-      max-width: 700px;
-    }
-
-    /* === Footer === */
-    footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 18px 10px;
-      margin-top: auto;
-      font-size: 14px;
-    }
-
-    footer a {
-      color: #f1d3b2;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    footer span {
-      color: #c49a6c;
-      font-weight: bold;
-    }
-
-    /* === Responsive === */
-    @media (max-width: 600px) {
-      header h1 { font-size: 22px; }
-      section { margin: 20px; padding: 25px; }
-      nav a { display: block; margin: 8px 0; }
-      .contact-btns a { width: 90%; }
-    }
-  </style>
+/* ===== Footer ===== */
+footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
+footer a{color:white;text-decoration:none;}
+</style>
 </head>
-
 <body>
 
-  <!-- Header -->
-  <header>
-    <h1>📞 Contact Rajasthan SandStone Hub</h1>
-    <p>Your trusted partner for sandstone factories & business collaborations in Rajasthan</p>
-  </header>
+<header>
+  <h1><img src="stone.png" alt="Logo">Rajasthan Stones</h1>
+  <div>
+    <button id="home-btn" onclick="window.location='index.html'">Home</button>
+    <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
+    <button id="btn-open-signin">Sign In</button>
+    <button id="btn-open-signup">Sign Up</button>
+    <button id="btn-google-signin">Sign In with Gmail</button>
+    <button id="btn-signout" style="display:none;">Sign Out</button>
+    <button id="btn-post" style="display:none;"><a href="admin.html">Post Product</a></button>
+  </div>
+</header>
 
-  <!-- Navigation -->
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="products.html">Products</a>
-    <a href="about.html">About</a>
-    <a href="add-sample.html">Add Sample</a>
-    <a href="contact.html" class="active">Contact</a>
-    <a href="terms.html">Terms</a>
-    <a href="privacy.html">Privacy Policy</a>
-  </nav>
+<nav>
+  <a href="sandstone.html">Sand Stone</a>
+  <a href="kota.html">Kota Stone</a>
+  <a href="granite.html">Granite</a>
+  <a href="marble.html">Marble</a>
+  <a href="bijoliya.html">Bijoliya</a>
+  <a href="dholpur.html">Dholpur</a>
+  <a href="tiles.html">Tiles</a>
+  <a href="mandana.html">Mandana</a>
+  <a href="other-stones.html">Other Stones</a>
+  <a href="factories.html">Factories</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Privacy Policy</a>
+  <a href="terms.html">Terms & Conditions</a>
+</nav>
 
-  <!-- Contact Section -->
-  <section>
-    <h2>Let’s Connect & Grow Together</h2>
-    <p>Looking to list your sandstone factory, collaborate, or have a business inquiry?  
-    We’re here to assist you with the best visibility and partnership opportunities.</p>
-
-    <p><b>Email:</b> <a href="mailto:ravijain236129@gmail.com">ravijain236129@gmail.com</a></p>
-    <p><b>Phone:</b> <a href="tel:+917737740207">+91 7737740207</a></p>
-
-    <div class="contact-btns">
-      <a href="https://wa.me/917737740207" target="_blank">💬 Chat on WhatsApp</a>
-      <a href="mailto:ravijain236129@gmail.com">📧 Send Email</a>
-    </div>
-  </section>
-
-  <!-- Google AdSense Placement -->
-  <div class="ad-container">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-8089328615109878"
-         data-ad-slot="1234567890"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<div class="content-section">
+  <h2>About Rajasthan SandStone Hub</h2>
+  
+  <div style="text-align:center; max-width:800px; margin:0 auto;">
+    <p style="font-size:1.1rem; line-height:1.8; color:#555; margin-bottom:30px;">
+      Welcome to Rajasthan SandStone Hub - your premier destination for authentic, high-quality natural stones from Rajasthan. 
+      We bridge the gap between stone manufacturers and customers, providing a seamless platform to discover, compare, and purchase 
+      the finest stones directly from trusted factories.
+    </p>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    © 2025 <span>Rajasthan SandStone Hub</span> | Powered by <a href="#">RJ Services</a><br>
-    <a href="privacy.html">Privacy Policy</a> | 
-    <a href="terms.html">Terms</a> | 
-    <a href="about.html">About</a>
-  </footer>
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>Our Mission</h3>
+      <p>To revolutionize the stone industry by creating a transparent, efficient marketplace that connects genuine buyers with reputable stone manufacturers across Rajasthan.</p>
+    </div>
+    
+    <div class="about-card">
+      <h3>Our Vision</h3>
+      <p>To become the most trusted digital platform for natural stones, promoting Rajasthan's rich stone heritage globally while ensuring fair trade practices.</p>
+    </div>
+    
+    <div class="about-card">
+      <h3>Why Choose Us?</h3>
+      <p>Direct factory connections, verified quality, competitive pricing, extensive variety, and dedicated customer support make us your ideal stone sourcing partner.</p>
+    </div>
+  </div>
 
+  <div style="margin-top:50px; background:#f9f9f9; padding:30px; border-radius:10px;">
+    <h3 style="color:#c7a97b; text-align:center; margin-bottom:20px;">Our Stone Categories</h3>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; text-align:center;">
+      <div style="padding:15px; background:white; border-radius:8px;">
+        <strong>Sand Stone</strong>
+      </div>
+      <div style="padding:15px; background:white; border-radius:8px;">
+        <strong>Kota Stone</strong>
+      </div>
+      <div style="padding:15px; background:white; border-radius:8px;">
+        <strong>Granite</strong>
+      </div>
+      <div style="padding:15px; background:white; border-radius:8px;">
+        <strong>Marble</strong>
+      </div>
+      <div style="padding:15px; background:white; border-radius:8px;">
+        <strong>Bijoliya Stone</strong>
+      </div>
+      <div style="padding:15px; background:white; border-radius:8px;">
+        <strong>Dholpur Stone</strong>
+      </div>
+      <div style="padding:15px; background:white; border-radius:8px;">
+        <strong>Tiles</strong>
+      </div>
+      <div style="padding:15px; background:white; border-radius:8px;">
+        <strong>Mandana Stone</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+  <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
+</footer>
+
+<!-- ===== Sign In Modal ===== -->
+<div class="modal" id="signin-modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2>Sign In</h2>
+    <input type="email" id="signin-email" placeholder="Email">
+    <input type="password" id="signin-password" placeholder="Password">
+    <button id="signin-btn">Sign In</button>
+    <div style="text-align:center;margin:10px 0;">OR</div>
+    <button id="modal-google-signin" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
+      <img src="download.png" alt="Google" style="width:20px; height:20px;"> Sign In with Google
+    </button>
+    <div class="feedback" id="signin-feedback"></div>
+    <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
+  </div>
+</div>
+
+<!-- ===== Sign Up Modal ===== -->
+<div class="modal" id="signup-modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2>Create Account</h2>
+    <input type="text" id="signup-name" placeholder="Full Name">
+    <input type="email" id="signup-email" placeholder="Email">
+    <input type="password" id="signup-password" placeholder="Password">
+    <input type="text" id="signup-phone" placeholder="Phone Number">
+    <button id="signup-btn">Sign Up</button>
+    <div class="feedback" id="signup-feedback"></div>
+    <a href="#" onclick="openModal('signin-modal'); closeModal('signup-modal')">Already have an account? Sign In</a>
+  </div>
+</div>
+
+<script type="module">
+// ===== Firebase Imports =====
+import { auth } from './firebase-config.js';
+import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+/* ===== Modal Functions ===== */
+function openModal(id){ document.getElementById(id).style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+document.querySelectorAll('.modal-close').forEach(btn=>{ btn.addEventListener('click', ()=>{ btn.closest('.modal').style.display='none'; }); });
+document.addEventListener('keydown', (e)=>{ if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); } });
+
+/* ===== Header Buttons & Auth ===== */
+const btnOpenSignin = document.getElementById('btn-open-signin');
+const btnOpenSignup = document.getElementById('btn-open-signup');
+const btnGoogleSignin = document.getElementById('btn-google-signin');
+const btnSignOut = document.getElementById('btn-signout');
+const btnPost = document.getElementById('btn-post');
+const historyBtn = document.getElementById('history-btn');
+btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
+btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
+
+const provider = new GoogleAuthProvider();
+document.getElementById('modal-google-signin').addEventListener('click', async ()=>{
+  try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); closeModal('signin-modal'); }
+  catch(err){ alert(err.message); }
+});
+btnGoogleSignin.addEventListener('click', async ()=>{ try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); } catch(err){ alert(err.message); } });
+btnSignOut.addEventListener('click', async ()=>{ await signOut(auth); alert('Signed out successfully'); });
+
+const signinBtn = document.getElementById('signin-btn');
+const signinFeedback = document.getElementById('signin-feedback');
+signinBtn.addEventListener('click', async ()=>{
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value.trim();
+  signinFeedback.textContent='';
+  try{ await signInWithEmailAndPassword(auth,email,password);
+       signinFeedback.style.color='green'; signinFeedback.textContent='✅ Signed in successfully!';
+       closeModal('signin-modal');
+  }catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent='❌ '+err.message; }
+});
+
+const signupBtn = document.getElementById('signup-btn');
+const signupFeedback = document.getElementById('signup-feedback');
+signupBtn.addEventListener('click', async ()=>{
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  signupFeedback.textContent='';
+  try{
+    const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
+    signupFeedback.style.color='green'; signupFeedback.textContent='✅ Account created successfully!';
+    closeModal('signup-modal');
+  }catch(err){ signupFeedback.style.color='red'; signupFeedback.textContent='❌ '+err.message; }
+});
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    btnOpenSignin.style.display='none'; btnOpenSignup.style.display='none'; btnGoogleSignin.style.display='none';
+    btnSignOut.style.display='inline-block'; btnPost.style.display='inline-block'; historyBtn.style.display='inline-block';
+  }else{
+    btnOpenSignin.style.display='inline-block'; btnOpenSignup.style.display='inline-block'; btnGoogleSignin.style.display='inline-block';
+    btnSignOut.style.display='none'; btnPost.style.display='none'; historyBtn.style.display='none';
+  }
+});
+</script>
 </body>
 </html>
