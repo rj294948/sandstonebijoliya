@@ -39,35 +39,124 @@ nav a{text-decoration:none;color:#333;font-weight:600;}
 footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
 footer a{color:white;text-decoration:none;}
 
-/* ===== Modal ===== */
-.modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
-.modal-content {background:white; padding:25px; border-radius:12px; width:350px; position:relative;}
-.modal-content h2 {text-align:center; color:#c7a97b; margin-bottom:15px;}
-.modal-content input, .modal-content select {width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;}
-.modal-content button {width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px;}
-.modal-content button:hover {background:#b38c5f;}
-.modal-close {position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;}
-.modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
-.feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
-
-/* ===== Image Modal ===== */
-#image-modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:2000;}
-#image-modal img {
-  width: 100%;           /* Modal ke width ke hisaab se fit */
-  height: auto;          /* Image apni height ke hisaab se auto-adjust */
-  border-radius: 12px;   /* Smooth rounded corners */
-  object-fit: contain;   /* Image FULL dikhayi degi, crop bilkul nahi */
-  background: #f2f2f2;   /* Light background for premium look */
-  padding: 8px;          /* Image ke around spacing */
-  margin-bottom: 12px;   /* Neeche thoda gap */
+/* ===== Modal (PROMPT STYLE) ===== */
+#image-modal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter: blur(3px);
+  justify-content:center;
+  align-items:center;
+  z-index:2000;
+  padding:20px;
+  box-sizing:border-box;
 }
 
-#image-modal .close-btn, #image-modal .prev-btn, #image-modal .next-btn {
-  position:absolute; top:50%; transform:translateY(-50%); font-size:2rem; color:white; background:rgba(0,0,0,0.4); border:none; padding:10px; border-radius:5px; cursor:pointer;
+/* popup box */
+.prompt-popup {
+  width:100%;
+  max-width:980px;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 18px 60px rgba(0,0,0,0.35);
+  display:flex;
+  gap:20px;
+  overflow:hidden;
+  align-items:flex-start;
+  padding:18px;
+  position:relative;
 }
-#image-modal .close-btn {top:10%; right:5%;}
-#image-modal .prev-btn {left:5%;}
-#image-modal .next-btn {right:5%;}
+
+/* left: image area */
+.prompt-popup .image-area {
+  flex:1 1 56%;
+  min-width:260px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:center;
+}
+
+/* image */
+.prompt-popup img {
+  width:100%;
+  height:auto;
+  max-height:68vh;
+  object-fit:contain;
+  border-radius:10px;
+  background:#f6f6f6;
+  padding:8px;
+}
+
+/* nav arrows (inside popup, but absolute) */
+.prompt-popup .prev-btn,
+.prompt-popup .next-btn {
+  position: absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,0.45);
+  color:#fff;
+  border:none;
+  padding:10px 12px;
+  font-size:22px;
+  border-radius:8px;
+  cursor:pointer;
+  z-index:5;
+}
+.prompt-popup .prev-btn { left:12px; }
+.prompt-popup .next-btn { right:12px; }
+
+/* right: details area */
+.prompt-popup .details-area {
+  width:360px;
+  max-width:42%;
+  min-width:220px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+/* close button */
+.prompt-popup .close-btn {
+  position:absolute;
+  top:12px;
+  right:12px;
+  background:transparent;
+  border:none;
+  font-size:26px;
+  cursor:pointer;
+  color:#333;
+}
+
+/* details styling */
+.details-area h2 { margin:0; color:#c7a97b; font-size:20px; }
+.details-area p { margin:6px 0; color:#222; line-height:1.4; font-size:14px; }
+.details-area .meta { font-weight:600; color:#444; }
+.details-area .desc { color:#555; font-size:13px; max-height:22vh; overflow:auto; padding-right:6px; }
+
+/* actions */
+.details-area .actions { display:flex; gap:10px; margin-top:8px; }
+.details-area .actions a {
+  text-decoration:none;
+  display:inline-block;
+  padding:10px 12px;
+  border-radius:8px;
+  font-weight:700;
+}
+.details-area .actions a.whatsapp { background:#25D366; color:white; }
+.details-area .actions a.email { background:#D44638; color:white; }
+
+/* small info row */
+.details-area .info-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+
+/* responsive */
+@media (max-width:900px){
+  .prompt-popup { flex-direction:column; max-width:760px; padding:14px; }
+  .prompt-popup .details-area { width:100%; max-width:100%; }
+  .prompt-popup .prev-btn, .prompt-popup .next-btn { left:8px; right:8px; }
+}
 </style>
 </head>
 <body>
@@ -140,10 +229,11 @@ footer a{color:white;text-decoration:none;}
 </section>
 
 <footer>
-  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services |
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
+<!-- Signin / Signup modals remain unchanged -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
@@ -174,11 +264,43 @@ footer a{color:white;text-decoration:none;}
   </div>
 </div>
 
+<!-- ===== PROMPT-STYLE IMAGE + DETAILS POPUP (REPLACED) ===== -->
 <div id="image-modal">
-  <button class="prev-btn">&#10094;</button>
-  <img id="modal-img" src="">
-  <button class="next-btn">&#10095;</button>
-  <button class="close-btn">&times;</button>
+  <div class="prompt-popup" role="dialog" aria-modal="true">
+    <button class="prev-btn" aria-label="Previous image">&#10094;</button>
+
+    <div class="image-area">
+      <img id="modal-image" src="" alt="Stone Image">
+    </div>
+
+    <div class="details-area">
+      <button class="close-btn" aria-label="Close">&times;</button>
+      <h2 id="modal-title">Stone Name</h2>
+
+      <div class="info-row">
+        <p class="meta">Price: <span id="modal-price">-</span></p>
+        <p class="meta">Unit: <span id="modal-unit">-</span></p>
+      </div>
+
+      <p class="meta">Company: <span id="modal-company">-</span></p>
+      <p class="meta">Sub-category: <span id="modal-subcat">-</span></p>
+      <p class="meta">Type: <span id="modal-type">-</span></p>
+      <p class="meta">Color: <span id="modal-color">-</span></p>
+      <p class="meta">Address: <span id="modal-address">-</span></p>
+
+      <div class="desc">
+        <strong>Description:</strong>
+        <p id="modal-description" style="margin:6px 0 0 0;"></p>
+      </div>
+
+      <div class="actions">
+        <a id="modal-whatsapp" class="whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+        <a id="modal-email" class="email" target="_blank" rel="noopener">Email</a>
+      </div>
+    </div>
+
+    <button class="next-btn" aria-label="Next image">&#10095;</button>
+  </div>
 </div>
 
 <script type="module">
@@ -353,30 +475,86 @@ function renderProducts(list){
   });
 }
 
-
-/* ===== Image Modal ===== */
+/* ===== PROMPT-STYLE Image Modal Logic ===== */
 let currentProductIndex = 0;
 let currentImageIndex = 0;
+
 const imageModal = document.getElementById('image-modal');
-const modalImg = document.getElementById('modal-img');
+const promptPopup = document.querySelector('#image-modal .prompt-popup');
+const modalImage = document.getElementById('modal-image');
+const modalTitle = document.getElementById('modal-title');
+const modalPrice = document.getElementById('modal-price');
+const modalUnit = document.getElementById('modal-unit');
+const modalCompany = document.getElementById('modal-company');
+const modalSubcat = document.getElementById('modal-subcat');
+const modalType = document.getElementById('modal-type');
+const modalColor = document.getElementById('modal-color');
+const modalAddress = document.getElementById('modal-address');
+const modalDescription = document.getElementById('modal-description');
+const modalWhatsapp = document.getElementById('modal-whatsapp');
+const modalEmail = document.getElementById('modal-email');
+const prevBtn = document.querySelector('#image-modal .prev-btn');
+const nextBtn = document.querySelector('#image-modal .next-btn');
+const closeBtn = document.querySelector('#image-modal .close-btn');
 
 window.openImageModal = function(productIndex, imageIndex){
+  // set indices
   currentProductIndex = productIndex;
   currentImageIndex = imageIndex;
-  modalImg.src = products[productIndex].images[imageIndex];
-  imageModal.style.display = 'flex';
-}
 
-document.querySelector('#image-modal .close-btn').addEventListener('click', ()=>{ imageModal.style.display='none'; });
-document.querySelector('#image-modal .prev-btn').addEventListener('click', ()=>{
-  const imgs = products[currentProductIndex].images;
-  currentImageIndex = (currentImageIndex-1+imgs.length)%imgs.length;
-  modalImg.src = imgs[currentImageIndex];
+  const p = products[currentProductIndex];
+  if(!p) return;
+
+  const imgSrc = (p.images && p.images[currentImageIndex]) ? p.images[currentImageIndex] : (p.images && p.images[0]) || 'stone-placeholder.png';
+  modalImage.src = imgSrc;
+
+  // fill details (guard undefined)
+  modalTitle.textContent = p.stone_name || '-';
+  modalPrice.textContent = (p.price !== undefined && p.price !== null) ? `₹${p.price}` : '-';
+  modalUnit.textContent = p.price_unit || '-';
+  modalCompany.textContent = p.factory_name || '-';
+  modalSubcat.textContent = p.sub_category || '-';
+  modalType.textContent = p.type || '-';
+  modalColor.textContent = p.color || '-';
+  modalAddress.textContent = p.address || '-';
+  modalDescription.textContent = p.description || '';
+
+  // whatsapp & email links
+  const waNumber = p.contact_number || '';
+  const waText = encodeURIComponent(`Hello, I'm interested in ${p.stone_name || 'this product'}. Price: ${p.price || '-'} ${p.price_unit || ''}`);
+  modalWhatsapp.href = `https://wa.me/${waNumber}?text=${waText}`;
+  const mailTo = `mailto:${p.email || 'info@example.com'}?subject=${encodeURIComponent('Inquiry about '+(p.stone_name||''))}&body=${encodeURIComponent('I am interested in '+(p.stone_name||'') + '\\n\\nPlease share more details.')}`;
+  modalEmail.href = mailTo;
+
+  // show modal
+  imageModal.style.display = 'flex';
+  // focus for accessibility
+  closeBtn.focus();
+};
+
+// prev / next handlers
+prevBtn.addEventListener('click', ()=>{
+  const imgs = products[currentProductIndex].images || [];
+  if(imgs.length === 0) return;
+  currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
+  modalImage.src = imgs[currentImageIndex];
 });
-document.querySelector('#image-modal .next-btn').addEventListener('click', ()=>{
-  const imgs = products[currentProductIndex].images;
-  currentImageIndex = (currentImageIndex+1)%imgs.length;
-  modalImg.src = imgs[currentImageIndex];
+nextBtn.addEventListener('click', ()=>{
+  const imgs = products[currentProductIndex].images || [];
+  if(imgs.length === 0) return;
+  currentImageIndex = (currentImageIndex + 1) % imgs.length;
+  modalImage.src = imgs[currentImageIndex];
+});
+
+// close handlers (button + click outside + escape)
+closeBtn.addEventListener('click', ()=>{ imageModal.style.display = 'none'; });
+imageModal.addEventListener('click', (e)=>{
+  if(e.target === imageModal) imageModal.style.display = 'none';
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape') imageModal.style.display = 'none';
+  if(e.key === 'ArrowLeft' && imageModal.style.display === 'flex') prevBtn.click();
+  if(e.key === 'ArrowRight' && imageModal.style.display === 'flex') nextBtn.click();
 });
 
 /* ===== Filtering ===== */
