@@ -96,14 +96,47 @@ footer a{color:white;text-decoration:none;}
 <div class="banner">Discover Natural Stones of Bijoliya</div>
 
 <div class="filter-container">
-  <select id="filter-company"><option value="">All Companies</option></select>
-  <select id="filter-subcat"><option value="">All Sub-categories</option></select>
-  <select id="filter-type"><option value="">All Types</option></select>
-  <select id="filter-color"><option value="">All Colors</option></select>
-  <select id="filter-price"><option value="">Max Price</option></select>
-  <button id="filter-btn">Apply</button>
-  <button id="clear-filter-btn">Clear</button>
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <label for="filter-company">Company Name</label>
+    <select id="filter-company">
+      <option value="">All</option>
+    </select>
+  </div>
+
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <label for="filter-subcat">Sub-category</label>
+    <select id="filter-subcat">
+      <option value="">All</option>
+    </select>
+  </div>
+
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <label for="filter-type">Type</label>
+    <select id="filter-type">
+      <option value="">All</option>
+    </select>
+  </div>
+
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <label for="filter-color">Color</label>
+    <select id="filter-color">
+      <option value="">All</option>
+    </select>
+  </div>
+
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <label for="filter-price">Max Price (₹)</label>
+    <select id="filter-price">
+      <option value="">Up to ₹</option>
+    </select>
+  </div>
+
+  <div style="display:flex; flex-direction:column; justify-content:flex-end;">
+    <button id="filter-btn">Apply</button>
+    <button id="clear-filter-btn">Clear</button>
+  </div>
 </div>
+
 
 <section>
   <h2>Available Products</h2>
