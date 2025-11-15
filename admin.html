@@ -201,7 +201,23 @@ footer a {color:white; text-decoration:none;}
 </div>
 
 <script type="module">
-import { auth, db, collection, addDoc, doc, updateDoc, signOut, serverTimestamp, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from './firebase-config.js';
+// Corrected Imports - Using your firebase-config.js exports
+import { 
+  db, 
+  auth, 
+  googleProvider,
+  collection, 
+  addDoc, 
+  doc, 
+  updateDoc, 
+  serverTimestamp,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile
+} from './firebase-config.js';
 
 /* ===== Modal Functions ===== */
 function openModal(id){ document.getElementById(id).style.display='flex'; }
@@ -219,10 +235,10 @@ const historyBtn = document.getElementById('history-btn');
 btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
 btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
 
-const provider = new GoogleAuthProvider();
+// Use googleProvider (instance) instead of creating new GoogleAuthProvider
 document.getElementById('modal-google-signin').addEventListener('click', async ()=>{
   try{ 
-    const result = await signInWithPopup(auth, provider); 
+    const result = await signInWithPopup(auth, googleProvider); 
     alert(`Signed in as ${result.user.displayName}`); 
     closeModal('signin-modal'); 
   } catch(err){ alert(err.message); }
@@ -230,7 +246,7 @@ document.getElementById('modal-google-signin').addEventListener('click', async (
 
 btnGoogleSignin.addEventListener('click', async ()=>{ 
   try{ 
-    const result = await signInWithPopup(auth, provider); 
+    const result = await signInWithPopup(auth, googleProvider); 
     alert(`Signed in as ${result.user.displayName}`); 
   } catch(err){ alert(err.message); } 
 });
@@ -238,7 +254,7 @@ btnGoogleSignin.addEventListener('click', async ()=>{
 btnSignOut.addEventListener('click', async ()=>{ 
   await signOut(auth); 
   alert('Signed out successfully!');
-  window.location.href = 'index.html'; // Home page redirect
+  window.location.href = 'index.html';
 });
 
 const signinBtn = document.getElementById('signin-btn');
