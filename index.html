@@ -87,15 +87,10 @@ footer a{color:white;text-decoration:none;}
 
 <div class="banner">Discover Natural Stones of Rajasthan</div>
 
-<!-- ===== Filter Section with Category ===== -->
 <div class="filter-container">
   <div class="filter-box">
-    <label>Category</label>
-    <select id="filter-category"><option value="">All Categories</option></select>
-  </div>
-  <div class="filter-box">
-    <label>Factory</label>
-    <select id="filter-factory"><option value="">All Factories</option></select>
+    <label>Company Name</label>
+    <select id="filter-factory"><option value="">All Companies</option></select>
   </div>
   <div class="filter-box">
     <label>Sub-category</label>
@@ -133,7 +128,6 @@ footer a{color:white;text-decoration:none;}
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<!-- ===== Sign In Modal ===== -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
@@ -150,7 +144,6 @@ footer a{color:white;text-decoration:none;}
   </div>
 </div>
 
-<!-- ===== Sign Up Modal ===== -->
 <div class="modal" id="signup-modal">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
@@ -165,7 +158,6 @@ footer a{color:white;text-decoration:none;}
   </div>
 </div>
 
-<!-- ===== Image Modal ===== -->
 <div id="image-modal">
   <button class="prev-btn">&#10094;</button>
   <img id="modal-img" src="">
@@ -251,7 +243,6 @@ const productGrid = document.getElementById('product-grid');
 let products = [];
 
 /* ===== Dropdown Options ===== */
-const filterCategory = document.getElementById('filter-category');
 const filterFactory = document.getElementById('filter-factory');
 const filterSubcat = document.getElementById('filter-subcat');
 const filterType = document.getElementById('filter-type');
@@ -269,16 +260,14 @@ async function loadProducts(){
 }
 
 function populateFilterOptions(){
-  const categories = new Set(), factories = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), units = new Set();
+  const factories = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), units = new Set();
   products.forEach(p=>{
-    if(p.category) categories.add(p.category);
     if(p.factory_name) factories.add(p.factory_name);
     if(p.sub_category) subcats.add(p.sub_category);
     if(p.type) types.add(p.type);
     if(p.color) colors.add(p.color);
     if(p.price_unit) units.add(p.price_unit);
   });
-  addOptions(filterCategory, Array.from(categories));
   addOptions(filterFactory, Array.from(factories));
   addOptions(filterSubcat, Array.from(subcats));
   addOptions(filterType, Array.from(types));
@@ -290,7 +279,7 @@ function addOptions(select, arr){
   arr.forEach(val=>{ select.innerHTML += `<option value="${val}">${val}</option>`; });
 }
 
-/* ===== Render Products ===== */
+/* ===== Render Products (FULL UPDATE) ===== */
 function renderProducts(list){
   productGrid.innerHTML = '';
   list.forEach(p=>{
@@ -302,74 +291,89 @@ function renderProducts(list){
       imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},0)">`;
       if(p.images.length>1){
         imagesHtml += `<div class="thumbnails">`;
-        p.images.forEach((img,idx)=>{ imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; });
+        p.images.forEach((img,idx)=>{ 
+          imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; 
+        });
         imagesHtml += `</div>`;
       }
-    } else { imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`; }
+    } else { 
+      imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`; 
+    }
 
     const whatsappLink = `https://wa.me/${p.contact_number}?text=Hello, I am interested in ${p.stone_name}`;
+    const gmailLink = `mailto:${p.contact_email || ''}?subject=Inquiry about ${p.stone_name}&body=Hello`;
+
+    let createdDate = '';
+    if(p.created_at){
+      if(typeof p.created_at.toDate === 'function'){
+        createdDate = p.created_at.toDate().toLocaleString();
+      } else if(p.created_at.seconds){
+               createdDate = new Date(p.created_at.seconds * 1000).toLocaleString();
+      }
+    }
+
     card.innerHTML = `
       ${imagesHtml}
-      <h3>${p.stone_name}</h3>
-      <p>Factory: ${p.factory_name || '-'}</p>
-      <p>Category: ${p.category || '-'}</p>
-      <p>Sub-category: ${p.sub_category || '-'}</p>
-      <p>Type: ${p.type || '-'}</p>
-      <p>Color: ${p.color || '-'}</p>
-      <p>Price: ₹${p.price || '-'} per ${p.price_unit || '-'}</p>
-      <a href="${whatsappLink}" target="_blank"><button style="background:#25D366;color:white;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;">WhatsApp</button></a>
+      <h3>${p.stone_name || 'Stone Name'}</h3>
+      <p><strong>Company:</strong> ${p.factory_name || '-'}</p>
+      <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
+      <p><strong>Type:</strong> ${p.type || '-'}</p>
+      <p><strong>Color:</strong> ${p.color || '-'}</p>
+      <p><strong>Price:</strong> ₹${p.price || '-'} per ${p.price_unit || '-'}</p>
+      <p><strong>Address:</strong> ${p.address || '-'}</p>
+      <p><strong>Created At:</strong> ${createdDate}</p>
+      <div style="margin-top:10px; display:flex; justify-content:center; gap:10px;">
+        <a href="${whatsappLink}" target="_blank"><button style="background:#25D366;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">WhatsApp</button></a>
+        <a href="${gmailLink}" target="_blank"><button style="background:#D44638;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">Email</button></a>
+      </div>
+      <p style="margin-top:10px;">${p.description || ''}</p>
     `;
     productGrid.appendChild(card);
   });
 }
 
-/* ===== Filter Functionality ===== */
-filterBtn.addEventListener('click', ()=>{
-  const filtered = products.filter(p=>{
-    return (!filterCategory.value || p.category === filterCategory.value)
-        && (!filterFactory.value || p.factory_name === filterFactory.value)
-        && (!filterSubcat.value || p.sub_category === filterSubcat.value)
-        && (!filterType.value || p.type === filterType.value)
-        && (!filterColor.value || p.color === filterColor.value)
-        && (!filterUnit.value || p.price_unit === filterUnit.value)
-        && (!filterPrice.value || p.price <= parseFloat(filterPrice.value));
-  });
-  renderProducts(filtered);
-});
-
-clearBtn.addEventListener('click', ()=>{
-  filterCategory.value=''; filterFactory.value=''; filterSubcat.value=''; filterType.value='';
-  filterColor.value=''; filterUnit.value=''; filterPrice.value='';
-  renderProducts(products);
-});
-
 /* ===== Image Modal ===== */
-let currentProductIndex=0, currentImageIndex=0;
+let currentProductIndex = 0;
+let currentImageIndex = 0;
 const imageModal = document.getElementById('image-modal');
 const modalImg = document.getElementById('modal-img');
-const closeBtn = document.querySelector('#image-modal .close-btn');
-const prevBtn = document.querySelector('#image-modal .prev-btn');
-const nextBtn = document.querySelector('#image-modal .next-btn');
 
-window.openImageModal = function(prodIdx,imgIdx){
-  currentProductIndex=prodIdx; currentImageIndex=imgIdx;
-  const imgUrl = products[prodIdx].images[imgIdx];
-  modalImg.src=imgUrl;
-  imageModal.style.display='flex';
+window.openImageModal = function(productIndex, imageIndex){
+  currentProductIndex = productIndex;
+  currentImageIndex = imageIndex;
+  modalImg.src = products[productIndex].images[imageIndex];
+  imageModal.style.display = 'flex';
 }
 
-closeBtn.onclick = ()=> imageModal.style.display='none';
-prevBtn.onclick = ()=>{
+document.querySelector('#image-modal .close-btn').addEventListener('click', ()=>{ imageModal.style.display='none'; });
+document.querySelector('#image-modal .prev-btn').addEventListener('click', ()=>{
   const imgs = products[currentProductIndex].images;
   currentImageIndex = (currentImageIndex-1+imgs.length)%imgs.length;
   modalImg.src = imgs[currentImageIndex];
-};
-nextBtn.onclick = ()=>{
+});
+document.querySelector('#image-modal .next-btn').addEventListener('click', ()=>{
   const imgs = products[currentProductIndex].images;
   currentImageIndex = (currentImageIndex+1)%imgs.length;
   modalImg.src = imgs[currentImageIndex];
-};
+});
 
+/* ===== Filtering ===== */
+filterBtn.addEventListener('click', ()=>{
+  let filtered = products;
+  if(filterFactory.value) filtered = filtered.filter(p=>p.factory_name===filterFactory.value);
+  if(filterSubcat.value) filtered = filtered.filter(p=>p.sub_category===filterSubcat.value);
+  if(filterType.value) filtered = filtered.filter(p=>p.type===filterType.value);
+  if(filterColor.value) filtered = filtered.filter(p=>p.color===filterColor.value);
+  if(filterUnit.value) filtered = filtered.filter(p=>p.price_unit===filterUnit.value);
+  if(filterPrice.value) filtered = filtered.filter(p=>p.price<=parseFloat(filterPrice.value));
+  renderProducts(filtered);
+});
+clearBtn.addEventListener('click', ()=>{
+  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterUnit.value=''; filterPrice.value='';
+  renderProducts(products);
+});
+
+/* ===== Load products initially ===== */
 loadProducts();
 </script>
 </body>
