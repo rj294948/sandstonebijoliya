@@ -16,47 +16,29 @@ header div button, header div a {margin-left:5px;}
 nav {
 display: flex;
 justify-content: center;
-gap: 2px;
-background: #1a1a1a;
-padding: 0;
+gap: 8px;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+padding: 16px 20px;
 flex-wrap: wrap;
-border-bottom: 1px solid #333;
+box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
 }
 
 nav a {
 text-decoration: none;
-color: #b8b8b8;
-font-weight: 500;
+color: #ffffff;
+font-weight: 600;
 font-size: 0.95rem;
-padding: 20px 30px;
+padding: 12px 22px;
+border-radius: 8px;
 transition: all 0.3s ease;
-position: relative;
-border-right: 1px solid #333;
-}
-
-nav a:last-child {
-border-right: none;
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
 }
 
 nav a:hover {
-color: #ffffff;
-background: #c7a97b;
-}
-
-nav a::before {
-content: '';
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 2px;
-background: #c7a97b;
-transform: scaleX(0);
-transition: transform 0.3s ease;
-}
-
-nav a:hover::before {
-transform: scaleX(1);
+background: rgba(255, 255, 255, 0.2);
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(255,255,255,0.2);
 }
 .banner{background:#c7a97b;color:white;text-align:center;padding:30px;font-size:1.5rem;margin-bottom:10px;}
 .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin:20px;}
