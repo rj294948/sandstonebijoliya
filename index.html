@@ -19,7 +19,14 @@ nav a{text-decoration:none;color:#333;font-weight:600;}
 .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin:20px;}
 .card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; background:white;}
 .card:hover{transform:scale(1.02);}
-.card img {width:100%; border-radius:8px; object-fit:cover; max-height:220px; cursor:pointer;}
+.card img {
+  width:100%;
+  height:280px;
+  border-radius:8px;
+  object-fit:contain;   /* full image visible, no crop */
+  background:#f1f1f1;
+  cursor:pointer;
+}
 .card .thumbnails {display:flex; gap:5px; justify-content:center; margin-top:5px;}
 .card .thumbnails img {width:50px; height:50px; object-fit:cover; border-radius:5px; cursor:pointer; transition:0.2s;}
 .card .thumbnails img:hover{border:2px solid #c7a97b;}
