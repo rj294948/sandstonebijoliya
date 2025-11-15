@@ -13,9 +13,121 @@ header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justif
 header h1 {font-size:1.5rem; cursor:pointer; margin:0; display:flex; align-items:center; gap:10px;}
 header h1 img {height:40px; border-radius:5px;}
 header div button, header div a {margin-left:5px;}
-nav { display: flex; justify-content: center; gap: 4px; background: linear-gradient(135deg, #2c3e50, #34495e); padding: 10px 15px; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; border-bottom: 2px solid #c7a97b; }
-nav a { text-decoration: none; color: #ecf0f1; font-weight: 600; font-size: 0.85rem; padding: 8px 14px; border-radius: 4px; transition: all 0.3s ease; background: rgba(255,255,255,0.1); flex-shrink: 0; }
-nav a:hover { background: #c7a97b; color: #2c3e50; }
+/* Dropdown Container */
+.dropdown { position: relative; display: inline-block; }
+
+/* Dropdown Button */
+.dropbtn { 
+  text-decoration: none; 
+  color: #ecf0f1; 
+  font-weight: 600; 
+  font-size: 0.85rem; 
+  padding: 8px 14px; 
+  border-radius: 4px; 
+  transition: all 0.3s ease; 
+  background: rgba(255,255,255,0.1); 
+  border: none; 
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.dropbtn:hover { 
+  background: #c7a97b; 
+  color: #2c3e50; 
+}
+
+/* Dropdown Content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: white;
+  min-width: 180px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  z-index: 1000;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  border: 1px solid #e0e0e0;
+}
+
+.dropdown-content a {
+  color: #2c3e50;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.dropdown-content a:last-child {
+  border-bottom: none;
+}
+
+.dropdown-content a:hover {
+  background: #c7a97b;
+  color: white;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .dropdown-content {
+    position: fixed;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 250px;
+  }
+}
+nav { 
+  display: flex; 
+  justify-content: center; 
+  gap: 4px; 
+  background: linear-gradient(135deg, #2c3e50, #34495e); 
+  padding: 10px 15px; 
+  flex-wrap: nowrap; 
+  overflow-x: auto; 
+  white-space: nowrap; 
+  border-bottom: 2px solid #c7a97b; 
+}
+
+nav a { 
+  text-decoration: none; 
+  color: #ecf0f1; 
+  font-weight: 600; 
+  font-size: 0.85rem; 
+  padding: 8px 14px; 
+  border-radius: 4px; 
+  transition: all 0.3s ease; 
+  background: rgba(255,255,255,0.1); 
+  flex-shrink: 0; 
+}
+
+nav a:hover { 
+  background: #c7a97b; 
+  color: #2c3e50; 
+}
+
+/* Scrollbar styling */
+nav::-webkit-scrollbar {
+  height: 4px;
+}
+
+nav::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.1);
+}
+
+nav::-webkit-scrollbar-thumb {
+  background: #c7a97b;
+  border-radius: 2px;
+}
 .banner{background:#c7a97b;color:white;text-align:center;padding:30px;font-size:1.5rem;margin-bottom:10px;}
 .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin:20px;}
 .card {border:1px solid #ccc; border-radius:10px; padding:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:transform 0.3s; background:white;}
@@ -135,23 +247,29 @@ footer a{color:white;text-decoration:none;}
   </div>
 </header>
 
-<nav>
-  <a href="sandstone.html">Sand Stone</a>
-  <a href="kota.html">Kota Stone</a>
+<<nav>
+  <a href="sandstone.html">Sand&nbsp;Stone</a>
+  <a href="kota.html">Kota&nbsp;Stone</a>
   <a href="granite.html">Granite</a>
   <a href="marble.html">Marble</a>
   <a href="bijoliya.html">Bijoliya</a>
   <a href="dholpur.html">Dholpur</a>
   <a href="tiles.html">Tiles</a>
   <a href="mandana.html">Mandana</a>
-  <a href="other-stones.html">Other Stones</a>
+  <a href="other-stones.html">Other&nbsp;Stones</a>
   <a href="factories.html">Factories</a>
-  <a href="about.html">About Us</a>
-  <a href="contact.html">Contact</a>
-  <a href="privacy.html">Privacy Policy</a>
-  <a href="terms.html">Terms & Conditions</a>
+  
+  <!-- More Dropdown -->
+  <div class="dropdown">
+    <a href="javascript:void(0)" class="dropbtn">More ▾</a>
+    <div class="dropdown-content">
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms & Conditions</a>
+    </div>
+  </div>
 </nav>
-
 <div class="banner">Discover Natural Stones of Rajasthan</div>
 
 <!-- ===== Filter Section with Category ===== -->
