@@ -233,7 +233,6 @@ footer a{color:white;text-decoration:none;}
   <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
 </footer>
 
-<!-- Signin / Signup modals remain unchanged -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <span class="modal-close">&times;</span>
@@ -247,6 +246,21 @@ footer a{color:white;text-decoration:none;}
     </button>
     <div class="feedback" id="signin-feedback"></div>
     <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
+  </div>
+</div>
+
+<!-- ===== Sign Up Modal ===== -->
+<div class="modal" id="signup-modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2>Create Account</h2>
+    <input type="text" id="signup-name" placeholder="Full Name">
+    <input type="email" id="signup-email" placeholder="Email">
+    <input type="password" id="signup-password" placeholder="Password">
+    <input type="text" id="signup-phone" placeholder="Phone Number">
+    <button id="signup-btn">Sign Up</button>
+    <div class="feedback" id="signup-feedback"></div>
+    <a href="#" onclick="openModal('signin-modal'); closeModal('signup-modal')">Already have an account? Sign In</a>
   </div>
 </div>
 
