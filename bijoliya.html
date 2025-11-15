@@ -153,14 +153,40 @@ footer a{color:white;text-decoration:none;}
 <div class="banner">Discover Natural Stones of Bijoliya</div>
 
 <div class="filter-container">
-  <select id="filter-factory"><option value="">All Factories</option></select>
-  <select id="filter-subcat"><option value="">All Sub-categories</option></select>
-  <select id="filter-type"><option value="">All Types</option></select>
-  <select id="filter-color"><option value="">All Colors</option></select>
-  <select id="filter-price"><option value="">Max Price</option></select>
-  <button id="filter-btn">Apply</button>
-  <button id="clear-filter-btn">Clear</button>
+  <div class="filter-box">
+    <label>Category</label>
+    <select id="filter-category"><option value="">All Categories</option></select>
+  </div>
+  <div class="filter-box">
+    <label>Factory</label>
+    <select id="filter-factory"><option value="">All Factories</option></select>
+  </div>
+  <div class="filter-box">
+    <label>Sub-category</label>
+    <select id="filter-subcat"><option value="">All Sub-categories</option></select>
+  </div>
+  <div class="filter-box">
+    <label>Type</label>
+    <select id="filter-type"><option value="">All Types</option></select>
+  </div>
+  <div class="filter-box">
+    <label>Color</label>
+    <select id="filter-color"><option value="">All Colors</option></select>
+  </div>
+  <div class="filter-box">
+    <label>Max Price (₹)</label>
+    <input type="number" id="filter-price" placeholder="Up to ₹">
+  </div>
+  <div class="filter-box">
+    <label>Unit</label>
+    <select id="filter-unit"><option value="">All Units</option></select>
+  </div>
+  <div class="filter-box" style="align-self:flex-end; display:flex; gap:5px;">
+    <button id="filter-btn">Apply</button>
+    <button id="clear-filter-btn">Clear</button>
+  </div>
 </div>
+
 
 <section>
   <h2>Available Products</h2>
