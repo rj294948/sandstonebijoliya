@@ -286,32 +286,35 @@ function renderProducts(list){
     const card = document.createElement('div');
     card.className = 'card';
 
+    // Images
     let imagesHtml = '';
     if(p.images && p.images.length>0){
       imagesHtml += `<img src="${p.images[0]}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},0)">`;
       if(p.images.length>1){
         imagesHtml += `<div class="thumbnails">`;
-        p.images.forEach((img,idx)=>{ 
-          imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; 
-        });
+        p.images.forEach((img,idx)=>{ imagesHtml += `<img src="${img}" alt="${p.stone_name}" onclick="openImageModal(${products.indexOf(p)},${idx})">`; });
         imagesHtml += `</div>`;
       }
-    } else { 
-      imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`; 
-    }
+    } else { imagesHtml = `<img src="stone-placeholder.png" alt="${p.stone_name}">`; }
 
-    const whatsappLink = `https://wa.me/${p.contact_number}?text=Hello, I am interested in ${p.stone_name}`;
-    const gmailLink = `mailto:${p.contact_email || ''}?subject=Inquiry about ${p.stone_name}&body=Hello`;
+    // WhatsApp and Email links
+    const whatsappNumber = p.contact_number || '';
+    const whatsappMessage = encodeURIComponent(`Hello, I am interested in your product: ${p.stone_name}. Could you provide more details?\nCompany: ${p.factory_name || '-'}\nPrice: ₹${p.price || '-'} per ${p.price_unit || '-'}`);
+    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
-    let createdDate = '';
+    const emailAddress = p.email || 'info@example.com'; // agar Firestore me email field nahi hai, default use hoga
+    const emailSubject = encodeURIComponent(`Inquiry about ${p.stone_name}`);
+    const emailBody = encodeURIComponent(`Hello,\n\nI am interested in your product:\n\nStone Name: ${p.stone_name}\nCompany: ${p.factory_name || '-'}\nType: ${p.type || '-'}\nColor: ${p.color || '-'}\nPrice: ₹${p.price || '-'} per ${p.price_unit || '-'}\nAddress: ${p.address || '-'}\n\nPlease provide more details.\n\nThanks.`);
+    const gmailLink = `mailto:${emailAddress}?subject=${emailSubject}&body=${emailBody}`;
+
+    // Created Date
+    let createdDate = '-';
     if(p.created_at){
-      if(typeof p.created_at.toDate === 'function'){
-        createdDate = p.created_at.toDate().toLocaleString();
-      } else if(p.created_at.seconds){
-               createdDate = new Date(p.created_at.seconds * 1000).toLocaleString();
-      }
+      if(typeof p.created_at === 'string') createdDate = new Date(p.created_at).toLocaleString();
+      else if(p.created_at.seconds) createdDate = new Date(p.created_at.seconds*1000).toLocaleString();
     }
 
+    // Card HTML
     card.innerHTML = `
       ${imagesHtml}
       <h3>${p.stone_name || 'Stone Name'}</h3>
@@ -321,16 +324,19 @@ function renderProducts(list){
       <p><strong>Color:</strong> ${p.color || '-'}</p>
       <p><strong>Price:</strong> ₹${p.price || '-'} per ${p.price_unit || '-'}</p>
       <p><strong>Address:</strong> ${p.address || '-'}</p>
+      <p><strong>Contact Number:</strong> <a href="${whatsappLink}" target="_blank">${whatsappNumber}</a></p>
+      <p><strong>Email:</strong> <a href="${gmailLink}" target="_blank">${emailAddress}</a></p>
       <p><strong>Created At:</strong> ${createdDate}</p>
+      <p style="margin-top:10px;">${p.description || ''}</p>
       <div style="margin-top:10px; display:flex; justify-content:center; gap:10px;">
         <a href="${whatsappLink}" target="_blank"><button style="background:#25D366;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">WhatsApp</button></a>
         <a href="${gmailLink}" target="_blank"><button style="background:#D44638;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">Email</button></a>
       </div>
-      <p style="margin-top:10px;">${p.description || ''}</p>
     `;
     productGrid.appendChild(card);
   });
 }
+
 
 /* ===== Image Modal ===== */
 let currentProductIndex = 0;
