@@ -1,183 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact | Bijoliya Sandstone</title>
-  <meta name="description" content="Contact Bijoliya Sandstone for sandstone products, factory listings, and business inquiries in Rajasthan." />
-  <meta name="keywords" content="Bijoliya Sandstone, Rajasthan Stone, Contact, RJ Services, Sandstone Factory" />
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/3b/Sandstone_icon.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us - Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone-stone.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== Modal ===== */
+.modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
+.modal-content {background:white; padding:25px; border-radius:12px; width:350px; position:relative;}
+.modal-content h2 {text-align:center; color:#c7a97b; margin-bottom:15px;}
+.modal-content input, .modal-content select, .modal-content textarea {width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #ccc;}
+.modal-content button {width:100%; padding:12px; border:none; background:#c7a97b; color:white; font-weight:600; border-radius:6px; cursor:pointer; margin-top:5px;}
+.modal-content button:hover {background:#b38c5f;}
+.modal-close {position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; color:#c7a97b;}
+.modal a {text-decoration:none; color:#c7a97b; display:block; text-align:center; margin-top:10px;}
+.feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
 
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      background-color: #fffaf3;
-      color: #333;
-    }
+/* ===== Header ===== */
+body {margin:0; font-family:Arial, sans-serif;}
+header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
+header h1 {font-size:1.5rem; cursor:pointer; display:flex; align-items:center; gap:10px;}
+header h1 img {height:40px; border-radius:5px;}
+header div button {margin-left:5px;}
 
-    /* Header */
-    header {
-      background: linear-gradient(90deg, #d16b2c, #b34700);
-      color: #fff;
-      padding: 18px 0;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
+/* ===== Navigation ===== */
+nav{display:flex;justify-content:center;gap:15px; background:#f3f3f3; padding:10px; flex-wrap:wrap;}
+nav a{text-decoration:none;color:#333;font-weight:600;}
 
-    header h1 {
-      margin: 0;
-      font-size: 26px;
-    }
+/* ===== Contact Section ===== */
+.contact-section {max-width:1200px; margin:30px auto; padding:20px;}
+.contact-section h2 {color:#c7a97b; text-align:center; margin-bottom:30px;}
+.contact-grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:40px; margin-top:30px;}
+.contact-info {background:white; padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+.contact-form {background:white; padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+.contact-item {display:flex; align-items:center; margin-bottom:20px; padding:15px; background:#f9f9f9; border-radius:8px;}
+.contact-item i {font-size:24px; color:#c7a97b; margin-right:15px; width:30px;}
+.contact-item div h4 {margin:0 0 5px 0; color:#c7a97b;}
+.contact-item div p {margin:0; color:#555;}
+.form-group {margin-bottom:20px;}
+.form-group label {display:block; margin-bottom:5px; color:#555; font-weight:600;}
+.form-group input, .form-group textarea {width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-size:1rem;}
+.form-group textarea {height:120px; resize:vertical;}
 
-    header p {
-      margin: 6px 0;
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    nav {
-      margin-top: 10px;
-    }
-
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 12px;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-
-    nav a:hover,
-    nav a.active {
-      color: #ffe6cc;
-      text-decoration: underline;
-    }
-
-    /* Main Section */
-    section {
-      background: #fff;
-      max-width: 700px;
-      margin: 50px auto;
-      padding: 30px 25px;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    section h2 {
-      color: #b34700;
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-
-    section p {
-      font-size: 16px;
-      line-height: 1.6;
-      margin: 10px 0;
-    }
-
-    section a {
-      color: #d16b2c;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    section a:hover {
-      text-decoration: underline;
-    }
-
-    /* Contact Buttons */
-    .contact-btns {
-      margin-top: 25px;
-    }
-
-    .contact-btns a {
-      display: inline-block;
-      background: #d16b2c;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 8px;
-      margin: 10px;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    .contact-btns a:hover {
-      background: #b34700;
-    }
-
-    /* Footer */
-    footer {
-      background: #333;
-      color: #fff;
-      text-align: center;
-      padding: 15px;
-      font-size: 14px;
-      margin-top: 40px;
-    }
-
-    footer a {
-      color: #ffb366;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      section {
-        margin: 20px;
-        padding: 25px;
-      }
-      header h1 {
-        font-size: 22px;
-      }
-    }
-  </style>
+/* ===== Footer ===== */
+footer{background:#333;color:white;text-align:center;padding:15px;margin-top:20px;}
+footer a{color:white;text-decoration:none;}
+</style>
 </head>
-
 <body>
 
-  <!-- Header -->
-  <header>
-    <h1>Bijoliya Sandstone</h1>
-    <p>Rajasthan’s Trusted Sandstone & Factory Directory</p>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="products.html">Products</a>
-      <a href="add-sample.html">Add Sample</a>
-      <a href="about.html">About</a>
-      <a href="contact.html" class="active">Contact</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-    </nav>
-  </header>
+<header>
+  <h1><img src="stone.png" alt="Logo">Rajasthan Stones</h1>
+  <div>
+    <button id="home-btn" onclick="window.location='index.html'">Home</button>
+    <button id="history-btn" style="display:none;" onclick="window.location='history.html'">My History</button>
+    <button id="btn-open-signin">Sign In</button>
+    <button id="btn-open-signup">Sign Up</button>
+    <button id="btn-google-signin">Sign In with Gmail</button>
+    <button id="btn-signout" style="display:none;">Sign Out</button>
+    <button id="btn-post" style="display:none;"><a href="admin.html">Post Product</a></button>
+  </div>
+</header>
 
-  <!-- Contact Section -->
-  <section>
-    <h2>📞 Get in Touch</h2>
-    <p>Want to list your sandstone factory, collaborate, or have any queries?  
-       We’d love to hear from you!</p>
+<nav>
+  <a href="sandstone.html">Sand Stone</a>
+  <a href="kota.html">Kota Stone</a>
+  <a href="granite.html">Granite</a>
+  <a href="marble.html">Marble</a>
+  <a href="bijoliya.html">Bijoliya</a>
+  <a href="dholpur.html">Dholpur</a>
+  <a href="tiles.html">Tiles</a>
+  <a href="mandana.html">Mandana</a>
+  <a href="other-stones.html">Other Stones</a>
+  <a href="factories.html">Factories</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Privacy Policy</a>
+  <a href="terms.html">Terms & Conditions</a>
+</nav>
 
-    <p><b>Email:</b> <a href="mailto:ravijain236129@gmail.com">ravijain236129@gmail.com</a></p>
-    <p><b>Phone:</b> <a href="tel:+917737740207">+91 7737740207</a></p>
-
-    <div class="contact-btns">
-      <a href="https://wa.me/917737740207" target="_blank">💬 WhatsApp Now</a>
-      <a href="mailto:ravijain236129@gmail.com">✉️ Send Email</a>
+<div class="contact-section">
+  <h2>Contact Rajasthan SandStone Hub</h2>
+  
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3 style="color:#c7a97b; margin-bottom:20px;">Get In Touch</h3>
+      
+      <div class="contact-item">
+        <i>📍</i>
+        <div>
+          <h4>Office Address</h4>
+          <p>Rajasthan SandStone Hub<br>Stone Market, Jhalawar Road<br>Kota, Rajasthan 324001</p>
+        </div>
+      </div>
+      
+      <div class="contact-item">
+        <i>📞</i>
+        <div>
+          <h4>Phone Number</h4>
+          <p>+91-9876543210<br>+91-9876543211</p>
+        </div>
+      </div>
+      
+      <div class="contact-item">
+        <i>✉️</i>
+        <div>
+          <h4>Email Address</h4>
+          <p>info@rajasthansandstone.com<br>support@rajasthansandstone.com</p>
+        </div>
+      </div>
+      
+      <div class="contact-item">
+        <i>🕒</i>
+        <div>
+          <h4>Business Hours</h4>
+          <p>Monday - Saturday: 9:00 AM - 7:00 PM<br>Sunday: 10:00 AM - 5:00 PM</p>
+        </div>
+      </div>
     </div>
-  </section>
+    
+    <div class="contact-form">
+      <h3 style="color:#c7a97b; margin-bottom:20px;">Send Us a Message</h3>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Enter your full name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="Enter your phone number">
+        </div>
+        
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" placeholder="Enter message subject" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" placeholder="Enter your message here..." required></textarea>
+        </div>
+        
+        <button type="submit" style="background:#c7a97b; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-size:1rem;">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
 
-  <!-- Footer -->
-  <footer>
-    © 2025 <b>Bijoliya Sandstone</b> | Powered by <a href="#">RJ Services</a><br>
-    <a href="privacy.html">Privacy Policy</a> | 
-    <a href="terms.html">Terms</a> | 
-    <a href="about.html">About</a>
-  </footer>
+<footer>
+  &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+  <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
+</footer>
 
+<!-- ===== Sign In Modal ===== -->
+<div class="modal" id="signin-modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2>Sign In</h2>
+    <input type="email" id="signin-email" placeholder="Email">
+    <input type="password" id="signin-password" placeholder="Password">
+    <button id="signin-btn">Sign In</button>
+    <div style="text-align:center;margin:10px 0;">OR</div>
+    <button id="modal-google-signin" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:8px;">
+      <img src="download.png" alt="Google" style="width:20px; height:20px;"> Sign In with Google
+    </button>
+    <div class="feedback" id="signin-feedback"></div>
+    <a href="#" onclick="openModal('signup-modal'); closeModal('signin-modal')">Don't have an account? Sign Up</a>
+  </div>
+</div>
+
+<!-- ===== Sign Up Modal ===== -->
+<div class="modal" id="signup-modal">
+  <div class="modal-content">
+    <span class="modal-close">&times;</span>
+    <h2>Create Account</h2>
+    <input type="text" id="signup-name" placeholder="Full Name">
+    <input type="email" id="signup-email" placeholder="Email">
+    <input type="password" id="signup-password" placeholder="Password">
+    <input type="text" id="signup-phone" placeholder="Phone Number">
+    <button id="signup-btn">Sign Up</button>
+    <div class="feedback" id="signup-feedback"></div>
+    <a href="#" onclick="openModal('signin-modal'); closeModal('signup-modal')">Already have an account? Sign In</a>
+  </div>
+</div>
+
+<script type="module">
+// ===== Firebase Imports =====
+import { auth } from './firebase-config.js';
+import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+/* ===== Modal Functions ===== */
+function openModal(id){ document.getElementById(id).style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+document.querySelectorAll('.modal-close').forEach(btn=>{ btn.addEventListener('click', ()=>{ btn.closest('.modal').style.display='none'; }); });
+document.addEventListener('keydown', (e)=>{ if(e.key === "Escape"){ document.querySelectorAll('.modal').forEach(modal=> modal.style.display='none'); } });
+
+/* ===== Header Buttons & Auth ===== */
+const btnOpenSignin = document.getElementById('btn-open-signin');
+const btnOpenSignup = document.getElementById('btn-open-signup');
+const btnGoogleSignin = document.getElementById('btn-google-signin');
+const btnSignOut = document.getElementById('btn-signout');
+const btnPost = document.getElementById('btn-post');
+const historyBtn = document.getElementById('history-btn');
+btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
+btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
+
+const provider = new GoogleAuthProvider();
+document.getElementById('modal-google-signin').addEventListener('click', async ()=>{
+  try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); closeModal('signin-modal'); }
+  catch(err){ alert(err.message); }
+});
+btnGoogleSignin.addEventListener('click', async ()=>{ try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); } catch(err){ alert(err.message); } });
+btnSignOut.addEventListener('click', async ()=>{ await signOut(auth); alert('Signed out successfully'); });
+
+const signinBtn = document.getElementById('signin-btn');
+const signinFeedback = document.getElementById('signin-feedback');
+signinBtn.addEventListener('click', async ()=>{
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value.trim();
+  signinFeedback.textContent='';
+  try{ await signInWithEmailAndPassword(auth,email,password);
+       signinFeedback.style.color='green'; signinFeedback.textContent='✅ Signed in successfully!';
+       closeModal('signin-modal');
+  }catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent='❌ '+err.message; }
+});
+
+const signupBtn = document.getElementById('signup-btn');
+const signupFeedback = document.getElementById('signup-feedback');
+signupBtn.addEventListener('click', async ()=>{
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  signupFeedback.textContent='';
+  try{
+    const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
+    signupFeedback.style.color='green'; signupFeedback.textContent='✅ Account created successfully!';
+    closeModal('signup-modal');
+  }catch(err){ signupFeedback.style.color='red'; signupFeedback.textContent='❌ '+err.message; }
+});
+
+onAuthStateChanged(auth,user=>{
+  if(user){
+    btnOpenSignin.style.display='none'; btnOpenSignup.style.display='none'; btnGoogleSignin.style.display='none';
+    btnSignOut.style.display='inline-block'; btnPost.style.display='inline-block'; historyBtn.style.display='inline-block';
+  }else{
+    btnOpenSignin.style.display='inline-block'; btnOpenSignup.style.display='inline-block'; btnGoogleSignin.style.display='inline-block';
+    btnSignOut.style.display='none'; btnPost.style.display='none'; historyBtn.style.display='none';
+  }
+});
+
+// Contact Form Handling
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  alert('Thank you for your message! We will get back to you soon.');
+  this.reset();
+});
+</script>
 </body>
 </html>
