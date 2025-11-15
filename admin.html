@@ -18,29 +18,29 @@
 .feedback {text-align:center; margin-top:8px; font-weight:600; font-size:0.9rem;}
 
 /* ===== Header ===== */
-body {font-family:"Poppins",sans-serif;background:#f5f5f5;margin:0;}
-header {background:#c7a97b;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
-header h1 {font-size:1.5rem;cursor:pointer;display:flex;align-items:center;gap:10px;}
+body {font-family:Arial, sans-serif; background:#f5f5f5; margin:0;}
+header {background:#c7a97b; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
+header h1 {font-size:1.5rem; cursor:pointer; display:flex; align-items:center; gap:10px; margin:0;}
 header h1 img {height:40px; border-radius:5px;}
-header div button {margin-left:5px;}
+header div button {margin-left:5px; padding:8px 15px; border:none; background:white; color:#c7a97b; border-radius:6px; cursor:pointer; font-weight:600;}
 
 /* ===== Navigation ===== */
-nav {display:flex;justify-content:center;gap:15px;background:#f3f3f3;padding:10px;flex-wrap:wrap;}
-nav a {text-decoration:none;color:#333;font-weight:600;}
+nav {display:flex; justify-content:center; gap:15px; background:#f3f3f3; padding:10px; flex-wrap:wrap;}
+nav a {text-decoration:none; color:#333; font-weight:600;}
 
 /* ===== Container ===== */
-.container {padding:20px;max-width:1200px;margin:auto;}
-h2 {color:#444;text-align:center;margin-bottom:20px;}
-form {background:white;padding:30px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.container {padding:20px; max-width:1200px; margin:auto;}
+h2 {color:#444; text-align:center; margin-bottom:20px;}
+form {background:white; padding:30px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1);}
 .form-group {margin-bottom:20px;}
-.form-group label {display:block;margin-bottom:8px;color:#555;font-weight:600;}
-select,input,textarea {width:100%;padding:12px;border-radius:6px;border:1px solid #ccc;font-size:1rem;box-sizing:border-box;}
-button {background:#c7a97b;color:white;font-weight:600;border:none;padding:12px 25px;border-radius:6px;cursor:pointer;font-size:1rem;}
+.form-group label {display:block; margin-bottom:8px; color:#555; font-weight:600;}
+select, input, textarea {width:100%; padding:12px; border-radius:6px; border:1px solid #ccc; font-size:1rem; box-sizing:border-box;}
+button {background:#c7a97b; color:white; font-weight:600; border:none; padding:12px 25px; border-radius:6px; cursor:pointer; font-size:1rem;}
 button:hover {background:#b38c5f;}
-.preview {display:flex;flex-wrap:wrap;gap:10px;margin:15px 0;}
-.preview img {width:140px;height:140px;object-fit:cover;border-radius:8px;border:2px solid #ddd;}
-footer {background:#333;color:white;text-align:center;padding:15px;margin-top:40px;}
-footer a {color:white;text-decoration:none;}
+.preview {display:flex; flex-wrap:wrap; gap:10px; margin:15px 0;}
+.preview img {width:140px; height:140px; object-fit:cover; border-radius:8px; border:2px solid #ddd;}
+footer {background:#333; color:white; text-align:center; padding:15px; margin-top:40px;}
+footer a {color:white; text-decoration:none;}
 </style>
 </head>
 <body>
@@ -54,7 +54,6 @@ footer a {color:white;text-decoration:none;}
     <button id="btn-open-signup">Sign Up</button>
     <button id="btn-google-signin">Sign In with Gmail</button>
     <button id="btn-signout" style="display:none;">Sign Out</button>
-    <button id="btn-post" style="display:none;"><a href="admin.html" style="color:inherit;text-decoration:none;">Post Product</a></button>
   </div>
 </header>
 
@@ -215,18 +214,32 @@ const btnOpenSignin = document.getElementById('btn-open-signin');
 const btnOpenSignup = document.getElementById('btn-open-signup');
 const btnGoogleSignin = document.getElementById('btn-google-signin');
 const btnSignOut = document.getElementById('btn-signout');
-const btnPost = document.getElementById('btn-post');
 const historyBtn = document.getElementById('history-btn');
+
 btnOpenSignin.addEventListener('click', ()=>openModal('signin-modal'));
 btnOpenSignup.addEventListener('click', ()=>openModal('signup-modal'));
 
 const provider = new GoogleAuthProvider();
 document.getElementById('modal-google-signin').addEventListener('click', async ()=>{
-  try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); closeModal('signin-modal'); }
-  catch(err){ alert(err.message); }
+  try{ 
+    const result = await signInWithPopup(auth, provider); 
+    alert(`Signed in as ${result.user.displayName}`); 
+    closeModal('signin-modal'); 
+  } catch(err){ alert(err.message); }
 });
-btnGoogleSignin.addEventListener('click', async ()=>{ try{ const result = await signInWithPopup(auth, provider); alert(`Signed in as ${result.user.displayName}`); } catch(err){ alert(err.message); } });
-btnSignOut.addEventListener('click', async ()=>{ await signOut(auth); alert('Signed out successfully'); });
+
+btnGoogleSignin.addEventListener('click', async ()=>{ 
+  try{ 
+    const result = await signInWithPopup(auth, provider); 
+    alert(`Signed in as ${result.user.displayName}`); 
+  } catch(err){ alert(err.message); } 
+});
+
+btnSignOut.addEventListener('click', async ()=>{ 
+  await signOut(auth); 
+  alert('Signed out successfully!');
+  window.location.href = 'index.html'; // Home page redirect
+});
 
 const signinBtn = document.getElementById('signin-btn');
 const signinFeedback = document.getElementById('signin-feedback');
@@ -234,10 +247,15 @@ signinBtn.addEventListener('click', async ()=>{
   const email = document.getElementById('signin-email').value.trim();
   const password = document.getElementById('signin-password').value.trim();
   signinFeedback.textContent='';
-  try{ await signInWithEmailAndPassword(auth,email,password);
-       signinFeedback.style.color='green'; signinFeedback.textContent='✅ Signed in successfully!';
-       closeModal('signin-modal');
-  }catch(err){ signinFeedback.style.color='red'; signinFeedback.textContent='❌ '+err.message; }
+  try{ 
+    await signInWithEmailAndPassword(auth,email,password);
+    signinFeedback.style.color='green'; 
+    signinFeedback.textContent='✅ Signed in successfully!';
+    closeModal('signin-modal');
+  } catch(err){ 
+    signinFeedback.style.color='red'; 
+    signinFeedback.textContent='❌ '+err.message; 
+  }
 });
 
 const signupBtn = document.getElementById('signup-btn');
@@ -251,18 +269,28 @@ signupBtn.addEventListener('click', async ()=>{
   try{
     const userCredential = await createUserWithEmailAndPassword(auth,email,password);
     await updateProfile(userCredential.user,{displayName:name,phoneNumber:phone});
-    signupFeedback.style.color='green'; signupFeedback.textContent='✅ Account created successfully!';
+    signupFeedback.style.color='green'; 
+    signupFeedback.textContent='✅ Account created successfully!';
     closeModal('signup-modal');
-  }catch(err){ signupFeedback.style.color='red'; signupFeedback.textContent='❌ '+err.message; }
+  } catch(err){ 
+    signupFeedback.style.color='red'; 
+    signupFeedback.textContent='❌ '+err.message; 
+  }
 });
 
 onAuthStateChanged(auth,user=>{
   if(user){
-    btnOpenSignin.style.display='none'; btnOpenSignup.style.display='none'; btnGoogleSignin.style.display='none';
-    btnSignOut.style.display='inline-block'; btnPost.style.display='inline-block'; historyBtn.style.display='inline-block';
-  }else{
-    btnOpenSignin.style.display='inline-block'; btnOpenSignup.style.display='inline-block'; btnGoogleSignin.style.display='inline-block';
-    btnSignOut.style.display='none'; btnPost.style.display='none'; historyBtn.style.display='none';
+    btnOpenSignin.style.display='none'; 
+    btnOpenSignup.style.display='none'; 
+    btnGoogleSignin.style.display='none';
+    btnSignOut.style.display='inline-block'; 
+    historyBtn.style.display='inline-block';
+  } else {
+    btnOpenSignin.style.display='inline-block'; 
+    btnOpenSignup.style.display='inline-block'; 
+    btnGoogleSignin.style.display='inline-block';
+    btnSignOut.style.display='none'; 
+    historyBtn.style.display='none';
   }
 });
 
@@ -291,16 +319,19 @@ imageInput.addEventListener("change", () => {
   });
 });
 
-/* CATEGORY AUTO FILL */
+/* CATEGORY AUTO FILL - CORRECTED */
 document.getElementById("category").addEventListener("change", function () {
-  const val = this.value;
+  const selectedCategory = this.value;
+  const stoneNameInput = document.getElementById("stone_name");
 
-  if (val === "Other Stones") {
-    document.getElementById("stone_name").value = "";
-    document.getElementById("stone_name").readOnly = false;
+  if (selectedCategory === "Other Stones") {
+    stoneNameInput.value = "";
+    stoneNameInput.readOnly = false;
+    stoneNameInput.placeholder = "Enter Stone Name";
   } else {
-    document.getElementById("stone_name").value = val;
-    document.getElementById("stone_name").readOnly = true;
+    stoneNameInput.value = selectedCategory;
+    stoneNameInput.readOnly = true;
+    stoneNameInput.placeholder = "Stone Name";
   }
 });
 
@@ -326,7 +357,7 @@ async function uploadImages() {
   return urls;
 }
 
-/* EDIT MODE */
+/* EDIT MODE - FOR MY HISTORY PAGE */
 window.addEventListener("DOMContentLoaded", () => {
   const editId = localStorage.getItem("editProductId");
   const editData = localStorage.getItem("editProductData");
@@ -337,14 +368,16 @@ window.addEventListener("DOMContentLoaded", () => {
     productIdInput.value = editId;
     form.category.value = p.category || "";
 
+    // Set stone name based on category
     if (p.category === "Other Stones") {
       form.stone_name.readOnly = false;
-      form.stone_name.value = p.stone_name;
+      form.stone_name.value = p.stone_name || "";
     } else {
       form.stone_name.readOnly = true;
-      form.stone_name.value = p.category;
+      form.stone_name.value = p.category || "";
     }
 
+    // Fill other fields
     form.sub_category.value = p.sub_category || "";
     form.type.value = p.type || "";
     form.color.value = p.color || "";
@@ -356,13 +389,18 @@ window.addEventListener("DOMContentLoaded", () => {
     form.factory_name.value = p.factory_name || "";
     form.address.value = p.address || "";
 
+    // Show existing images
     if (p.images && p.images.length) {
+      imagesBase64 = []; // Reset for new uploads
       p.images.forEach(img => {
         preview.innerHTML += `<img src="${img}">`;
+        // For edit mode, we keep original images
+        imagesBase64.push(img);
       });
     }
   }
 
+  // Clear edit data after loading
   localStorage.removeItem("editProductId");
   localStorage.removeItem("editProductData");
 });
@@ -381,7 +419,14 @@ form.onsubmit = async (e) => {
   const user = auth.currentUser;
   if (!user) return alert("Login required");
 
-  const imageUrls = await uploadImages();
+  // Upload new images only if new files are selected
+  let imageUrls = [];
+  if (imagesBase64.length > 0 && typeof imagesBase64[0] === 'string' && imagesBase64[0].startsWith('data:')) {
+    imageUrls = await uploadImages();
+  } else {
+    // If editing and no new images, use existing images
+    imageUrls = imagesBase64;
+  }
 
   const data = {
     category: form.category.value,
@@ -415,6 +460,7 @@ form.onsubmit = async (e) => {
     form.reset();
     preview.innerHTML = "";
     imageInput.value = "";
+    imagesBase64 = [];
     productIdInput.value = "";
 
   } catch (err) {
