@@ -36,11 +36,12 @@ nav a{text-decoration:none;color:#333;font-weight:600;}
 .card:hover{transform:scale(1.02);}
 .card img {
   width:100%;
+  height:280px;
   border-radius:8px;
-  object-fit:cover;
-  max-height:220px;
+  object-fit:contain;   /* full image visible, no crop */
+  background:#f1f1f1;
+  cursor:pointer;
 }
-
 .card .thumbnails {display:flex; gap:5px; justify-content:center; margin-top:5px;}
 .card .thumbnails img {width:50px; height:50px; object-fit:cover; border-radius:5px; cursor:pointer; transition:0.2s;}
 .card .thumbnails img:hover{border:2px solid #c7a97b;}
@@ -84,11 +85,13 @@ footer a{color:white;text-decoration:none;}
 }
 
 #image-modal img {
-  max-width:100%;
-  max-height:auto;
-  border-radius:8px;
-  object-fit:contain;
-  margin-bottom:10px;
+  width: 100%;           /* Modal ke width ke hisaab se fit */
+  height: auto;          /* Image apni height ke hisaab se auto-adjust */
+  border-radius: 12px;   /* Smooth rounded corners */
+  object-fit: contain;   /* Image FULL dikhayi degi, crop bilkul nahi */
+  background: #f2f2f2;   /* Light background for premium look */
+  padding: 8px;          /* Image ke around spacing */
+  margin-bottom: 12px;   /* Neeche thoda gap */
 }
 
 .modal-details {
