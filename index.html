@@ -52,7 +52,15 @@ footer a{color:white;text-decoration:none;}
 
 /* ===== Image Modal ===== */
 #image-modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:2000;}
-#image-modal img { max-width:100%; max-height:auto; border-radius:8px; object-fit:contain; margin-bottom:10px; }
+#image-modal img {
+  width: 100%;           /* Modal ke width ke hisaab se fit */
+  height: auto;          /* Image apni height ke hisaab se auto-adjust */
+  border-radius: 12px;   /* Smooth rounded corners */
+  object-fit: contain;   /* Image FULL dikhayi degi, crop bilkul nahi */
+  background: #f2f2f2;   /* Light background for premium look */
+  padding: 8px;          /* Image ke around spacing */
+  margin-bottom: 12px;   /* Neeche thoda gap */
+}
 
 #image-modal .close-btn, #image-modal .prev-btn, #image-modal .next-btn {
   position:absolute; top:50%; transform:translateY(-50%); font-size:2rem; color:white; background:rgba(0,0,0,0.4); border:none; padding:10px; border-radius:5px; cursor:pointer;
