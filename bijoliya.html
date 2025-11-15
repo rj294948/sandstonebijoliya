@@ -96,7 +96,7 @@ footer a{color:white;text-decoration:none;}
 <div class="banner">Discover Natural Stones of Bijoliya</div>
 
 <div class="filter-container">
-  <select id="filter-factory"><option value="">All Factories</option></select>
+  <select id="filter-company"><option value="">All Companies</option></select>
   <select id="filter-subcat"><option value="">All Sub-categories</option></select>
   <select id="filter-type"><option value="">All Types</option></select>
   <select id="filter-color"><option value="">All Colors</option></select>
@@ -233,7 +233,7 @@ const productGrid = document.getElementById('product-grid');
 let products = [];
 
 /* ===== Dropdown Options ===== */
-const filterFactory = document.getElementById('filter-factory');
+const filterCompany = document.getElementById('filter-company');
 const filterSubcat = document.getElementById('filter-subcat');
 const filterType = document.getElementById('filter-type');
 const filterColor = document.getElementById('filter-color');
@@ -252,15 +252,15 @@ async function loadProducts(){
 
 /* ===== Populate filter dropdowns dynamically ===== */
 function populateFilterOptions(){
-  const factories = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), prices = [];
+  const companies = new Set(), subcats = new Set(), types = new Set(), colors = new Set(), prices = [];
   products.forEach(p=>{
-    if(p.factory_name) factories.add(p.factory_name);
+    if(p.factory_name) companies.add(p.factory_name);
     if(p.sub_category) subcats.add(p.sub_category);
     if(p.type) types.add(p.type);
     if(p.color) colors.add(p.color);
     if(p.price) prices.push(p.price);
   });
-  addOptions(filterFactory, Array.from(factories));
+  addOptions(filterCompany, Array.from(companies));
   addOptions(filterSubcat, Array.from(subcats));
   addOptions(filterType, Array.from(types));
   addOptions(filterColor, Array.from(colors));
@@ -296,12 +296,11 @@ function renderProducts(list){
     card.innerHTML = `
       ${imagesHtml}
       <h3>${p.stone_name}</h3>
-      <p><strong>Category:</strong> ${p.category}</p>
       <p><strong>Sub-category:</strong> ${p.sub_category || '-'}</p>
       <p><strong>Type:</strong> ${p.type || '-'}</p>
       <p><strong>Color:</strong> ${p.color || '-'}</p>
       <p><strong>Price:</strong> ₹${p.price || '-'} / ${p.price_unit || '-'}</p>
-      <p><strong>Factory:</strong> ${p.factory_name}</p>
+      <p><strong>Company Name:</strong> ${p.factory_name}</p>
       <p><strong>Email:</strong> <a href="mailto:${p.email}">${p.email}</a></p>
       <p><a href="https://wa.me/${p.contact_number}" target="_blank">WhatsApp</a> | <a href="tel:${p.contact_number}">Call</a></p>
     `;
@@ -312,7 +311,7 @@ function renderProducts(list){
 /* ===== Filter Logic ===== */
 filterBtn.addEventListener('click', ()=>{
   const filtered = products.filter(p=>{
-    return (!filterFactory.value || (p.factory_name && p.factory_name === filterFactory.value)) &&
+    return (!filterCompany.value || (p.factory_name && p.factory_name === filterCompany.value)) &&
            (!filterSubcat.value || (p.sub_category && p.sub_category === filterSubcat.value)) &&
            (!filterType.value || (p.type && p.type === filterType.value)) &&
            (!filterColor.value || (p.color && p.color === filterColor.value)) &&
@@ -322,41 +321,38 @@ filterBtn.addEventListener('click', ()=>{
 });
 
 clearBtn.addEventListener('click', ()=>{
-  filterFactory.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
+  filterCompany.value=''; filterSubcat.value=''; filterType.value=''; filterColor.value=''; filterPrice.value='';
   renderProducts(products);
 });
 
 /* ===== Image Modal ===== */
-const imageModal = document.getElementById('image-modal');
-const modalImg = document.getElementById('modal-img');
-const closeBtn = document.querySelector('#image-modal .close-btn');
-const prevBtn = document.querySelector('#image-modal .prev-btn');
-const nextBtn = document.querySelector('#image-modal .next-btn');
-
 let currentProductIndex = 0;
 let currentImageIndex = 0;
+const modal = document.getElementById('image-modal');
+const modalImg = document.getElementById('modal-img');
+const closeBtn = modal.querySelector('.close-btn');
+const prevBtn = modal.querySelector('.prev-btn');
+const nextBtn = modal.querySelector('.next-btn');
 
 window.openImageModal = (prodIdx,imgIdx)=>{
-  currentProductIndex = prodIdx;
-  currentImageIndex = imgIdx;
-  modalImg.src = products[currentProductIndex].images[currentImageIndex];
-  imageModal.style.display = 'flex';
+  currentProductIndex = prodIdx; currentImageIndex = imgIdx;
+  modal.style.display='flex'; modalImg.src = products[prodIdx].images[imgIdx];
 };
 
-closeBtn.addEventListener('click', ()=>{ imageModal.style.display='none'; });
-imageModal.addEventListener('click', e=>{ if(e.target === imageModal) imageModal.style.display='none'; });
-prevBtn.addEventListener('click', ()=>{ 
-  const imgs = products[currentProductIndex].images;
-  currentImageIndex = (currentImageIndex-1+imgs.length)%imgs.length;
-  modalImg.src = imgs[currentImageIndex];
+closeBtn.addEventListener('click', ()=>{ modal.style.display='none'; });
+prevBtn.addEventListener('click', ()=>{
+  currentImageIndex--;
+  if(currentImageIndex<0) currentImageIndex = products[currentProductIndex].images.length-1;
+  modalImg.src = products[currentProductIndex].images[currentImageIndex];
 });
-nextBtn.addEventListener('click', ()=>{ 
-  const imgs = products[currentProductIndex].images;
-  currentImageIndex = (currentImageIndex+1)%imgs.length;
-  modalImg.src = imgs[currentImageIndex];
+nextBtn.addEventListener('click', ()=>{
+  currentImageIndex++;
+  if(currentImageIndex>=products[currentProductIndex].images.length) currentImageIndex = 0;
+  modalImg.src = products[currentProductIndex].images[currentImageIndex];
 });
 
-window.onload = loadProducts;
+loadProducts();
 </script>
+
 </body>
 </html>
