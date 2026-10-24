@@ -11,16 +11,12 @@
 <meta name="description" content="Rajasthan's No.1 Sandstone Supplier in Bijoliya. Premium quality Sandstone, Kota Stone, Granite, Marble, Dholpur Stone & Tiles. Best prices with direct factory contact +91-7737740207">
 <meta name="keywords" content="sandstone bijoliya, kota stone supplier, granite dealer, marble stone, dholpur stone, stone supplier rajasthan, building materials, construction stones, natural stones">
 <meta name="robots" content="index, follow">
-<meta name="googlebot" content="index, follow">
 <link rel="canonical" href="https://rj294948.github.io/sandstonebijoliya/index.html">
 <meta property="og:title" content="Rajasthan Sandstone Hub - Premium Stone Supplier">
 <meta property="og:description" content="Premium quality Sandstone, Kota Stone, Granite, Marble from Bijoliya, Rajasthan">
-<meta property="og:image" content="https://rj294948.github.io/sandstonebijoliya/stone.png">
+<meta property="og:image" content="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png">
 <meta property="og:url" content="https://rj294948.github.io/sandstonebijoliya/index.html">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Rajasthan Sandstone Hub">
-<meta name="twitter:description" content="Premium Stone Supplier from Bijoliya">
 <link rel="icon" href="stone.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -62,32 +58,19 @@ body {
 .sidebar {
   width: 250px;
   background: linear-gradient(180deg, #141414 0%, #0d0d0d 100%);
-  color: white;
-  padding: 20px 0;
-  position: fixed;
-  height: 100vh;
-  overflow-y: auto;
-  box-shadow: 2px 0 20px rgba(0,0,0,0.8);
-  z-index: 1000;
-  transition: var(--transition);
-  transform: translateX(0);
-  border-right: 1px solid var(--border-subtle);
+  color: white; padding: 20px 0; position: fixed; height: 100vh;
+  overflow-y: auto; box-shadow: 2px 0 20px rgba(0,0,0,0.8);
+  z-index: 1000; transition: var(--transition);
+  transform: translateX(0); border-right: 1px solid var(--border-subtle);
 }
 .sidebar.collapsed { width: 70px; }
 .sidebar.hidden { transform: translateX(-100%); }
 .sidebar-header {
-  padding: 0 20px 20px;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 0 20px 20px; border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
 }
 .sidebar.collapsed .sidebar-header { justify-content: center; padding: 0 10px 20px; }
-.sidebar-logo {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 1.2rem; font-weight: 700; color: var(--primary);
-}
+.sidebar-logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 700; color: var(--primary); }
 .sidebar.collapsed .sidebar-logo span { display: none; }
 .sidebar-logo img { height: 40px; border-radius: 5px; }
 .sidebar-toggle {
@@ -115,9 +98,137 @@ body {
 .main-content {
   flex: 1; margin-left: 250px; min-height: 100vh;
   display: flex; flex-direction: column; transition: var(--transition);
+  position: relative;
 }
 .main-content.expanded { margin-left: 70px; }
 .main-content.full-width { margin-left: 0; }
+
+/* ===== RIGHT SIDE FLOATING IMAGE SLIDER ===== */
+.right-image-slider {
+  position: fixed;
+  right: 20px;
+  top: 90px;
+  width: 200px;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  pointer-events: none;
+}
+
+.right-slider-card {
+  pointer-events: auto;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7), 0 0 20px rgba(199,169,123,0.1);
+  border: 1px solid var(--border-subtle);
+  transition: var(--transition);
+}
+
+.right-slider-card:hover {
+  transform: translateX(-5px);
+  border-color: rgba(199,169,123,0.4);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(199,169,123,0.2);
+}
+
+.right-slider-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #000;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.right-slider-header .live-dot {
+  width: 8px;
+  height: 8px;
+  background: #000;
+  border-radius: 50%;
+  animation: livePulse 1.5s infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.3); }
+}
+
+.right-slider-image-box {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  background: #050505;
+}
+
+.right-slider-image-box img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: scale(1.05);
+}
+
+.right-slider-image-box img.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.right-slider-footer {
+  padding: 8px 12px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.right-slider-footer .image-name {
+  color: var(--primary);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
+}
+
+.right-slider-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.right-slider-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: var(--transition);
+}
+
+.right-slider-dots span.active {
+  background: var(--primary);
+  width: 12px;
+  border-radius: 3px;
+}
+
+/* Hide on smaller screens to avoid overlap */
+@media (max-width: 1400px) {
+  .right-image-slider { width: 180px; }
+  .right-slider-image-box { height: 200px; }
+}
+@media (max-width: 1200px) {
+  .right-image-slider { display: none; }
+}
 
 /* ===== Top Header ===== */
 .top-header {
@@ -228,6 +339,7 @@ body {
   transition: var(--transition);
   border: 1px solid var(--border-subtle);
   position: relative;
+  cursor: pointer;
 }
 .product-card:hover {
   transform: translateY(-8px);
@@ -260,7 +372,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  cursor: zoom-in;
+  cursor: pointer;
   transition: transform 0.5s ease;
 }
 .product-card:hover .carousel-slide img { transform: scale(1.05); }
@@ -357,6 +469,29 @@ body {
 .product-actions { display: flex; gap: 8px; }
 .product-actions .btn { flex: 1; justify-content: center; padding: 10px; font-size: 0.8rem; }
 
+/* ===== View Details Button ===== */
+.btn-view-details {
+  width: 100%;
+  margin-bottom: 10px;
+  background: transparent;
+  border: 1px dashed rgba(199,169,123,0.5);
+  color: var(--primary);
+  padding: 8px;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-view-details:hover {
+  background: rgba(199,169,123,0.1);
+  border-style: solid;
+}
+
 /* ===== Modals ===== */
 .modal {
   display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -389,7 +524,6 @@ body {
   cursor: pointer; font-size: 14px; transition: var(--transition); margin-top: 5px;
 }
 .modal-content button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(199,169,123,0.4); }
-.modal-content button:disabled { background: #333; cursor: not-allowed; transform: none; }
 .modal-close {
   position: absolute; top: 15px; right: 15px; font-size: 28px;
   cursor: pointer; color: var(--text-muted); background: none; border: none;
@@ -529,17 +663,18 @@ footer a:hover { color: var(--primary-dark); }
 
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
+<!-- ===== Sidebar ===== -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-logo">
-      <img src="stone.png" alt="Rajasthan Stones Logo">
+      <img src="stone.png" alt="Rajasthan Stones Logo" onerror="this.style.display='none'">
       <span>Rajasthan Stones</span>
     </div>
     <button class="sidebar-toggle" id="sidebar-toggle"><i class="fas fa-chevron-left"></i></button>
     <button class="mobile-sidebar-close" id="mobile-sidebar-close"><i class="fas fa-times"></i></button>
   </div>
   <ul class="sidebar-nav">
-    <li><a href="sandstone.html" class="active"><i class="fas fa-gem"></i> <span>Sand Stone</span></a></li>
+    <li><a href="sandstone.html"><i class="fas fa-gem"></i> <span>Sand Stone</span></a></li>
     <li><a href="kota.html"><i class="fas fa-cube"></i> <span>Kota Stone</span></a></li>
     <li><a href="granite.html"><i class="fas fa-mountain"></i> <span>Granite</span></a></li>
     <li><a href="marble.html"><i class="fas fa-square"></i> <span>Marble</span></a></li>
@@ -554,6 +689,24 @@ footer a:hover { color: var(--primary-dark); }
   </ul>
 </div>
 
+<!-- ===== RIGHT SIDE FLOATING IMAGE SLIDER ===== -->
+<div class="right-image-slider" id="right-image-slider">
+  <div class="right-slider-card">
+    <div class="right-slider-header">
+      <span><i class="fas fa-fire"></i> Featured Stones</span>
+      <span class="live-dot"></span>
+    </div>
+    <div class="right-slider-image-box" id="right-slider-image-box">
+      <!-- Images injected by JS -->
+    </div>
+    <div class="right-slider-footer">
+      <span class="image-name" id="right-slider-name">Loading...</span>
+      <div class="right-slider-dots" id="right-slider-dots"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Main Content ===== -->
 <div class="main-content" id="main-content">
   <header class="top-header">
     <button class="mobile-menu-btn" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
@@ -607,6 +760,7 @@ footer a:hover { color: var(--primary-dark); }
   </footer>
 </div>
 
+<!-- ===== Sign In Modal ===== -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <button class="modal-close">&times;</button>
@@ -624,6 +778,7 @@ footer a:hover { color: var(--primary-dark); }
   </div>
 </div>
 
+<!-- ===== Sign Up Modal ===== -->
 <div class="modal" id="signup-modal">
   <div class="modal-content">
     <button class="modal-close">&times;</button>
@@ -650,6 +805,7 @@ footer a:hover { color: var(--primary-dark); }
   </div>
 </div>
 
+<!-- ===== Fullscreen Gallery ===== -->
 <div class="fullscreen-modal" id="fullscreen-modal">
   <button class="fullscreen-close">&times;</button>
   <button class="fullscreen-nav fullscreen-prev">&#10094;</button>
@@ -666,12 +822,82 @@ import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, creat
 const contactNumber = "+917737740207";
 const contactEmail = "ravijain236129@gmail.com";
 
-let currentProductId = null;
-let currentProduct = null;
-let currentImageIndex = 0;
-let currentImages = [];
+/* ================================================================
+   ✅ RIGHT SIDE FLOATING IMAGE SLIDER
+   ================================================================ */
+const RIGHT_SLIDER_IMAGES = [
+  { url: "https://i.ibb.co/9mWg7qhZ/de29e2179f30.png", name: "Premium Stone 1" },
+  { url: "https://i.ibb.co/dwty45tv/48ae17733978.png", name: "Premium Stone 2" },
+  { url: "https://i.ibb.co/dw6MN0xv/412d7b05dece.png", name: "Premium Stone 3" },
+  { url: "https://i.ibb.co/1tLNNTFG/b5860f80e753.png", name: "Premium Stone 4" },
+  { url: "https://i.ibb.co/xKgwbTYM/96a984185507.png", name: "Premium Stone 5" },
+  { url: "https://i.ibb.co/fYx3bfJs/0956c514f616.png", name: "Premium Stone 6" },
+  { url: "https://i.ibb.co/S4pxysNG/16f01166b907.png", name: "Premium Stone 7" },
+  { url: "https://i.ibb.co/nq4qj1MM/02043e775803.png", name: "Premium Stone 8" },
+  { url: "https://i.ibb.co/HpzGW2px/6699d34bfe9d.png", name: "Premium Stone 9" },
+  { url: "https://i.ibb.co/NGBHKFc/07c34bda7a8a.png", name: "Premium Stone 10" }
+];
 
-/* ===== Sidebar ===== */
+let rightSliderIndex = 0;
+let rightSliderTimer = null;
+
+function initRightSlider() {
+  const box = document.getElementById('right-slider-image-box');
+  const dotsContainer = document.getElementById('right-slider-dots');
+  const nameEl = document.getElementById('right-slider-name');
+  if (!box || !dotsContainer || !nameEl) return;
+
+  // Create images
+  RIGHT_SLIDER_IMAGES.forEach((img, idx) => {
+    const el = document.createElement('img');
+    el.src = img.url;
+    el.alt = img.name;
+    el.loading = 'lazy';
+    if (idx === 0) el.classList.add('active');
+    box.appendChild(el);
+
+    const dot = document.createElement('span');
+    if (idx === 0) dot.classList.add('active');
+    dotsContainer.appendChild(dot);
+  });
+
+  nameEl.textContent = RIGHT_SLIDER_IMAGES[0].name;
+
+  const images = box.querySelectorAll('img');
+  const dots = dotsContainer.querySelectorAll('span');
+
+  function showSlide(idx) {
+    images.forEach((img, i) => img.classList.toggle('active', i === idx));
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
+    nameEl.textContent = RIGHT_SLIDER_IMAGES[idx].name;
+    rightSliderIndex = idx;
+  }
+
+  function nextSlide() {
+    const next = (rightSliderIndex + 1) % RIGHT_SLIDER_IMAGES.length;
+    showSlide(next);
+  }
+
+  // Auto-change every 2.5 seconds
+  rightSliderTimer = setInterval(nextSlide, 2500);
+
+  // Pause on hover
+  const card = document.querySelector('.right-slider-card');
+  if (card) {
+    card.addEventListener('mouseenter', () => clearInterval(rightSliderTimer));
+    card.addEventListener('mouseleave', () => {
+      rightSliderTimer = setInterval(nextSlide, 2500);
+    });
+  }
+}
+
+// Start slider after page load
+initRightSlider();
+
+
+/* ================================================================
+   SIDEBAR
+   ================================================================ */
 const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
 const sidebar = document.getElementById('sidebar');
@@ -701,7 +927,9 @@ document.getElementById('sidebar-toggle').addEventListener('click', () => {
   }
 });
 
-/* ===== Modals ===== */
+/* ================================================================
+   MODALS
+   ================================================================ */
 function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
 
@@ -725,7 +953,9 @@ document.addEventListener('keydown', (e) => {
 document.getElementById('switch-to-signup').addEventListener('click', (e) => { e.preventDefault(); closeModal('signin-modal'); openModal('signup-modal'); });
 document.getElementById('switch-to-signin').addEventListener('click', (e) => { e.preventDefault(); closeModal('signup-modal'); openModal('signin-modal'); });
 
-/* ===== Filters ===== */
+/* ================================================================
+   FILTERS
+   ================================================================ */
 document.getElementById('filter-toggle-btn').addEventListener('click', () => {
   const fc = document.getElementById('filter-container');
   const tb = document.getElementById('filter-toggle-btn');
@@ -735,7 +965,9 @@ document.getElementById('filter-toggle-btn').addEventListener('click', () => {
     : '<i class="fas fa-filter"></i> Show Filters';
 });
 
-/* ===== Header Buttons ===== */
+/* ================================================================
+   HEADER BUTTONS + AUTH
+   ================================================================ */
 const btnOpenSignin = document.getElementById('btn-open-signin');
 const btnOpenSignup = document.getElementById('btn-open-signup');
 const btnSignOut = document.getElementById('btn-signout');
@@ -749,7 +981,6 @@ btnOpenSignup.addEventListener('click', () => openModal('signup-modal'));
 btnPost.addEventListener('click', () => { window.location.href = 'admin.html'; });
 historyBtn.addEventListener('click', () => { window.location.href = 'history.html'; });
 
-/* ===== Auth ===== */
 const provider = new GoogleAuthProvider();
 const modalGoogleBtn = document.getElementById('modal-google-signin');
 const signinFeedback = document.getElementById('signin-feedback');
@@ -811,7 +1042,9 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-/* ===== Signup ===== */
+/* ================================================================
+   SIGNUP
+   ================================================================ */
 const signupBtn = document.getElementById('signup-btn');
 function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 function validatePhone(phone) { return /^[6-9]\d{9}$/.test(phone); }
@@ -864,7 +1097,9 @@ signupBtn.addEventListener('click', async () => {
   await completeSignup();
 });
 
-/* ===== Products ===== */
+/* ================================================================
+   PRODUCTS
+   ================================================================ */
 const productGrid = document.getElementById('product-grid');
 let products = [];
 
@@ -909,12 +1144,12 @@ function getSampleProducts() {
       color: "green",
       price: 85,
       price_unit: "sqft",
-      description: "Premium quality green sandstone with natural texture and durability. Perfect for outdoor and indoor applications.",
+      description: "Premium quality green sandstone with natural texture and durability.",
       images: [
-        "https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1582735689272-29b68d399c1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+        "https://i.ibb.co/9mWg7qhZ/de29e2179f30.png",
+        "https://i.ibb.co/dwty45tv/48ae17733978.png",
+        "https://i.ibb.co/dw6MN0xv/412d7b05dece.png",
+        "https://i.ibb.co/1tLNNTFG/b5860f80e753.png"
       ],
       created_at: { toDate: () => new Date('2025-11-15T06:41:57') }
     },
@@ -929,9 +1164,9 @@ function getSampleProducts() {
       price_unit: "sqft",
       description: "Classic brown kota stone with uniform texture and excellent finish.",
       images: [
-        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+        "https://i.ibb.co/xKgwbTYM/96a984185507.png",
+        "https://i.ibb.co/fYx3bfJs/0956c514f616.png",
+        "https://i.ibb.co/S4pxysNG/16f01166b907.png"
       ],
       created_at: { toDate: () => new Date('2025-11-14T10:20:00') }
     },
@@ -944,11 +1179,11 @@ function getSampleProducts() {
       color: "white",
       price: 120,
       price_unit: "sqft",
-      description: "Pure white marble with elegant veining. Perfect for luxurious interiors.",
+      description: "Pure white marble with elegant veining.",
       images: [
-        "https://images.unsplash.com/photo-1582735689272-29b68d399c1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+        "https://i.ibb.co/nq4qj1MM/02043e775803.png",
+        "https://i.ibb.co/HpzGW2px/6699d34bfe9d.png",
+        "https://i.ibb.co/NGBHKFc/07c34bda7a8a.png"
       ],
       created_at: { toDate: () => new Date('2025-11-13T14:30:00') }
     },
@@ -961,12 +1196,11 @@ function getSampleProducts() {
       color: "black",
       price: 95,
       price_unit: "sqft",
-      description: "Durable black granite with fine grain. Excellent for kitchen countertops.",
+      description: "Durable black granite with fine grain.",
       images: [
-        "https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1582735689272-29b68d399c1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+        "https://i.ibb.co/9mWg7qhZ/de29e2179f30.png",
+        "https://i.ibb.co/xKgwbTYM/96a984185507.png",
+        "https://i.ibb.co/nq4qj1MM/02043e775803.png"
       ],
       created_at: { toDate: () => new Date('2025-11-12T09:15:00') }
     }
@@ -1001,7 +1235,42 @@ function formatDate(created) {
   return date.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-/* ===== RENDER PRODUCTS WITH MULTI-IMAGE CAROUSEL ===== */
+/* ================================================================
+   ✅ CATEGORY PAGE ROUTER
+   Determines which page to open based on product category
+   ================================================================ */
+function getCategoryPage(category) {
+  const map = {
+    'sandstone': 'sandstone.html',
+    'sand stone': 'sandstone.html',
+    'kota': 'kota.html',
+    'kota stone': 'kota.html',
+    'granite': 'granite.html',
+    'marble': 'marble.html',
+    'dholpur': 'dholpur.html',
+    'tiles': 'tiles.html',
+    'tile': 'tiles.html',
+    'mandana': 'mandana.html',
+    'other': 'other-stones.html',
+    'other stones': 'other-stones.html'
+  };
+  const key = (category || '').toLowerCase().trim();
+  return map[key] || 'product-details.html';
+}
+
+/* ================================================================
+   ✅ PRODUCT CLICK → Category page + product ID
+   ================================================================ */
+window.openProductInCategory = function(productId) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+  const page = getCategoryPage(product.category);
+  window.location.href = `${page}?id=${productId}`;
+};
+
+/* ================================================================
+   RENDER PRODUCTS
+   ================================================================ */
 function renderProducts(productsToRender) {
   productGrid.innerHTML = '';
   if (productsToRender.length === 0) {
@@ -1014,7 +1283,7 @@ function renderProducts(productsToRender) {
   productsToRender.forEach(product => {
     const images = (product.images && product.images.length > 0)
       ? product.images
-      : ['stone-placeholder.png'];
+      : ['https://i.ibb.co/9mWg7qhZ/de29e2179f30.png'];
 
     const card = document.createElement('div');
     card.className = 'product-card';
@@ -1022,7 +1291,7 @@ function renderProducts(productsToRender) {
     let slidesHTML = '';
     let dotsHTML = '';
     images.forEach((img, idx) => {
-      slidesHTML += `<div class="carousel-slide"><img src="${img}" alt="${product.stone_name} - image ${idx+1}" onclick="openFullscreenImage('${product.id}', ${idx})" loading="lazy" onerror="this.src='stone-placeholder.png'"></div>`;
+      slidesHTML += `<div class="carousel-slide"><img src="${img}" alt="${product.stone_name} - image ${idx+1}" onclick="event.stopPropagation(); openFullscreenImage('${product.id}', ${idx})" loading="lazy" onerror="this.src='https://i.ibb.co/9mWg7qhZ/de29e2179f30.png'"></div>`;
       dotsHTML += `<button class="carousel-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}" aria-label="Go to image ${idx+1}"></button>`;
     });
 
@@ -1034,8 +1303,8 @@ function renderProducts(productsToRender) {
           ${slidesHTML}
         </div>
         ${hasMultiple ? `
-          <button class="carousel-arrow prev" data-nav="prev" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
-          <button class="carousel-arrow next" data-nav="next" aria-label="Next image"><i class="fas fa-chevron-right"></i></button>
+          <button class="carousel-arrow prev" data-nav="prev" aria-label="Previous image" onclick="event.stopPropagation();"><i class="fas fa-chevron-left"></i></button>
+          <button class="carousel-arrow next" data-nav="next" aria-label="Next image" onclick="event.stopPropagation();"><i class="fas fa-chevron-right"></i></button>
           <div class="carousel-dots">${dotsHTML}</div>
         ` : ''}
         <div class="image-counter-badge">
@@ -1052,16 +1321,27 @@ function renderProducts(productsToRender) {
           <span><i class="fas fa-calendar"></i> ${formatDate(product.created_at)}</span>
         </div>
         <div class="product-price">₹${product.price || '0'} / ${product.price_unit || 'unit'}</div>
+        <button class="btn-view-details" onclick="event.stopPropagation(); openProductInCategory('${product.id}')">
+          <i class="fas fa-external-link-alt"></i> View Details in ${(product.category || 'Category').replace(/^\w/, c => c.toUpperCase())}
+        </button>
         <div class="product-actions">
-          <button class="btn btn-whatsapp" onclick="openWhatsAppForProduct('${product.id}')">
+          <button class="btn btn-whatsapp" onclick="event.stopPropagation(); openWhatsAppForProduct('${product.id}')">
             <i class="fab fa-whatsapp"></i> WhatsApp
           </button>
-          <button class="btn btn-email" onclick="openEmailForProduct('${product.id}')">
+          <button class="btn btn-email" onclick="event.stopPropagation(); openEmailForProduct('${product.id}')">
             <i class="fas fa-envelope"></i> Email
           </button>
         </div>
       </div>
     `;
+
+    // Whole card click → open category page
+    card.addEventListener('click', (e) => {
+      // Don't trigger if user clicked a button or carousel arrow
+      if (e.target.closest('button') || e.target.closest('.carousel-dots')) return;
+      openProductInCategory(product.id);
+    });
+
     productGrid.appendChild(card);
   });
 
@@ -1094,8 +1374,6 @@ function renderProducts(productsToRender) {
   });
 }
 
-window.viewProductDetails = function(id) { window.location.href = `product-details.html?id=${id}`; };
-
 filterBtn.addEventListener('click', () => {
   const filtered = products.filter(p => {
     return (!filterCategory.value || p.category === filterCategory.value)
@@ -1113,7 +1391,9 @@ clearBtn.addEventListener('click', () => {
   renderProducts(products);
 });
 
-/* ===== Fullscreen Gallery ===== */
+/* ================================================================
+   FULLSCREEN GALLERY
+   ================================================================ */
 const fullscreenModal = document.getElementById('fullscreen-modal');
 const fullscreenImage = document.getElementById('fullscreen-image');
 const fullscreenClose = document.querySelector('.fullscreen-close');
@@ -1133,6 +1413,8 @@ window.openFullscreenImage = function(productId, imgIdx) {
   fullscreenModal.classList.add('active');
   document.body.style.overflow = 'hidden';
 };
+
+let currentProductId, currentProduct, currentImages, currentImageIndex;
 
 function updateFullscreenCounter() { fullscreenCounter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`; }
 
@@ -1159,7 +1441,9 @@ document.addEventListener('keydown', (e) => {
 });
 fullscreenModal.addEventListener('click', (e) => { if (e.target === fullscreenModal) fullscreenClose.click(); });
 
-/* ===== WhatsApp & Email ===== */
+/* ================================================================
+   WHATSAPP & EMAIL
+   ================================================================ */
 window.openWhatsAppForProduct = function(productId) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
@@ -1188,6 +1472,9 @@ window.openEmailForProduct = function(productId) {
   window.open(`mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
 };
 
+/* ================================================================
+   RESIZE HANDLER
+   ================================================================ */
 function handleResize() {
   if (window.innerWidth > 768) {
     sidebar.classList.remove('hidden');
