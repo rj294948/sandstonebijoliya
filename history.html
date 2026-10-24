@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My History - Rajasthan SandStone Hub</title>
+<link rel="icon" href="stone.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ===== General ===== */
+:root {
+  --primary: #c7a97b;
+  --primary-dark: #a58a62;
+  --secondary: #5a4a3a;
+  --light: #f8f5f0;
+  --dark: #333;
+  --gray: #e0e0e0;
+  --success: #28a745;
+  --danger: #dc3545;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+  --radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--dark);
+  background: var(--light);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: 250px;
+  background: var(--primary);
+  color: white;
+  padding: 20px 0;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  transition: var(--transition);
+  transform: translateX(0);
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+.sidebar-header {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  padding: 0 10px 20px;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.sidebar.collapsed .sidebar-logo span {
+  display: none;
+}
+
+.sidebar-logo img {
+  height: 40px;
+  border-radius: 5px;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  transform: rotate(180deg);
+}
+
+.sidebar-nav {
+  list-style: none;
+}
+
+.sidebar.collapsed .sidebar-nav span {
+  display: none;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .sidebar-nav a {
+  padding: 12px;
+  justify-content: center;
+}
+
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background: rgba(255,255,255,0.1);
+  border-left-color: white;
+}
+
+.sidebar-nav i {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+
+.main-content.expanded {
+  margin-left: 70px;
+}
+
+.main-content.full-width {
+  margin-left: 0;
+}
+
+/* ===== Header ===== */
+.top-header {
+  background: white;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  gap: 15px;
+  min-height: 60px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--light);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--secondary);
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.btn {
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  border: none;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* ===== Container ===== */
+.container {
+  padding: 30px;
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+  padding-bottom: 15px;
+  color: var(--secondary);
+  font-size: 2rem;
+}
+
+.page-title:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: var(--primary);
+}
+
+/* ===== Product Grid ===== */
+#product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+/* ===== Card Design ===== */
+.card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+/* ===== Image Gallery ===== */
+.image-gallery {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.main-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.thumbnail-container {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.3s ease;
+}
+
+.thumbnail:hover, .thumbnail.active {
+  border: 2px solid var(--primary);
+}
+
+.image-counter {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+/* ===== Card Content ===== */
+.card h3 {
+  margin: 15px 0 8px;
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.card p {
+  margin: 6px 0;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.price-tag {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: inline-block;
+  margin: 10px 0;
+}
+
+/* ===== Actions ===== */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.actions button {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #5cb85c, #4cae4c);
+  color: white;
+}
+
+.edit-btn:hover {
+  background: linear-gradient(135deg, #4cae4c, #449d44);
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #d9534f, #c9302c);
+  color: white;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #c9302c, #ac2925);
+  transform: scale(1.05);
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  grid-column: 1 / -1;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #888;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+/* ===== Footer ===== */
+footer {
+  background: var(--dark);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: auto;
+  font-size: 0.95rem;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+footer a:hover {
+  color: var(--primary);
+}
+
+/* ===== Image Modal ===== */
+#image-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#image-modal img {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+#image-modal .close-btn, #image-modal .prev-btn, #image-modal .next-btn {
+  position: absolute;
+  font-size: 2rem;
+  color: white;
+  background: rgba(0,0,0,0.4);
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#image-modal .close-btn {
+  top: 20px;
+  right: 20px;
+}
+
+#image-modal .prev-btn {
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
+#image-modal .next-btn {
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+/* ===== Auth Modals ===== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 35px;
+  border-radius: 15px;
+  width: 420px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  transform: translateY(-30px);
+  opacity: 0;
+  transition: all 0.4s ease;
+  margin: 20px;
+}
+
+.modal.active .modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modal-content h2 {
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.modal .form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.modal .form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--gray);
+  font-size: 1rem;
+  transition: var(--transition);
+  background: #fafafa;
+}
+
+.modal .form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(199,169,123,0.2);
+  background: white;
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--dark);
+  background: none;
+  border: none;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: var(--transition);
+  z-index: 2001;
+  font-weight: bold;
+}
+
+.modal-close:hover {
+  color: var(--primary);
+  transform: rotate(90deg);
+}
+
+.modal-divider {
+  text-align: center;
+  margin: 20px 0;
+  color: #666;
+  position: relative;
+}
+
+.modal-divider:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gray);
+}
+
+.modal-divider span {
+  background: white;
+  padding: 0 15px;
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
+}
+
+.modal a {
+  text-decoration: none;
+  color: var(--primary);
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 600;
+  transition: var(--transition);
+  font-size: 1rem;
+}
+
+.modal a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.feedback {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-height: 20px;
+  padding: 8px;
+  border-radius: var(--radius);
+}
+
+/* ===== Mobile Menu Button ===== */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--secondary);
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1001;
+}
+
+/* Mobile Sidebar Close Button */
+.mobile-sidebar-close {
+  display: none;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 1002;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-sidebar-close:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Mobile sidebar overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
+/* Desktop View - Hide Mobile Close Button */
+@media (min-width: 769px) {
+  .mobile-sidebar-close {
+    display: none !important;
+  }
+}
+
+/* Mobile View - Hide Desktop Toggle Button */
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: none !important;
+  }
+  
+  .mobile-sidebar-close {
+    display: flex !important;
+  }
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+  .header-actions {
+    gap: 6px;
+  }
+  
+  .btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  #product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+  }
+  
+  .main-content.full-width {
+    margin-left: 0;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+  }
+  
+  .mobile-sidebar-close {
+    display: flex;
+  }
+  
+  .top-header {
+    padding: 8px 15px;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 50px;
+  }
+  
+  .header-actions {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .user-profile {
+    order: 1;
+    margin-left: 0;
+    flex: 1;
+    justify-content: flex-end;
+  }
+  
+  .user-info {
+    padding: 5px 10px;
+  }
+  
+  .user-name {
+    font-size: 0.8rem;
+  }
+  
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+  
+  .btn {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+  
+  .container {
+    padding: 20px 15px;
+  }
+  
+  .page-title {
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+  }
+  
+  #product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: 10px;
+    padding: 25px 20px;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-header {
+    padding: 6px 12px;
+    gap: 6px;
+    min-height: 45px;
+  }
+  
+  .header-actions {
+    gap: 4px;
+  }
+  
+  .btn {
+    padding: 4px 6px;
+    font-size: 10px;
+  }
+  
+  .user-info {
+    padding: 4px 8px;
+  }
+  
+  .user-name {
+    font-size: 0.75rem;
+  }
+  
+  .user-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+  }
+  
+  .container {
+    padding: 15px 12px;
+  }
+  
+  .page-title {
+    font-size: 1.4rem;
+  }
+  
+  #product-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .card {
+    padding: 15px;
+  }
+  
+  .main-image {
+    height: 160px;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .modal-content {
+    padding: 20px 15px;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.3rem;
+  }
+  
+  .modal .form-group input {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- ===== Sidebar ===== -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <img src="stone.png" alt="Rajasthan Stones Logo">
+      <span>Rajasthan Stones</span>
+    </div>
+    <button class="sidebar-toggle" id="sidebar-toggle">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="mobile-sidebar-close" id="mobile-sidebar-close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <ul class="sidebar-nav">
+    <li><a href="index.html"><i class="fas fa-home"></i> <span>Home</span></a></li>
+    <li><a href="sandstone.html"><i class="fas fa-gem"></i> <span>Sand Stone</span></a></li>
+    <li><a href="kota.html"><i class="fas fa-cube"></i> <span>Kota Stone</span></a></li>
+    <li><a href="granite.html"><i class="fas fa-mountain"></i> <span>Granite</span></a></li>
+    <li><a href="marble.html"><i class="fas fa-square"></i> <span>Marble</span></a></li>
+    <li><a href="dholpur.html"><i class="fas fa-palette"></i> <span>Dholpur</span></a></li>
+    <li><a href="tiles.html"><i class="fas fa-th-large"></i> <span>Tiles</span></a></li>
+    <li><a href="mandana.html"><i class="fas fa-draw-polygon"></i> <span>Mandana</span></a></li>
+    <li><a href="other-stones.html"><i class="fas fa-shapes"></i> <span>Other Stones</span></a></li>
+    <li><a href="about.html"><i class="fas fa-info-circle"></i> <span>About Us</span></a></li>
+    <li><a href="contact.html"><i class="fas fa-phone"></i> <span>Contact</span></a></li>
+    <li><a href="privacy.html"><i class="fas fa-shield-alt"></i> <span>Privacy Policy</span></a></li>
+    <li><a href="terms.html"><i class="fas fa-file-contract"></i> <span>Terms & Conditions</span></a></li>
+  </ul>
+</div>
+
+<!-- ===== Main Content ===== -->
+<div class="main-content" id="main-content">
+  <!-- ===== Top Header ===== -->
+  <header class="top-header">
+    <button class="mobile-menu-btn" id="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="header-actions">
+      <button id="home-btn" class="btn btn-outline" onclick="window.location='index.html'">
+        <i class="fas fa-home"></i> Home
+      </button>
+      <button id="btn-post" style="display:none;" class="btn btn-outline" onclick="window.location='admin.html'">
+        <i class="fas fa-plus"></i> Post Product
+      </button>
+      <button id="btn-open-signin" class="btn btn-primary">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+      </button>
+      <button id="btn-open-signup" class="btn btn-outline">Sign Up</button>
+      <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
+    </div>
+    <div class="user-profile">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">G</div>
+        <span class="user-name" id="user-name">Guest User</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Main Container ===== -->
+  <div class="container">
+    <h1 class="page-title">📦 My Added Products</h1>
+    <div id="product-grid">
+      <div class="empty-state">
+        <h3>No products added yet</h3>
+        <p>Start by adding your first stone product to see it here!</p>
+        <button onclick="window.location='admin.html'" style="background:var(--primary); color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; font-weight:600; font-size:1rem;">
+          ➕ Add Your First Product
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    &copy; 2025 Rajasthan SandStone Hub | Designed by RJ Services | 
+    <a href="about.html">About Us</a> | <a href="contact.html">Contact</a>
+  </footer>
+</div>
+
+<!-- ===== Image Modal ===== -->
+<div id="image-modal">
+  <button class="prev-btn">&#10094;</button>
+  <img id="modal-img" src="">
+  <button class="next-btn">&#10095;</button>
+  <button class="close-btn">&times;</button>
+</div>
+
+<!-- ===== Sign In Modal ===== -->
+<div class="modal" id="signin-modal">
+  <div class="modal-content">
+    <button class="modal-close">&times;</button>
+    <h2>Sign In</h2>
+    <div class="form-group">
+      <input type="email" id="signin-email" placeholder="Email Address">
+    </div>
+    <div class="form-group">
+      <input type="password" id="signin-password" placeholder="Password">
+    </div>
+    <button id="signin-btn" class="submit-btn">Sign In</button>
+    <div class="modal-divider">
+      <span>OR</span>
+    </div>
+    <button id="modal-google-signin" class="btn" style="background:#4285F4;color:white; display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:14px;">
+      <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width:20px; height:20px;">
+      Sign In with Google
+    </button>
+    <div class="feedback" id="signin-feedback"></div>
+    <a href="#" id="switch-to-signup">Don't have an account? Sign Up</a>
+  </div>
+</div>
+
+<!-- ===== Sign Up Modal ===== -->
+<div class="modal" id="signup-modal">
+  <div class="modal-content">
+    <button class="modal-close">&times;</button>
+    <h2>Create Account</h2>
+    <div class="form-group">
+      <input type="text" id="signup-name" placeholder="Full Name" required>
+      <div class="error-message" id="name-error">Please enter your full name</div>
+    </div>
+    <div class="form-group">
+      <input type="email" id="signup-email" placeholder="Email Address" required>
+      <div class="error-message" id="email-error">Please enter a valid email address</div>
+    </div>
+    <div class="form-group">
+      <div class="phone-input-container">
+        <span class="phone-prefix">+91</span>
+        <input type="text" id="signup-phone" class="phone-input" placeholder="Phone Number (10 digits)" maxlength="10" required oninput="validatePhoneNumber(this)">
+      </div>
+      <div class="error-message" id="phone-error">Please enter a valid 10-digit phone number</div>
+    </div>
+    <div class="form-group">
+      <input type="password" id="signup-password" placeholder="Password" required>
+      <div class="error-message" id="password-error">Password must be at least 6 characters</div>
+    </div>
+    <button id="signup-btn" class="submit-btn">Create Account</button>
+    <div class="feedback" id="signup-feedback"></div>
+    <a href="#" id="switch-to-signin">Already have an account? Sign In</a>
+  </div>
+</div>
+
+<script type="module">
+import { 
+  auth, 
+  db, 
+  googleProvider,
+  collection, 
+  query, 
+  getDocs, 
+  doc, 
+  deleteDoc, 
+  signOut, 
+  orderBy,
+  signInWithPopup,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile
+} from "./firebase-config.js";
+
+/* ===== Mobile Sidebar Toggle ===== */
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileSidebarClose = document.getElementById('mobile-sidebar-close');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const mainContent = document.getElementById('main-content');
+
+function toggleMobileSidebar() {
+  sidebar.classList.toggle('active');
+  sidebarOverlay.classList.toggle('active');
+  document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+}
+
+mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
+mobileSidebarClose.addEventListener('click', toggleMobileSidebar);
+sidebarOverlay.addEventListener('click', toggleMobileSidebar);
+
+// Close sidebar when clicking on links (mobile)
+document.querySelectorAll('.sidebar-nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      toggleMobileSidebar();
+    }
+  });
+});
+
+/* ===== Desktop Sidebar Toggle ===== */
+document.getElementById('sidebar-toggle').addEventListener('click', () => {
+  if (window.innerWidth > 768) {
+    sidebar.classList.toggle('collapsed');
+    mainContent.classList.toggle('expanded');
+    
+    // Update toggle icon
+    const toggleIcon = document.querySelector('.sidebar-toggle i');
+    if (sidebar.classList.contains('collapsed')) {
+      toggleIcon.className = 'fas fa-chevron-right';
+    } else {
+      toggleIcon.className = 'fas fa-chevron-left';
+    }
+  }
+});
+
+/* ===== Modal Functions ===== */
+function openModal(id){ 
+  document.getElementById(id).classList.add('active'); 
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id){ 
+  document.getElementById(id).classList.remove('active'); 
+  document.body.style.overflow = '';
+}
+
+// Close modals when clicking close button
+document.querySelectorAll('.modal-close').forEach(btn => { 
+  btn.addEventListener('click', (e) => { 
+    e.stopPropagation();
+    const modal = e.target.closest('.modal');
+    if (modal) {
+      closeModal(modal.id);
+    }
+  }); 
+});
+
+// Close modals when clicking outside
+document.querySelectorAll('.modal').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal(modal.id);
+    }
+  });
+});
+
+document.addEventListener('keydown', (e) => { 
+  if(e.key === "Escape"){ 
+    document.querySelectorAll('.modal').forEach(modal => closeModal(modal.id));
+    document.getElementById('image-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  } 
+});
+
+// Switch between sign in and sign up
+document.getElementById('switch-to-signup').addEventListener('click', (e) => {
+  e.preventDefault();
+  closeModal('signin-modal');
+  openModal('signup-modal');
+});
+
+document.getElementById('switch-to-signin').addEventListener('click', (e) => {
+  e.preventDefault();
+  closeModal('signup-modal');
+  openModal('signin-modal');
+});
+
+/* ===== Header Buttons & Auth ===== */
+const btnOpenSignin = document.getElementById('btn-open-signin');
+const btnOpenSignup = document.getElementById('btn-open-signup');
+const btnSignOut = document.getElementById('btn-signout');
+const btnPost = document.getElementById('btn-post');
+const userAvatar = document.getElementById('user-avatar');
+const userName = document.getElementById('user-name');
+
+btnOpenSignin.addEventListener('click', () => openModal('signin-modal'));
+btnOpenSignup.addEventListener('click', () => openModal('signup-modal'));
+
+// Post Product button functionality
+btnPost.addEventListener('click', () => {
+  window.location.href = 'admin.html';
+});
+
+/* ===== Firebase Auth ===== */
+const modalGoogleBtn = document.getElementById('modal-google-signin');
+const signinFeedback = document.getElementById('signin-feedback');
+const signupFeedback = document.getElementById('signup-feedback');
+
+// Google Sign In
+modalGoogleBtn.addEventListener('click', async () => {
+  signinFeedback.textContent = '';
+  try { 
+    const result = await signInWithPopup(auth, googleProvider);
+    signinFeedback.style.color = 'green';
+    signinFeedback.textContent = `✅ Signed in as ${result.user.displayName}`;
+    setTimeout(() => closeModal('signin-modal'), 1500);
+  } catch(err) { 
+    signinFeedback.style.color = 'red'; 
+    signinFeedback.textContent = '❌ ' + err.message; 
+  }
+});
+
+// Email/Password Sign In
+document.getElementById('signin-btn').addEventListener('click', async () => {
+  const email = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value.trim();
+  signinFeedback.textContent = '';
+  
+  if (!email || !password) {
+    signinFeedback.style.color = 'red';
+    signinFeedback.textContent = '❌ Please fill in all fields';
+    return;
+  }
+  
+  try { 
+    await signInWithEmailAndPassword(auth, email, password);
+    signinFeedback.style.color = 'green'; 
+    signinFeedback.textContent = '✅ Signed in successfully!';
+    setTimeout(() => closeModal('signin-modal'), 1500);
+  } catch(err) { 
+    signinFeedback.style.color = 'red'; 
+    signinFeedback.textContent = '❌ ' + err.message; 
+  }
+});
+
+// Sign Out
+btnSignOut.addEventListener('click', async () => { 
+  await signOut(auth); 
+  alert('Signed out successfully'); 
+});
+
+// Auth state listener
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in
+    btnOpenSignin.style.display = 'none'; 
+    btnOpenSignup.style.display = 'none'; 
+    btnSignOut.style.display = 'inline-block'; 
+    btnPost.style.display = 'inline-block';
+    
+    // Set user name and avatar with first letter
+    const displayName = user.displayName || 'User';
+    userName.textContent = displayName;
+    userAvatar.textContent = displayName.charAt(0).toUpperCase();
+  } else {
+    // User is signed out
+    btnOpenSignin.style.display = 'inline-block'; 
+    btnOpenSignup.style.display = 'inline-block'; 
+    btnSignOut.style.display = 'none'; 
+    btnPost.style.display = 'none';
+    userName.textContent = 'Guest User';
+    userAvatar.textContent = 'G';
+  }
+});
+
+/* ===== Sign Up Form Validation ===== */
+const signupBtn = document.getElementById('signup-btn');
+
+// Validate email format
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Validate phone number
+function validatePhone(phone) {
+  const phoneRegex = /^[6-9]\d{9}$/;
+  return phoneRegex.test(phone);
+}
+
+// Validate form
+function validateSignupForm() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  
+  let isValid = true;
+  
+  // Reset errors
+  document.querySelectorAll('.error-message').forEach(error => error.classList.remove('show'));
+  
+  // Validate name
+  if (!name) {
+    document.getElementById('name-error').classList.add('show');
+    isValid = false;
+  }
+  
+  // Validate email
+  if (!email || !validateEmail(email)) {
+    document.getElementById('email-error').classList.add('show');
+    isValid = false;
+  }
+  
+  // Validate phone
+  if (!phone || !validatePhone(phone)) {
+    document.getElementById('phone-error').classList.add('show');
+    isValid = false;
+  }
+  
+  // Validate password
+  if (!password || password.length < 6) {
+    document.getElementById('password-error').classList.add('show');
+    isValid = false;
+  }
+  
+  return isValid;
+}
+
+// Complete signup process
+async function completeSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  const password = document.getElementById('signup-password').value.trim();
+  
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(userCredential.user, { displayName: name });
+    
+    // Save additional user data to Firestore
+    await setDoc(doc(db, "users", userCredential.user.uid), {
+      name: name,
+      email: email,
+      phone: phone,
+      createdAt: new Date()
+    });
+    
+    signupFeedback.style.color = 'green';
+    signupFeedback.textContent = '✅ Account created successfully!';
+    
+    setTimeout(() => {
+      closeModal('signup-modal');
+      resetSignupForm();
+    }, 1500);
+    
+  } catch(err) { 
+    signupFeedback.style.color = 'red'; 
+    signupFeedback.textContent = '❌ ' + err.message; 
+  }
+}
+
+// Reset signup form
+function resetSignupForm() {
+  document.getElementById('signup-name').value = '';
+  document.getElementById('signup-email').value = '';
+  document.getElementById('signup-phone').value = '';
+  document.getElementById('signup-password').value = '';
+  document.querySelectorAll('.error-message').forEach(error => error.classList.remove('show'));
+  signupFeedback.textContent = '';
+}
+
+// Signup button click handler
+signupBtn.addEventListener('click', async () => {
+  if (!validateSignupForm()) return;
+  
+  await completeSignup();
+});
+
+/* ===== Product Grid Logic ===== */
+const grid = document.getElementById("product-grid");
+
+// ✅ Auth check and data load
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location = "index.html";
+  } else {
+    await loadUserProducts(user.uid);
+  }
+});
+
+async function loadUserProducts(uid) {
+  const q = query(collection(db, "products"), orderBy("created_at", "desc"));
+  const snap = await getDocs(q);
+  grid.innerHTML = "";
+
+  let userProducts = 0;
+
+  snap.forEach((docSnap) => {
+    const p = docSnap.data();
+    if (p.userId === uid) {
+      userProducts++;
+      const productImages = p.images || [];
+      const mainImage = productImages.length > 0 ? productImages[0] : 'stone-placeholder.png';
+      
+      grid.innerHTML += `
+      <div class="card">
+        <div class="image-gallery">
+          <img src="${mainImage}" alt="${p.stone_name}" class="main-image" 
+               onclick="openImageGallery(${userProducts}, '${productImages.join("','")}')">
+          ${productImages.length > 1 ? `<div class="image-counter">${productImages.length} photos</div>` : ''}
+          
+          ${productImages.length > 1 ? `
+          <div class="thumbnail-container">
+            ${productImages.map((img, index) => `
+              <img src="${img}" alt="Thumbnail ${index + 1}" class="thumbnail ${index === 0 ? 'active' : ''}" 
+                   onclick="changeMainImage(this, '${mainImage}', ${userProducts})">
+            `).join('')}
+          </div>
+          ` : ''}
+        </div>
+        
+        <h3>${p.stone_name || 'Stone Product'}</h3>
+        <p><strong>Category:</strong> ${p.category || 'Not specified'}</p>
+        <p><strong>Type:</strong> ${p.type || 'Not specified'}</p>
+        <p><strong>Color:</strong> ${p.color || 'Not specified'}</p>
+        <p><strong>Company:</strong> ${p.factory_name || 'Not specified'}</p>
+        
+        ${p.price ? `<div class="price-tag">₹${p.price} ${p.price_unit ? `per ${p.price_unit}` : ''}</div>` : ''}
+        
+        <p><strong>Contact:</strong> ${p.contact_number || 'Not specified'}</p>
+        <p><strong>Email:</strong> ${p.email || 'Not specified'}</p>
+        <p><strong>Address:</strong> ${p.address || 'Not specified'}</p>
+        
+        ${p.description ? `<p><strong>Description:</strong> ${p.description}</p>` : ''}
+        
+        <div class="actions">
+          <button class="edit-btn" onclick="editProduct('${docSnap.id}', '${encodeURIComponent(JSON.stringify(p))}')">✏️ Edit</button>
+          <button class="delete-btn" onclick="deleteProduct('${docSnap.id}')">🗑️ Delete</button>
+        </div>
+      </div>`;
+    }
+  });
+
+  if (userProducts === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <h3>📦 No products added yet</h3>
+        <p>Start by adding your first stone product to see it here!</p>
+        <button onclick="window.location='admin.html'" style="background:var(--primary); color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; font-weight:600; font-size:1rem;">
+          ➕ Add Your First Product
+        </button>
+      </div>
+    `;
+  }
+}
+
+/* ===== Image Gallery Functions ===== */
+window.changeMainImage = (thumbnail, fallbackImage, productIndex) => {
+  const mainImage = thumbnail.closest('.image-gallery').querySelector('.main-image');
+  mainImage.src = thumbnail.src;
+  
+  // Update active thumbnail
+  thumbnail.closest('.thumbnail-container').querySelectorAll('.thumbnail').forEach(thumb => {
+    thumb.classList.remove('active');
+  });
+  thumbnail.classList.add('active');
+};
+
+window.openImageGallery = (productIndex, ...imageUrls) => {
+  const images = Array.isArray(imageUrls[0]) ? imageUrls[0] : imageUrls;
+  if (images.length === 0) return;
+  
+  let currentImageIndex = 0;
+  const modal = document.getElementById('image-modal');
+  const modalImg = document.getElementById('modal-img');
+  
+  modalImg.src = images[currentImageIndex];
+  modal.style.display = 'flex';
+  
+  // Update navigation buttons
+  const prevBtn = modal.querySelector('.prev-btn');
+  const nextBtn = modal.querySelector('.next-btn');
+  
+  const updateButtons = () => {
+    prevBtn.style.display = images.length > 1 ? 'block' : 'none';
+    nextBtn.style.display = images.length > 1 ? 'block' : 'none';
+  };
+  
+  updateButtons();
+  
+  prevBtn.onclick = () => {
+    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    modalImg.src = images[currentImageIndex];
+  };
+  
+  nextBtn.onclick = () => {
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+    modalImg.src = images[currentImageIndex];
+  };
+};
+
+// Close image modal
+document.querySelector('#image-modal .close-btn').onclick = () => {
+  document.getElementById('image-modal').style.display = 'none';
+};
+
+document.getElementById('image-modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('image-modal')) {
+    document.getElementById('image-modal').style.display = 'none';
+  }
+});
+
+/* ===== Product Actions ===== */
+window.editProduct = (id, pData) => {
+  localStorage.setItem("editProductId", id);
+  localStorage.setItem("editProductData", pData);
+  window.location = "admin.html";
+};
+
+window.deleteProduct = async (id) => {
+  if (confirm("🗑️ Are you sure you want to delete this product? This action cannot be undone.")) {
+    try {
+      await deleteDoc(doc(db, "products", id));
+      alert("✅ Product deleted successfully!");
+      const user = auth.currentUser;
+      if (user) await loadUserProducts(user.uid);
+    } catch (error) {
+      alert("❌ Error deleting product: " + error.message);
+    }
+  }
+};
+
+/* ===== Handle Window Resize ===== */
+function handleResize() {
+  if (window.innerWidth > 768) {
+    // Desktop - ensure sidebar is visible
+    sidebar.classList.remove('hidden');
+    sidebarOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  } else {
+    // Mobile - ensure sidebar is hidden by default
+    if (!sidebar.classList.contains('active')) {
+      sidebar.classList.add('hidden');
+    }
+  }
+}
+
+window.addEventListener('resize', handleResize);
+window.addEventListener('load', handleResize);
+</script>
+</body>
+</html>

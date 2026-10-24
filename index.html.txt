@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sandstone Bijoliya</title>
+</head>
+<body>
+    <h1>सैंडस्टोन बिजोलिया</h1>
+    <p>पत्थरों का ऑनलाइन बाजार</p>
+</body>
+</html>

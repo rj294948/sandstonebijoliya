@@ -1,0 +1,24 @@
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+body{background:#fafafa;color:#333;}
+header{background:#c7a97b;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;color:white;}
+header h1{font-size:1.5rem;cursor:pointer;}
+header input{padding:8px 12px;width:300px;border:none;border-radius:6px;}
+header button{padding:8px 15px;border:none;background:#fff;color:#c7a97b;border-radius:6px;cursor:pointer;font-weight:600;}
+header button:hover{background:#d1b68d;color:white;}
+nav{background:#b38c5f;display:flex;justify-content:center;gap:20px;padding:10px 0;}
+nav a{color:white;text-decoration:none;font-weight:600;padding:6px 12px;border-radius:6px;transition:0.3s;}
+nav a:hover{background:#d1b68d;color:white;}
+.banner{background:url('assets/images/header-bg.jpg') center/cover no-repeat;height:5vh;display:flex;align-items:center;justify-content:center;color:white;text-shadow:2px 2px 8px rgba(0,0,0,0.7);font-size:2rem;font-weight:bold;}
+section{padding:30px 20px;}
+section h2{font-size:1.5rem;margin-bottom:0px;color:#c7a97b;text-align:center;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.card{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:transform 0.3s;cursor:pointer;}
+.card:hover{transform:translateY(-5px);}
+.card img{width:100%;height:160px;object-fit:cover;}
+.card h3{padding:10px;font-size:1rem;color:#333;text-align:center;}
+.card p{text-align:center;color:gray;font-size:0.9rem;padding-bottom:10px;}
+.filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px;}
+.filters select,.filters input{padding:8px 12px;border-radius:6px;border:1px solid #ccc;}
+footer{background:#c7a97b;color:white;text-align:center;padding:15px;margin-top:40px;}
+footer a{color:white;text-decoration:underline;}
+@media(max-width:600px){header{flex-direction:column;gap:10px;}header input{width:100%;}nav{flex-direction:column;gap:8px;}.filters{flex-direction:column;gap:8px;}}

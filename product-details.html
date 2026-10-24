@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Details - Rajasthan Stones</title>
+<link rel="icon" href="stone.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ===== General Styles ===== */
+:root {
+  --primary: #c7a97b;
+  --primary-dark: #a58a62;
+  --secondary: #5a4a3a;
+  --light: #f8f5f0;
+  --dark: #333;
+  --gray: #e0e0e0;
+  --success: #28a745;
+  --danger: #dc3545;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+  --radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--dark);
+  background: var(--light);
+  min-height: 100vh;
+}
+
+/* ===== Header ===== */
+.top-header {
+  background: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+.logo img {
+  height: 40px;
+  border-radius: 5px;
+}
+
+.back-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.back-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ===== Product Details Section ===== */
+.product-details-section {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.product-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 50px;
+  background: white;
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: var(--shadow);
+}
+
+.product-images {
+  position: relative;
+}
+
+/* Simple Image Container */
+.image-container {
+  width: 100%;
+  height: 400px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #f9f9f9;
+  margin-bottom: 15px;
+  cursor: pointer;
+  position: relative;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: var(--transition);
+}
+
+.image-container:hover .main-image {
+  transform: scale(1.02);
+}
+
+.zoom-indicator {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.image-container:hover .zoom-indicator {
+  opacity: 1;
+}
+
+.thumbnail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.thumbnail {
+  height: 80px;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition);
+  position: relative;
+}
+
+.thumbnail.active {
+  border-color: var(--primary);
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail:hover::after {
+  content: '🔍';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2rem;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-info {
+  padding: 10px 0;
+}
+
+.product-category {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.product-title {
+  font-size: 2rem;
+  color: var(--secondary);
+  margin-bottom: 15px;
+  line-height: 1.3;
+}
+
+.product-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.product-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: var(--light);
+  border-radius: var(--radius);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.meta-label {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.meta-value {
+  font-size: 1rem;
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.product-description {
+  margin-bottom: 25px;
+  line-height: 1.7;
+  color: #555;
+}
+
+/* ===== Technical Specifications ===== */
+.tech-specs {
+  background: var(--light);
+  padding: 20px;
+  border-radius: var(--radius);
+  margin-bottom: 25px;
+}
+
+.tech-specs h3 {
+  color: var(--secondary);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray);
+}
+
+.spec-label {
+  color: #666;
+  font-weight: 600;
+}
+
+.spec-value {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+/* ===== Additional Fields ===== */
+.additional-fields {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: var(--radius);
+  margin-bottom: 25px;
+  border-left: 4px solid var(--primary);
+}
+
+.additional-fields h3 {
+  color: var(--secondary);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.additional-field-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--gray);
+}
+
+.additional-field-name {
+  color: #666;
+  font-weight: 600;
+}
+
+.additional-field-value {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.product-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.whatsapp-btn {
+  background: #25D366;
+  color: white;
+}
+
+.email-btn {
+  background: #D44638;
+  color: white;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.9);
+}
+
+/* ===== Related Products Section ===== */
+.related-products {
+  margin-top: 50px;
+}
+
+.section-title {
+  text-align: center;
+  margin: 30px 0;
+  position: relative;
+  padding-bottom: 12px;
+  color: var(--secondary);
+  font-size: 1.8rem;
+}
+
+.section-title:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: var(--primary);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.product-card {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  border: 1px solid var(--gray);
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.product-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: #f9f9f9;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: var(--transition);
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+.product-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--primary);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.product-info-card {
+  padding: 15px;
+}
+
+.product-title-card {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--secondary);
+  line-height: 1.3;
+}
+
+.product-price-card {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.product-description-card {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== Image Zoom Modal ===== */
+.zoom-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  z-index: 3000;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+
+.zoom-modal.active {
+  display: flex;
+}
+
+.zoom-image-container {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zoom-image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  cursor: default;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.zoom-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2.5rem;
+  color: white;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  z-index: 3001;
+}
+
+.zoom-close:hover {
+  background: rgba(0,0,0,0.8);
+  transform: scale(1.1);
+}
+
+.zoom-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  color: white;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  z-index: 3001;
+}
+
+.zoom-nav:hover {
+  background: rgba(0,0,0,0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.zoom-prev {
+  left: 20px;
+}
+
+.zoom-next {
+  right: 20px;
+}
+
+.zoom-counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 1.2rem;
+  background: rgba(0,0,0,0.5);
+  padding: 8px 16px;
+  border-radius: 20px;
+  z-index: 3001;
+}
+
+/* ===== Loading States ===== */
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 40px;
+  color: var(--danger);
+  font-size: 1.1rem;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 968px) {
+  .product-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .image-container {
+    height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-header {
+    padding: 12px 20px;
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .product-details-section {
+    padding: 0 15px;
+    margin: 20px auto;
+  }
+  
+  .product-container {
+    padding: 20px;
+  }
+  
+  .product-title {
+    font-size: 1.6rem;
+  }
+  
+  .product-price {
+    font-size: 1.5rem;
+  }
+  
+  .product-meta {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .specs-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-actions {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    min-width: auto;
+  }
+  
+  .thumbnail-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+  
+  .zoom-nav {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+  
+  .zoom-close {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+  }
+  
+  .zoom-image {
+    max-width: 95%;
+    max-height: 85vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-container {
+    padding: 15px;
+  }
+  
+  .image-container {
+    height: 250px;
+  }
+  
+  .thumbnail {
+    height: 60px;
+  }
+  
+  .product-title {
+    font-size: 1.4rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    margin: 20px 0;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .zoom-nav {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  
+  .zoom-close {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+  
+  .zoom-indicator {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="top-header">
+  <a href="index.html" class="logo">
+    <img src="stone.png" alt="Rajasthan Stones Logo">
+    <span>Rajasthan Stones</span>
+  </a>
+  <a href="index.html" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Back to Home
+  </a>
+</header>
+
+<!-- ===== Product Details Section ===== -->
+<section class="product-details-section">
+  <div id="productContainer" class="product-container">
+    <div class="loading">Loading product details...</div>
+  </div>
+
+  <!-- ===== Related Products Section ===== -->
+  <div class="related-products">
+    <h2 class="section-title">More Related Products</h2>
+    <div id="relatedProducts" class="products-grid">
+      <div class="loading">Loading related products...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Image Zoom Modal ===== -->
+<div class="zoom-modal" id="zoom-modal">
+  <button class="zoom-close">&times;</button>
+  <button class="zoom-nav zoom-prev">&#10094;</button>
+  <div class="zoom-image-container">
+    <img class="zoom-image" id="zoom-image" src="" alt="Zoomed product image">
+  </div>
+  <button class="zoom-nav zoom-next">&#10095;</button>
+  <div class="zoom-counter" id="zoom-counter">1 / 3</div>
+</div>
+
+<script>
+// Contact details
+const contactNumber = "+917737740207";
+const contactEmail = "ravijain236129@gmail.com";
+
+// Global variables
+let currentProduct = null;
+let allProducts = [];
+let currentZoomImageIndex = 0;
+let currentZoomImages = [];
+
+// Get product ID from URL
+function getProductIdFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('id');
+}
+
+// Load product details
+async function loadProductDetails() {
+  const productId = getProductIdFromURL();
+  
+  if (!productId) {
+    showError('Product ID not found in URL');
+    return;
+  }
+  
+  try {
+    // Try to load from localStorage first (from home page)
+    const savedProducts = localStorage.getItem('stoneProducts');
+    if (savedProducts) {
+      allProducts = JSON.parse(savedProducts);
+    } else {
+      // If no products in localStorage, load sample data
+      allProducts = getSampleProducts();
+    }
+    
+    // Find the current product
+    currentProduct = allProducts.find(p => p.id === productId);
+    
+    if (!currentProduct) {
+      showError('Product not found');
+      return;
+    }
+    
+    // ✅ FILTER OUT BLANK/PERSONAL DATA
+    currentProduct = filterPersonalInfo(currentProduct);
+    
+    displayProductDetails(currentProduct);
+    loadRelatedProducts(currentProduct);
+    
+  } catch (error) {
+    console.error('Error loading product:', error);
+    showError('Error loading product details');
+  }
+}
+
+// ✅ FUNCTION TO FILTER OUT PERSONAL INFO AND BLANK DATA
+function filterPersonalInfo(product) {
+  const filteredProduct = { ...product };
+  
+  // Remove personal contact info from product fields
+  const personalFields = ['contact_number', 'email', 'factory_name', 'address', 'gst_number'];
+  personalFields.forEach(field => {
+    if (filteredProduct[field]) {
+      delete filteredProduct[field];
+    }
+  });
+  
+  // Filter out blank/empty values from product details
+  Object.keys(filteredProduct).forEach(key => {
+    if (filteredProduct[key] === '' || filteredProduct[key] === null || filteredProduct[key] === undefined) {
+      delete filteredProduct[key];
+    }
+  });
+  
+  // Filter additional fields to remove personal info
+  if (filteredProduct.additional_fields && Array.isArray(filteredProduct.additional_fields)) {
+    filteredProduct.additional_fields = filteredProduct.additional_fields.filter(field => {
+      // Remove fields that contain personal info
+      const personalKeywords = ['contact', 'mobile', 'phone', 'email', 'address', 'gst', 'name'];
+      const fieldName = field.name?.toLowerCase() || '';
+      const fieldValue = field.value?.toLowerCase() || '';
+      
+      return !personalKeywords.some(keyword => 
+        fieldName.includes(keyword) || fieldValue.includes(keyword)
+      );
+    });
+    
+    // Remove if no valid additional fields left
+    if (filteredProduct.additional_fields.length === 0) {
+      delete filteredProduct.additional_fields;
+    }
+  }
+  
+  return filteredProduct;
+}
+
+// ✅ FUNCTION TO FORMAT FIREBASE TIMESTAMP
+function formatFirebaseTimestamp(timestamp) {
+  if (!timestamp) return 'Unknown date';
+  
+  try {
+    let date;
+    
+    // Handle Firebase timestamp format
+    if (timestamp.toDate && typeof timestamp.toDate === 'function') {
+      date = timestamp.toDate();
+    } else if (timestamp.seconds) {
+      // Firebase timestamp with seconds
+      date = new Date(timestamp.seconds * 1000);
+    } else if (timestamp._seconds) {
+      // Firebase timestamp with _seconds
+      date = new Date(timestamp._seconds * 1000);
+    } else if (typeof timestamp === 'string' || typeof timestamp === 'number') {
+      // Regular date string or timestamp
+      date = new Date(timestamp);
+    } else {
+      return 'Unknown date';
+    }
+    
+    // Format date in Indian format
+    return date.toLocaleDateString('en-IN', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  } catch (error) {
+    console.error('Error formatting timestamp:', error);
+    return 'Unknown date';
+  }
+}
+
+// Sample products data (same as home page)
+function getSampleProducts() {
+  return [
+    {
+      id: '1',
+      stone_name: "Raj Green Sandstone",
+      category: "sandstone",
+      sub_category: "slabs",
+      type: "natural",
+      color: "green",
+      price: 85,
+      price_unit: "sqft",
+      description: "Premium quality green sandstone with natural texture and durability. Perfect for outdoor and indoor applications.",
+      thickness: "20-40 mm",
+      size: "Custom sizes available",
+      finish: "Natural",
+      usage: "Flooring, Wall Cladding, Paving",
+      water_absorption: "2-3%",
+      density: "2.4-2.6 g/cm³",
+      compressive_strength: "1800-2200 kg/cm²",
+      images: [
+        "https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+        "https://images.unsplash.com/photo-1582735689272-29b68d399c1c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+      ],
+      created_at: { toDate: () => new Date('2025-11-15T06:41:57') }
+    },
+    {
+      id: '2',
+      stone_name: "Kota Brown Stone",
+      category: "kota",
+      sub_category: "tiles",
+      type: "calibrated",
+      color: "brown",
+      price: 65,
+      price_unit: "sqft",
+      description: "Classic brown kota stone with uniform texture and excellent finish. Ideal for flooring and wall cladding.",
+      thickness: "10-20 mm",
+      size: "Standard tiles (12x12, 24x24 inches)",
+      finish: "Calibrated",
+      usage: "Flooring, Pavements, Landscaping",
+      water_absorption: "1.5-2.5%",
+      density: "2.5-2.7 g/cm³",
+      compressive_strength: "2000-2400 kg/cm²",
+      images: [
+        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+      ],
+      created_at: { toDate: () => new Date('2025-11-14T10:20:00') }
+    }
+  ];
+}
+
+// Display product details
+function displayProductDetails(product) {
+  const productContainer = document.getElementById('productContainer');
+  
+  const imagesHTML = product.images && product.images.length > 0 
+    ? `
+      <div class="product-images">
+        <div class="image-container" onclick="openImageZoom(0)">
+          <img src="${product.images[0]}" alt="${product.stone_name}" class="main-image" id="mainProductImage">
+          <div class="zoom-indicator">
+            <i class="fas fa-search-plus"></i>
+            Click to zoom
+          </div>
+        </div>
+        ${product.images.length > 1 ? `
+          <div class="thumbnail-grid">
+            ${product.images.map((img, index) => `
+              <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeMainImage(${index})">
+                <img src="${img}" alt="Thumbnail ${index + 1}">
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `
+    : `
+      <div class="product-images">
+        <div class="image-container" onclick="openImageZoom(0)">
+          <img src="https://via.placeholder.com/500x400/3498db/ffffff?text=Stone+Image" alt="${product.stone_name}" class="main-image">
+          <div class="zoom-indicator">
+            <i class="fas fa-search-plus"></i>
+            Click to zoom
+          </div>
+        </div>
+      </div>
+    `;
+  
+  // ✅ TECHNICAL SPECIFICATIONS
+  const technicalSpecs = [
+    { label: 'Thickness', value: product.thickness },
+    { label: 'Size', value: product.size },
+    { label: 'Finish', value: product.finish },
+    { label: 'Usage', value: product.usage },
+    { label: 'Water Absorption', value: product.water_absorption },
+    { label: 'Density', value: product.density },
+    { label: 'Compressive Strength', value: product.compressive_strength }
+  ].filter(spec => spec.value && spec.value !== 'N/A' && spec.value !== '');
+
+  const technicalSpecsHTML = technicalSpecs.length > 0 ? `
+    <div class="tech-specs">
+      <h3><i class="fas fa-flask"></i> Technical Specifications</h3>
+      <div class="specs-grid">
+        ${technicalSpecs.map(spec => `
+          <div class="spec-item">
+            <span class="spec-label">${spec.label}</span>
+            <span class="spec-value">${spec.value}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  ` : '';
+
+  // ✅ ADDITIONAL FIELDS
+  const additionalFieldsHTML = product.additional_fields && product.additional_fields.length > 0 ? `
+    <div class="additional-fields">
+      <h3><i class="fas fa-plus-circle"></i> Additional Information</h3>
+      ${product.additional_fields.map(field => `
+        <div class="additional-field-item">
+          <span class="additional-field-name">${field.name}</span>
+          <span class="additional-field-value">${field.value}</span>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  // ✅ PRODUCT META INFORMATION (Non-personal)
+  const productMeta = [
+    { label: 'Sub-category', value: product.sub_category },
+    { label: 'Type', value: product.type },
+    { label: 'Color', value: product.color },
+    { label: 'Posted Date', value: formatFirebaseTimestamp(product.created_at) }
+  ].filter(meta => meta.value && meta.value !== 'N/A' && meta.value !== '');
+
+  // ✅ UPDATED ORDER: Technical Specifications first, then Additional Information, then Description
+  productContainer.innerHTML = `
+    ${imagesHTML}
+    <div class="product-info">
+      <span class="product-category">${product.category || 'Stone'}</span>
+      <h1 class="product-title">${product.stone_name}</h1>
+      <div class="product-price">₹${product.price || '0'} / ${product.price_unit || 'unit'}</div>
+      
+      ${productMeta.length > 0 ? `
+        <div class="product-meta">
+          ${productMeta.map(meta => `
+            <div class="meta-item">
+              <span class="meta-label">${meta.label}</span>
+              <span class="meta-value">${meta.value}</span>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+      
+      ${technicalSpecsHTML}
+      ${additionalFieldsHTML}
+      
+      ${product.description ? `
+        <div class="product-description">
+          <h3><i class="fas fa-info-circle"></i> Description</h3>
+          <p>${product.description}</p>
+        </div>
+      ` : ''}
+      
+      <div class="product-actions">
+        <button class="action-btn whatsapp-btn" onclick="contactViaWhatsApp()">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </button>
+        <button class="action-btn email-btn" onclick="contactViaEmail()">
+          <i class="fas fa-envelope"></i> Email
+        </button>
+      </div>
+    </div>
+  `;
+
+  // Setup click events for thumbnails
+  setupThumbnailClicks();
+}
+
+// Setup thumbnail click events
+function setupThumbnailClicks() {
+  document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+    thumb.addEventListener('click', (e) => {
+      e.stopPropagation();
+      changeMainImage(index);
+    });
+  });
+}
+
+// Change main image when thumbnail is clicked
+function changeMainImage(index) {
+  if (!currentProduct || !currentProduct.images) return;
+  
+  const mainImage = document.getElementById('mainProductImage');
+  
+  if (mainImage) {
+    mainImage.src = currentProduct.images[index];
+  }
+  
+  // Update active thumbnail
+  document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+    thumb.classList.toggle('active', i === index);
+  });
+}
+
+// Open image zoom modal
+function openImageZoom(imgIndex) {
+  if (!currentProduct || !currentProduct.images) return;
+  
+  currentZoomImages = currentProduct.images;
+  currentZoomImageIndex = imgIndex;
+  
+  // Update modal content
+  const zoomImage = document.getElementById('zoom-image');
+  zoomImage.src = currentZoomImages[currentZoomImageIndex];
+  updateZoomCounter();
+  
+  // Show modal
+  const zoomModal = document.getElementById('zoom-modal');
+  zoomModal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+// Update zoom image counter
+function updateZoomCounter() {
+  const zoomCounter = document.getElementById('zoom-counter');
+  zoomCounter.textContent = `${currentZoomImageIndex + 1} / ${currentZoomImages.length}`;
+}
+
+// Close zoom modal
+function closeZoomModal() {
+  const zoomModal = document.getElementById('zoom-modal');
+  zoomModal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Previous image in zoom
+function prevZoomImage() {
+  if (currentZoomImages.length === 0) return;
+  
+  currentZoomImageIndex = (currentZoomImageIndex - 1 + currentZoomImages.length) % currentZoomImages.length;
+  const zoomImage = document.getElementById('zoom-image');
+  zoomImage.src = currentZoomImages[currentZoomImageIndex];
+  updateZoomCounter();
+}
+
+// Next image in zoom
+function nextZoomImage() {
+  if (currentZoomImages.length === 0) return;
+  
+  currentZoomImageIndex = (currentZoomImageIndex + 1) % currentZoomImages.length;
+  const zoomImage = document.getElementById('zoom-image');
+  zoomImage.src = currentZoomImages[currentZoomImageIndex];
+  updateZoomCounter();
+}
+
+// Load related products
+function loadRelatedProducts(currentProduct) {
+  const relatedProductsDiv = document.getElementById('relatedProducts');
+  
+  if (!currentProduct) {
+    relatedProductsDiv.innerHTML = '<div class="error">Unable to load related products</div>';
+    return;
+  }
+  
+  // Find related products (same category, excluding current product)
+  const relatedProducts = allProducts
+    .filter(product => 
+      product.category === currentProduct.category && 
+      product.id !== currentProduct.id
+    )
+    .map(product => filterPersonalInfo(product)) // ✅ Filter personal info
+    .filter(product => 
+      product.stone_name && 
+      product.stone_name !== '' && 
+      product.stone_name !== 'N/A'
+    ); // ✅ Remove blank products
+
+  if (relatedProducts.length === 0) {
+    relatedProductsDiv.innerHTML = '<div class="no-data">No related products found</div>';
+    return;
+  }
+  
+  // Display related products
+  relatedProductsDiv.innerHTML = relatedProducts.map(product => `
+    <div class="product-card" onclick="viewProduct('${product.id}')">
+      <div class="product-image">
+        <img src="${product.images ? product.images[0] : 'https://via.placeholder.com/300x200/3498db/ffffff?text=Stone+Image'}" alt="${product.stone_name}">
+        <span class="product-badge">${product.category || 'Stone'}</span>
+      </div>
+      <div class="product-info-card">
+        <h3 class="product-title-card">${product.stone_name}</h3>
+        <div class="product-price-card">₹${product.price || '0'} / ${product.price_unit || 'unit'}</div>
+        <div class="product-description-card">${product.description ? product.description.substring(0, 100) + '...' : 'Product description not available'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// View product function
+function viewProduct(productId) {
+  window.location.href = `product-details.html?id=${productId}`;
+}
+
+// ✅ UPDATED Contact functions with PROPER TIMESTAMP
+function contactViaWhatsApp() {
+  if (!currentProduct) return;
+  
+  // ✅ PROPER FIREBASE TIMESTAMP FORMATTING
+  const postedDateTime = formatFirebaseTimestamp(currentProduct.created_at);
+  
+  const mainImageUrl = currentProduct.images && currentProduct.images.length > 0 ? currentProduct.images[0] : '';
+  
+  // ✅ COMPLETE PRODUCT DETAILS WITHOUT PERSONAL INFO
+  const message = `Hello, I am interested in your product:\n\n` +
+                 `*Product Details:*\n` +
+                 `🪨 Stone Name: ${currentProduct.stone_name}\n` +
+                 `📂 Category: ${currentProduct.category || 'N/A'}\n` +
+                 `📋 Sub-category: ${currentProduct.sub_category || 'N/A'}\n` +
+                 `🔧 Type: ${currentProduct.type || 'N/A'}\n` +
+                 `🎨 Color: ${currentProduct.color || 'N/A'}\n` +
+                 `💰 Price: ₹${currentProduct.price || 'N/A'} per ${currentProduct.price_unit || 'N/A'}\n` +
+                 `📏 Thickness: ${currentProduct.thickness || 'N/A'}\n` +
+                 `📐 Size: ${currentProduct.size || 'N/A'}\n` +
+                 `✨ Finish: ${currentProduct.finish || 'N/A'}\n` +
+                 `💧 Water Absorption: ${currentProduct.water_absorption || 'N/A'}\n` +
+                 `🏗️ Usage: ${currentProduct.usage || 'N/A'}\n` +
+                 `📝 Description: ${currentProduct.description || 'N/A'}\n` +
+                 `📅 Posted Date & Time: ${postedDateTime}\n` +
+                 `${mainImageUrl ? `🖼️ Product Image: ${mainImageUrl}` : ''}\n\n` +
+                 `Please provide more details and availability.`;
+  
+  const whatsappUrl = `https://wa.me/${contactNumber}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+}
+
+function contactViaEmail() {
+  if (!currentProduct) return;
+  
+  // ✅ PROPER FIREBASE TIMESTAMP FORMATTING
+  const postedDateTime = formatFirebaseTimestamp(currentProduct.created_at);
+  
+  const mainImageUrl = currentProduct.images && currentProduct.images.length > 0 ? currentProduct.images[0] : '';
+  
+  const subject = `Inquiry about ${currentProduct.stone_name}`;
+  const body = `Hello,\n\nI am interested in your product:\n\n` +
+               `Product Details:\n` +
+               `Stone Name: ${currentProduct.stone_name}\n` +
+               `Category: ${currentProduct.category || 'N/A'}\n` +
+               `Sub-category: ${currentProduct.sub_category || 'N/A'}\n` +
+               `Type: ${currentProduct.type || 'N/A'}\n` +
+               `Color: ${currentProduct.color || 'N/A'}\n` +
+               `Price: ₹${currentProduct.price || 'N/A'} per ${currentProduct.price_unit || 'N/A'}\n` +
+               `Thickness: ${currentProduct.thickness || 'N/A'}\n` +
+               `Size: ${currentProduct.size || 'N/A'}\n` +
+               `Finish: ${currentProduct.finish || 'N/A'}\n` +
+               `Water Absorption: ${currentProduct.water_absorption || 'N/A'}\n` +
+               `Usage: ${currentProduct.usage || 'N/A'}\n` +
+               `Description: ${currentProduct.description || 'N/A'}\n` +
+               `Posted Date & Time: ${postedDateTime}\n` +
+               `${mainImageUrl ? `Product Image: ${mainImageUrl}` : ''}\n\n` +
+               `Please provide more details, availability, and pricing information.\n\n` +
+               `Thank you.\n\n` +
+               `Best regards,\n[Your Name]`;
+  
+  const emailUrl = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.open(emailUrl, '_blank');
+}
+
+// Error handling
+function showError(message) {
+  const productContainer = document.getElementById('productContainer');
+  productContainer.innerHTML = `<div class="error">${message}</div>`;
+}
+
+// Setup zoom modal event listeners
+function setupZoomModalEvents() {
+  const zoomModal = document.getElementById('zoom-modal');
+  const zoomClose = document.querySelector('.zoom-close');
+  const zoomPrev = document.querySelector('.zoom-prev');
+  const zoomNext = document.querySelector('.zoom-next');
+  
+  // Close modal
+  zoomClose.onclick = () => {
+    closeZoomModal();
+  };
+  
+  // Previous image
+  zoomPrev.onclick = (e) => {
+    e.stopPropagation();
+    prevZoomImage();
+  };
+  
+  // Next image
+  zoomNext.onclick = (e) => {
+    e.stopPropagation();
+    nextZoomImage();
+  };
+  
+  // Close modal when clicking outside image
+  zoomModal.addEventListener('click', (e) => {
+    if (e.target === zoomModal) {
+      closeZoomModal();
+    }
+  });
+  
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!zoomModal.classList.contains('active')) return;
+    
+    if (e.key === 'ArrowLeft') {
+      prevZoomImage();
+    } else if (e.key === 'ArrowRight') {
+      nextZoomImage();
+    } else if (e.key === 'Escape') {
+      closeZoomModal();
+    }
+  });
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  setupZoomModalEvents();
+  loadProductDetails();
+});
+</script>
+</body>
+</html>
