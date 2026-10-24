@@ -5,498 +5,389 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="31nH3FVV0op1VtiEtdejD-D1wxT6pvgUj9WWVFexrG0" />
 <meta name="google-site-verification" content="Jy6Gj4ivr8cX6dFW5cqY3OGZ0IqiI4Sp9b7FHXlYo8w" />
-<meta name="google-adsense-account" content="ca-pub-8089328615109878">
-<!-- Google AdSense Code -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8089328615109878" crossorigin="anonymous"></script>
 <title>Rajasthan Sandstone Hub - Premium Stone Supplier</title>
 <meta name="description" content="Rajasthan's No.1 Sandstone Supplier in Bijoliya. Premium quality Sandstone, Kota Stone, Granite, Marble.">
-<meta name="robots" content="index, follow">
 
-<!-- Google Fonts for Athlete2 Bold Look -->
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Oswald:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="icon" href="stone.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-/* ===== ATHLETE2 THEME VARIABLES ===== */
+/* ===== VARIABLES ===== */
 :root {
-  --primary: #c7a97b; /* Premium Gold/Stone Accent */
-  --primary-dark: #a58a62;
-  --bg-dark: #0a0a0a; /* Deep Black */
-  --bg-card: #151515; /* Dark Gray for cards */
+  --primary: #c7a97b;
+  --bg-dark: #0a0a0a;
+  --bg-card: #151515;
   --text-light: #ffffff;
   --text-muted: #888888;
-  --border-color: #333333;
-  --radius: 0px; /* Sharp industrial edges */
-  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --border-color: #222222;
+  --transition: all 0.3s ease;
   --font-head: 'Oswald', sans-serif;
   --font-body: 'Montserrat', sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: var(--font-body);
-  line-height: 1.6;
   color: var(--text-light);
   background: var(--bg-dark);
-  display: flex;
-  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* ===== Typography ===== */
-h1, h2, h3, h4 {
-  font-family: var(--font-head);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* ===== Sidebar ===== */
-.sidebar {
-  width: 250px;
-  background: #000;
-  border-right: 1px solid var(--border-color);
-  color: white;
-  padding: 20px 0;
-  position: fixed;
-  height: 100vh;
-  overflow-y: auto;
-  z-index: 1000;
-  transition: var(--transition);
-}
-
-.sidebar.collapsed { width: 70px; }
-.sidebar.hidden { transform: translateX(-100%); }
-
-.sidebar-header {
-  padding: 0 20px 20px;
+/* ===== TOP NAVIGATION (Replaced Sidebar) ===== */
+.top-navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: 15px;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 30px;
+  height: 70px;
 }
-.sidebar.collapsed .sidebar-header { padding: 0 10px 20px; justify-content: center; }
 
-.sidebar-logo {
+.nav-brand {
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 1px;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.3rem;
-  font-weight: 700;
-  font-family: var(--font-head);
-  color: var(--primary);
-  text-transform: uppercase;
 }
-.sidebar.collapsed .sidebar-logo span { display: none; }
-.sidebar-logo img { height: 40px; border-radius: 0; }
+.nav-brand span { color: var(--primary); }
+.nav-brand img { height: 35px; }
 
-.sidebar-toggle {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  color: white;
-  cursor: pointer;
-  padding: 8px;
-  transition: var(--transition);
-}
-.sidebar-toggle:hover { background: var(--primary); color: #000; }
-.sidebar.collapsed .sidebar-toggle { transform: rotate(180deg); }
-
-.sidebar-nav { list-style: none; }
-.sidebar.collapsed .sidebar-nav span { display: none; }
-.sidebar-nav a {
+.nav-links {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 20px;
+  gap: 25px;
+}
+.nav-links a {
   color: var(--text-muted);
   text-decoration: none;
+  font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.85rem;
-  transition: var(--transition);
-  border-left: 3px solid transparent;
-}
-.sidebar.collapsed .sidebar-nav a { padding: 15px; justify-content: center; }
-.sidebar-nav a:hover, .sidebar-nav a.active {
-  background: var(--bg-card);
-  color: var(--text-light);
-  border-left-color: var(--primary);
-}
-.sidebar-nav i { width: 20px; text-align: center; font-size: 1.1rem;}
-
-/* ===== Main Content ===== */
-.main-content {
-  flex: 1;
-  margin-left: 250px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  letter-spacing: 0.5px;
   transition: var(--transition);
 }
-.main-content.expanded { margin-left: 70px; }
+.nav-links a:hover, .nav-links a.active { color: var(--primary); }
 
-/* ===== Header ===== */
-.top-header {
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 15px 30px;
+.nav-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  z-index: 999;
+  gap: 15px;
 }
+
+/* Auth Buttons & Profile in Navbar */
+.btn {
+  padding: 8px 18px;
+  border-radius: 0;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.btn-primary { background: var(--primary); color: #000; }
+.btn-primary:hover { background: transparent; border-color: var(--primary); color: var(--primary); }
+.btn-outline { background: transparent; border: 1px solid var(--text-muted); color: var(--text-light); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 
 .user-info {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--bg-card);
-  padding: 6px 12px;
-  border: 1px solid var(--border-color);
+  cursor: pointer;
 }
 .user-avatar {
-  width: 32px;
-  height: 32px;
-  background: var(--primary);
-  color: #000;
+  width: 35px; height: 35px;
+  background: var(--primary); color: #000;
+  display: flex; justify-content: center; align-items: center;
+  font-family: var(--font-head); font-weight: 700; border-radius: 50%;
+}
+.user-name { font-size: 0.85rem; font-weight: 600; color: white; }
+
+.mobile-toggle {
+  display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;
+}
+
+/* ===== NEW HERO & INFINITE HIGHLIGHT SCROLL ===== */
+.hero-section {
+  padding: 40px 0 20px;
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.highlight-marquee {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-family: var(--font-head);
+  width: max-content;
+  animation: scrollMarquee 30s linear infinite;
 }
-.user-name { font-weight: 600; color: var(--text-light); font-size: 0.9rem; }
+.highlight-marquee:hover { animation-play-state: paused; }
 
-/* ===== Buttons (Athlete Style) ===== */
-.btn {
-  padding: 10px 20px;
-  border-radius: var(--radius);
-  font-weight: 700;
-  font-family: var(--font-head);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: var(--transition);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  font-size: 13px;
-  text-decoration: none;
+@keyframes scrollMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
-.btn-primary { background: var(--primary); color: #000; }
-.btn-primary:hover { background: transparent; border-color: var(--primary); color: var(--primary); }
-.btn-outline { background: transparent; border: 2px solid var(--text-light); color: var(--text-light); }
-.btn-outline:hover { background: var(--text-light); color: #000; }
-.btn-whatsapp { background: transparent; border: 2px solid #25D366; color: #25D366; }
-.btn-whatsapp:hover { background: #25D366; color: #000; }
-.btn-email { background: transparent; border: 2px solid #D44638; color: #D44638; }
-.btn-email:hover { background: #D44638; color: #000; }
 
-/* ===== Aggressive Banner ===== */
-.banner {
-  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover;
-  color: white;
-  text-align: center;
-  padding: 100px 20px;
-  position: relative;
-  border-bottom: 2px solid var(--primary);
-}
-.banner h1 {
-  font-size: 4rem;
-  font-weight: 900;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-}
-.banner h1 span { color: var(--primary); }
-.banner p { font-size: 1.2rem; max-width: 700px; margin: 0 auto; color: #ccc; }
-
-/* ===== NEW: Premium Highlights Grid ===== */
-.premium-section { padding: 50px 20px; border-bottom: 1px solid var(--border-color); }
-.premium-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-top: 30px;
-}
-.premium-item {
-  position: relative;
-  height: 250px;
+.highlight-item {
+  width: 300px;
+  height: 400px;
+  margin: 0 10px;
   overflow: hidden;
   border: 1px solid var(--border-color);
   background: var(--bg-card);
-  cursor: pointer;
 }
-.premium-item img {
+.highlight-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-  filter: grayscale(30%);
+  filter: grayscale(15%) contrast(1.1);
+  transition: transform 0.8s ease, filter 0.8s ease;
 }
-.premium-item:hover img { transform: scale(1.1); filter: grayscale(0%); }
-.premium-overlay {
-  position: absolute;
-  bottom: -50px; left: 0; right: 0;
-  background: rgba(0,0,0,0.85);
-  color: var(--primary);
-  padding: 15px;
-  text-align: center;
-  font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  transition: bottom 0.3s ease;
-  border-top: 2px solid var(--primary);
+.highlight-item:hover img {
+  transform: scale(1.05);
+  filter: grayscale(0%) contrast(1.2);
 }
-.premium-item:hover .premium-overlay { bottom: 0; }
 
-/* ===== Filter Section ===== */
-.filter-toggle { display: flex; justify-content: center; margin: 30px 0 10px; }
+/* ===== FILTERS ===== */
+.filter-toggle { text-align: center; margin: 30px 0 10px; }
 .filter-container {
   display: none; flex-wrap: wrap; justify-content: center; gap: 15px;
   margin: 15px 20px; padding: 25px;
   background: var(--bg-card); border: 1px solid var(--border-color);
 }
 .filter-container.active { display: flex; }
-.filter-box { display: flex; flex-direction: column; gap: 8px; flex: 1 1 180px; max-width: 200px; }
-.filter-box label { font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;}
+.filter-box { display: flex; flex-direction: column; gap: 8px; flex: 1 1 150px; max-width: 200px; }
+.filter-box label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;}
 .filter-box select, .filter-box input {
   padding: 10px; border: 1px solid var(--border-color);
-  font-size: 14px; background: #000; color: white; transition: var(--transition);
-  border-radius: 0;
+  font-size: 13px; background: #000; color: white; outline: none; border-radius: 0;
 }
-.filter-box select:focus, .filter-box input:focus { outline: none; border-color: var(--primary); }
+.filter-box select:focus, .filter-box input:focus { border-color: var(--primary); }
 
-/* ===== Products Grid ===== */
-.products-section { padding: 0 20px 40px; flex: 1; }
+/* ===== PRODUCTS GRID ===== */
+.products-section { padding: 40px 30px; }
 .section-title {
-  text-align: center; margin: 40px 0; font-size: 2.5rem; color: white;
+  text-align: center; font-size: 2rem; font-family: var(--font-head);
+  margin-bottom: 40px; color: white; letter-spacing: 2px;
 }
 .section-title span { color: var(--primary); }
 
-.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
 
-/* Athlete Card Style */
 .product-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  overflow: hidden;
+  cursor: pointer;
   transition: var(--transition);
   position: relative;
 }
 .product-card:hover {
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(199, 169, 123, 0.1);
   transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
 }
 
 .product-image {
   position: relative;
-  height: 250px;
+  height: 280px;
   background: #000;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
 }
-.product-image img { width: 100%; height: 100%; object-fit: contain; display: none; transition: 0.3s; cursor: pointer; }
-.product-image img.active { display: block; }
-.product-card:hover .product-image img.active { transform: scale(1.05); }
+.product-image img {
+  width: 100%; height: 100%; object-fit: cover;
+  position: absolute; top:0; left:0;
+  opacity: 0; transition: opacity 0.8s ease-in-out, transform 3s ease;
+}
+.product-image img.active { opacity: 1; transform: scale(1.03); }
 
 .product-badge {
   position: absolute; top: 15px; right: 15px;
   background: var(--primary); color: #000;
-  padding: 4px 10px; font-size: 0.75rem; font-weight: 800; font-family: var(--font-head);
+  padding: 4px 12px; font-size: 0.7rem; font-weight: 700; font-family: var(--font-head);
   text-transform: uppercase; z-index: 10;
 }
 
-/* Carousel Arrows */
-.card-carousel-nav {
-  position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%);
-  display: flex; justify-content: space-between; padding: 0 10px; pointer-events: none;
-}
-.card-carousel-nav button {
-  background: #000; color: white; border: 1px solid var(--border-color);
-  width: 35px; height: 35px; cursor: pointer; pointer-events: auto;
-  display: flex; align-items: center; justify-content: center; transition: 0.3s;
-}
-.card-carousel-nav button:hover { background: var(--primary); color: #000; border-color: var(--primary); }
-
 .image-counter {
   position: absolute; bottom: 10px; right: 10px;
-  background: rgba(0,0,0,0.8); color: var(--primary); border: 1px solid var(--primary);
-  font-size: 11px; font-weight: bold; padding: 3px 8px; pointer-events: none;
+  background: rgba(0,0,0,0.8); color: var(--text-light);
+  font-size: 10px; padding: 3px 8px; z-index: 10;
 }
 
-.product-info { padding: 20px; }
-.product-title { font-size: 1.3rem; margin-bottom: 12px; color: white; }
-.product-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; font-size: 0.85rem; color: var(--text-muted); }
-.product-price {
-  font-size: 1.4rem; font-weight: 900; font-family: var(--font-head);
-  color: var(--primary); margin-bottom: 15px; text-align: center;
-  border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
-  padding: 10px 0;
+.product-info { padding: 20px; text-align: center; }
+.product-title {
+  font-size: 1.2rem; font-family: var(--font-head); color: white;
+  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;
 }
-.product-actions { display: flex; gap: 10px; }
-.product-actions .btn { flex: 1; justify-content: center; padding: 10px; font-size: 0.85rem; }
+.product-meta {
+  display: flex; justify-content: center; gap: 15px;
+  font-size: 0.8rem; color: var(--text-muted);
+}
+.product-meta span { display: flex; align-items: center; gap: 5px; }
 
-/* ===== Modals ===== */
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 2000; }
+/* ===== MODALS ===== */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 2000; }
 .modal.active { display: flex; }
-.modal-content { background: var(--bg-card); border: 1px solid var(--primary); padding: 40px; width: 400px; max-width: 90vw; position: relative; }
-.modal-content h2 { color: white; margin-bottom: 25px; font-size: 2rem; text-align: center; }
+.modal-content { background: var(--bg-card); border: 1px solid var(--border-color); padding: 40px; width: 400px; max-width: 90vw; position: relative; }
+.modal-content h2 { color: white; margin-bottom: 25px; font-size: 1.8rem; text-align: center; font-family: var(--font-head); }
 .form-group { margin-bottom: 20px; }
-.form-group input { width: 100%; padding: 12px 15px; background: #000; border: 1px solid var(--border-color); color: white; font-size: 14px; border-radius: 0;}
-.form-group input:focus { outline: none; border-color: var(--primary); }
-.modal-close { position: absolute; top: 15px; right: 15px; font-size: 24px; color: var(--primary); background: none; border: none; cursor: pointer; }
-.modal-divider { text-align: center; margin: 20px 0; color: var(--text-muted); position: relative; }
-.modal-divider:before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--border-color); }
-.modal-divider span { background: var(--bg-card); padding: 0 15px; position: relative; z-index: 1; font-size: 0.9rem; }
-.modal a { color: var(--primary); display: block; text-align: center; margin-top: 15px; font-weight: 600; text-decoration: none;}
+.form-group input { width: 100%; padding: 12px 15px; background: #000; border: 1px solid var(--border-color); color: white; font-size: 13px; outline: none; }
+.form-group input:focus { border-color: var(--primary); }
+.modal-close { position: absolute; top: 15px; right: 15px; font-size: 24px; color: var(--text-muted); background: none; border: none; cursor: pointer; }
+.modal-close:hover { color: var(--primary); }
+.modal a { color: var(--primary); display: block; text-align: center; margin-top: 15px; font-size: 0.85rem; text-decoration: none; }
 
-/* ===== Full Screen Image Modal ===== */
-.fullscreen-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; justify-content: center; align-items: center; }
-.fullscreen-modal.active { display: flex; }
-.fullscreen-image { max-width: 95%; max-height: 95%; object-fit: contain; }
-.fullscreen-close, .fullscreen-nav {
-  position: absolute; background: #000; border: 1px solid var(--border-color); color: white;
-  width: 50px; height: 50px; display: flex; justify-content: center; align-items: center;
-  cursor: pointer; font-size: 1.5rem; transition: 0.3s; z-index: 3001;
+/* ===== FOOTER ===== */
+footer {
+  background: #000; border-top: 1px solid var(--border-color);
+  color: var(--text-muted); text-align: center; padding: 25px;
+  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
 }
-.fullscreen-close { top: 20px; right: 20px; }
-.fullscreen-nav { top: 50%; transform: translateY(-50%); }
-.fullscreen-prev { left: 20px; }
-.fullscreen-next { right: 20px; }
-.fullscreen-close:hover, .fullscreen-nav:hover { background: var(--primary); color: #000; border-color: var(--primary); }
-
-/* ===== Footer ===== */
-footer { background: #000; border-top: 1px solid var(--border-color); color: var(--text-muted); text-align: center; padding: 20px; margin-top: auto; font-size: 0.9rem; font-family: var(--font-head); letter-spacing: 1px;}
 footer a { color: var(--primary); text-decoration: none; }
 
-/* Responsive adjustments omitted for brevity but they follow the same dark theme logic */
-@media (max-width: 768px) {
-  .sidebar { width: 280px; transform: translateX(-100%); }
-  .sidebar.active { transform: translateX(0); }
-  .main-content { margin-left: 0 !important; }
-  .banner h1 { font-size: 2.5rem; }
-  .products-grid { grid-template-columns: repeat(1, 1fr); }
-  .header-actions { flex-wrap: wrap; justify-content: center;}
-  .top-header { flex-direction: column; gap: 15px;}
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+  .nav-links {
+    position: fixed; top: 70px; left: -100%; width: 250px; height: calc(100vh - 70px);
+    background: var(--bg-card); flex-direction: column; gap: 0;
+    border-right: 1px solid var(--border-color); transition: var(--transition);
+  }
+  .nav-links.active { left: 0; }
+  .nav-links a { padding: 20px; border-bottom: 1px solid var(--border-color); }
+  .mobile-toggle { display: block; }
+  .nav-brand span.text { display: none; }
+  .highlight-item { width: 220px; height: 300px; }
 }
-.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-light); cursor: pointer; }
-@media (max-width: 768px) { .mobile-menu-btn { display: block; position: absolute; left: 15px; top: 15px;} }
+@media (max-width: 576px) {
+  .top-navbar { padding: 0 15px; }
+  .btn-outline, .btn-primary { padding: 6px 12px; font-size: 0.75rem; }
+  .user-name { display: none; }
+  .products-section { padding: 30px 15px; }
+}
 </style>
 </head>
 <body>
 
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">
-      <span>RAJASTHAN HUB</span>
+<!-- TOP NAVBAR -->
+<header class="top-navbar">
+  <div style="display:flex; align-items:center; gap:15px;">
+    <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
+    <div class="nav-brand">
+      <img src="stone.png" alt="Logo"> <span class="text">RAJASTHAN</span> <span>HUB</span>
     </div>
-    <button class="sidebar-toggle" id="sidebar-toggle"><i class="fas fa-chevron-left"></i></button>
   </div>
-  <ul class="sidebar-nav">
-    <li><a href="sandstone.html" class="active"><i class="fas fa-gem"></i> <span>Sand Stone</span></a></li>
-    <li><a href="kota.html"><i class="fas fa-cube"></i> <span>Kota Stone</span></a></li>
-    <li><a href="granite.html"><i class="fas fa-mountain"></i> <span>Granite</span></a></li>
-    <li><a href="marble.html"><i class="fas fa-square"></i> <span>Marble</span></a></li>
-    <li><a href="dholpur.html"><i class="fas fa-palette"></i> <span>Dholpur</span></a></li>
-    <li><a href="tiles.html"><i class="fas fa-th-large"></i> <span>Tiles</span></a></li>
-    <li><a href="mandana.html"><i class="fas fa-draw-polygon"></i> <span>Mandana</span></a></li>
-  </ul>
+  
+  <nav class="nav-links" id="nav-links">
+    <a href="sandstone.html" class="active">Sand Stone</a>
+    <a href="kota.html">Kota Stone</a>
+    <a href="granite.html">Granite</a>
+    <a href="marble.html">Marble</a>
+    <a href="dholpur.html">Dholpur</a>
+    <a href="tiles.html">Tiles</a>
+    <a href="mandana.html">Mandana</a>
+  </nav>
+  
+  <div class="nav-actions">
+    <button id="btn-post" style="display:none;" class="btn btn-outline"><i class="fas fa-plus"></i> Post</button>
+    <button id="btn-open-signin" class="btn btn-primary"><i class="fas fa-user"></i> Sign In</button>
+    <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
+    
+    <div class="user-info">
+      <div class="user-avatar" id="user-avatar">G</div>
+      <span class="user-name" id="user-name">GUEST</span>
+    </div>
+  </div>
+</header>
+
+<!-- INFINITE HIGHLIGHT MARQUEE (NO TEXT, PURE VISUAL) -->
+<section class="hero-section">
+  <div class="highlight-marquee">
+    <!-- First set of images -->
+    <div class="highlight-item"><img src="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/dwty45tv/48ae17733978.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/dw6MN0xv/412d7b05dece.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/1tLNNTFG/b5860f80e753.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/xKgwbTYM/96a984185507.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/fYx3bfJs/0956c514f616.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/S4pxysNG/16f01166b907.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/nq4qj1MM/02043e775803.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/HpzGW2px/6699d34bfe9d.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/NGBHKFc/07c34bda7a8a.png" alt=""></div>
+    <!-- Duplicated set for seamless infinite scrolling -->
+    <div class="highlight-item"><img src="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/dwty45tv/48ae17733978.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/dw6MN0xv/412d7b05dece.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/1tLNNTFG/b5860f80e753.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/xKgwbTYM/96a984185507.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/fYx3bfJs/0956c514f616.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/S4pxysNG/16f01166b907.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/nq4qj1MM/02043e775803.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/HpzGW2px/6699d34bfe9d.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/NGBHKFc/07c34bda7a8a.png" alt=""></div>
+  </div>
+</section>
+
+<!-- FILTER TOGGLE -->
+<div class="filter-toggle">
+  <button class="btn btn-outline" id="filter-toggle-btn"><i class="fas fa-sliders-h"></i> FILTER INVENTORY</button>
 </div>
 
-<div class="main-content" id="main-content">
-  <header class="top-header">
-    <button class="mobile-menu-btn" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
-    <div class="header-actions" style="margin-left: 40px;">
-      <button id="history-btn" style="display:none;" class="btn btn-outline"><i class="fas fa-history"></i> History</button>
-      <button id="btn-post" style="display:none;" class="btn btn-outline"><i class="fas fa-plus"></i> Post Product</button>
-      <button id="btn-open-signin" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-      <button id="btn-open-signup" class="btn btn-outline">Sign Up</button>
-      <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
-    </div>
-    <div class="user-profile">
-      <div class="user-info">
-        <div class="user-avatar" id="user-avatar">G</div>
-        <span class="user-name" id="user-name">GUEST</span>
-      </div>
-    </div>
-  </header>
-
-  <div class="banner">
-    <h1>Rajasthan <span>Sandstone</span> Hub</h1>
-    <p>INDUSTRIAL STRENGTH. PREMIUM AESTHETICS. DIRECT FROM QUARRIES.</p>
+<!-- FILTERS -->
+<div class="filter-container" id="filter-container">
+  <div class="filter-box"><label>Category</label><select id="filter-category"><option value="">ALL</option></select></div>
+  <div class="filter-box"><label>Sub-category</label><select id="filter-subcat"><option value="">ALL</option></select></div>
+  <div class="filter-box"><label>Type</label><select id="filter-type"><option value="">ALL</option></select></div>
+  <div class="filter-box"><label>Color</label><select id="filter-color"><option value="">ALL</option></select></div>
+  <div style="display:flex; gap:10px; align-items:flex-end;">
+    <button id="filter-btn" class="btn btn-primary">APPLY</button>
+    <button id="clear-filter-btn" class="btn btn-outline">CLEAR</button>
   </div>
-
-  <!-- NEW PREMIUM HIGHLIGHTS SECTION -->
-  <section class="premium-section">
-    <h2 class="section-title">PREMIUM <span>HIGHLIGHTS</span></h2>
-    <div class="premium-grid">
-      <div class="premium-item"><img src="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png" alt="Premium Stone 1"><div class="premium-overlay">Premium Stone 1</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/dwty45tv/48ae17733978.png" alt="Premium Stone 2"><div class="premium-overlay">Premium Stone 2</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/dw6MN0xv/412d7b05dece.png" alt="Premium Stone 3"><div class="premium-overlay">Premium Stone 3</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/1tLNNTFG/b5860f80e753.png" alt="Premium Stone 4"><div class="premium-overlay">Premium Stone 4</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/xKgwbTYM/96a984185507.png" alt="Premium Stone 5"><div class="premium-overlay">Premium Stone 5</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/fYx3bfJs/0956c514f616.png" alt="Premium Stone 6"><div class="premium-overlay">Premium Stone 6</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/S4pxysNG/16f01166b907.png" alt="Premium Stone 7"><div class="premium-overlay">Premium Stone 7</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/nq4qj1MM/02043e775803.png" alt="Premium Stone 8"><div class="premium-overlay">Premium Stone 8</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/HpzGW2px/6699d34bfe9d.png" alt="Premium Stone 9"><div class="premium-overlay">Premium Stone 9</div></div>
-      <div class="premium-item"><img src="https://i.ibb.co/NGBHKFc/07c34bda7a8a.png" alt="Premium Stone 10"><div class="premium-overlay">Premium Stone 10</div></div>
-    </div>
-  </section>
-
-  <div class="filter-toggle">
-    <button class="btn btn-primary" id="filter-toggle-btn"><i class="fas fa-filter"></i> SHOW FILTERS</button>
-  </div>
-
-  <div class="filter-container" id="filter-container">
-    <div class="filter-box"><label>Category</label><select id="filter-category"><option value="">ALL</option></select></div>
-    <div class="filter-box"><label>Sub-category</label><select id="filter-subcat"><option value="">ALL</option></select></div>
-    <div class="filter-box"><label>Type</label><select id="filter-type"><option value="">ALL</option></select></div>
-    <div class="filter-box"><label>Color</label><select id="filter-color"><option value="">ALL</option></select></div>
-    <div class="filter-box"><label>Max Price (₹)</label><input type="number" id="filter-price" placeholder="AMOUNT"></div>
-    <div class="filter-box"><label>Unit</label><select id="filter-unit"><option value="">ALL</option></select></div>
-    <div style="display:flex; gap:10px; align-items:flex-end;">
-      <button id="filter-btn" class="btn btn-primary">APPLY</button>
-      <button id="clear-filter-btn" class="btn btn-outline">CLEAR</button>
-    </div>
-  </div>
-
-  <section class="products-section">
-    <h2 class="section-title">ALL <span>PRODUCTS</span></h2>
-    <div class="products-grid" id="product-grid">
-      <div style="color:white; text-align:center; grid-column: 1/-1;">LOADING INVENTORY...</div>
-    </div>
-  </section>
-
-  <footer>
-    &copy; 2025 RAJASTHAN SANDSTONE HUB | DESIGNED FOR STRENGTH | <a href="contact.html">CONTACT</a>
-  </footer>
 </div>
 
-<!-- Modals & Scripts (Functionality kept exactly identical, only CSS altered for modals) -->
+<!-- PRODUCTS GRID -->
+<section class="products-section">
+  <h2 class="section-title">PREMIUM <span>INVENTORY</span></h2>
+  <div class="products-grid" id="product-grid">
+    <div style="color:var(--text-muted); text-align:center; grid-column: 1/-1;">LOADING...</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2025 RAJASTHAN SANDSTONE HUB | <a href="contact.html">CONTACT SUPPORT</a>
+</footer>
+
+<!-- MODALS -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <button class="modal-close">&times;</button>
     <h2>SIGN IN</h2>
     <div class="form-group"><input type="email" id="signin-email" placeholder="EMAIL ADDRESS"></div>
     <div class="form-group"><input type="password" id="signin-password" placeholder="PASSWORD"></div>
-    <button id="signin-btn" class="btn btn-primary" style="width:100%">LOGIN</button>
-    <div class="modal-divider"><span>OR</span></div>
-    <button id="modal-google-signin" class="btn btn-outline" style="width:100%; justify-content:center;">
-      <img src="https://developers.google.com/identity/images/g-logo.png" alt="G" style="width:20px; height:20px; margin-right:10px;"> GOOGLE
-    </button>
-    <a href="#" id="switch-to-signup">CREATE ACCOUNT</a>
+    <button id="signin-btn" class="btn btn-primary" style="width:100%; justify-content:center;">LOGIN</button>
+    <a href="#" id="switch-to-signup">CREATE NEW ACCOUNT</a>
   </div>
 </div>
 
@@ -508,84 +399,74 @@ footer a { color: var(--primary); text-decoration: none; }
     <div class="form-group"><input type="email" id="signup-email" placeholder="EMAIL ADDRESS"></div>
     <div class="form-group"><input type="text" id="signup-phone" placeholder="PHONE NUMBER"></div>
     <div class="form-group"><input type="password" id="signup-password" placeholder="PASSWORD"></div>
-    <button id="signup-btn" class="btn btn-primary" style="width:100%">CREATE ACCOUNT</button>
+    <button id="signup-btn" class="btn btn-primary" style="width:100%; justify-content:center;">CREATE ACCOUNT</button>
     <a href="#" id="switch-to-signin">ALREADY REGISTERED? LOGIN</a>
   </div>
-</div>
-
-<!-- Full Screen Modal -->
-<div class="fullscreen-modal" id="fullscreen-modal">
-  <button class="fullscreen-close">&times;</button>
-  <button class="fullscreen-nav fullscreen-prev">&#10094;</button>
-  <img class="fullscreen-image" id="fullscreen-image" src="" alt="">
-  <button class="fullscreen-nav fullscreen-next">&#10095;</button>
 </div>
 
 <script type="module">
 import { db, auth } from './firebase-config.js';
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-// Same variables as before
-const contactNumber = "+917737740207";
 let products = [];
 
-// Layout Toggles
-document.getElementById('sidebar-toggle').addEventListener('click', () => {
-  document.getElementById('sidebar').classList.toggle('collapsed');
-  document.getElementById('main-content').classList.toggle('expanded');
-});
-document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-  document.getElementById('sidebar').classList.toggle('active');
+// Mobile Menu Toggle
+document.getElementById('mobile-toggle').addEventListener('click', () => {
+  document.getElementById('nav-links').classList.toggle('active');
 });
 
-// Basic Modal Logic
+// Modals Setup
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 document.getElementById('btn-open-signin').onclick = () => openModal('signin-modal');
-document.getElementById('btn-open-signup').onclick = () => openModal('signup-modal');
 document.querySelectorAll('.modal-close').forEach(btn => btn.onclick = function() { closeModal(this.closest('.modal').id); });
 document.getElementById('switch-to-signup').onclick = (e) => { e.preventDefault(); closeModal('signin-modal'); openModal('signup-modal'); };
 document.getElementById('switch-to-signin').onclick = (e) => { e.preventDefault(); closeModal('signup-modal'); openModal('signin-modal'); };
 
-// Filters toggle
+// Filters Toggle
 document.getElementById('filter-toggle-btn').onclick = function() {
   document.getElementById('filter-container').classList.toggle('active');
 };
 
-// Render logic matching new HTML dark layout
+// Render Products (No Prices, No Buy Buttons, Fully Clickable)
 window.renderProducts = function(productsToRender) {
   const grid = document.getElementById('product-grid');
   grid.innerHTML = '';
-  if (productsToRender.length === 0) { grid.innerHTML = '<div style="color:white; grid-column:1/-1; text-align:center;">NO DATA FOUND</div>'; return; }
   
-  productsToRender.forEach((product, pIndex) => {
-    let imagesHtml = (product.images && product.images.length > 0) ? 
-      product.images.map((img, idx) => `<img src="${img}" class="card-img ${idx === 0 ? 'active' : ''}">`).join('') : 
-      `<img src="stone.png" class="card-img active">`;
-      
-    let navControls = (product.images && product.images.length > 1) ? `
-      <div class="card-carousel-nav">
-        <button onclick="event.stopPropagation(); changeCardImage(this, -1)">&#10094;</button>
-        <button onclick="event.stopPropagation(); changeCardImage(this, 1)">&#10095;</button>
-      </div>
-      <div class="image-counter">1 / ${product.images.length}</div>` : '';
+  if (productsToRender.length === 0) { 
+    grid.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center;">NO INVENTORY MATCHES FOUND</div>'; 
+    return; 
+  }
+  
+  // Save for details page
+  localStorage.setItem('stoneProducts', JSON.stringify(productsToRender));
+  
+  productsToRender.forEach(product => {
+    // Generate image HTML (all images stacked, first is active)
+    let imagesHtml = '';
+    if (product.images && product.images.length > 0) {
+      imagesHtml = product.images.map((img, idx) => 
+        `<img src="${img}" class="card-img ${idx === 0 ? 'active' : ''}" alt="stone">`
+      ).join('');
+    } else {
+      imagesHtml = `<img src="stone-placeholder.png" class="card-img active" alt="stone">`;
+    }
+
+    let counterHtml = (product.images && product.images.length > 1) ? 
+      `<div class="image-counter">1 / ${product.images.length}</div>` : '';
 
     grid.innerHTML += `
-      <div class="product-card">
+      <div class="product-card" onclick="window.location.href='product-details.html?id=${product.id}'">
         <div class="product-image">
           ${imagesHtml}
           <span class="product-badge">${product.category || 'STONE'}</span>
-          ${navControls}
+          ${counterHtml}
         </div>
         <div class="product-info">
-          <h3 class="product-title">${product.stone_name || 'UNKNOWN STONE'}</h3>
+          <h3 class="product-title">${product.stone_name || 'PREMIUM STONE'}</h3>
           <div class="product-meta">
-            <span><i class="fas fa-tag"></i> ${product.sub_category || '-'}</span>
-            <span><i class="fas fa-palette"></i> ${product.color || '-'}</span>
-          </div>
-          <div class="product-price">₹${product.price || '0'} / ${product.price_unit || 'UNIT'}</div>
-          <div class="product-actions">
-            <button class="btn btn-whatsapp" onclick="window.open('https://wa.me/${contactNumber}', '_blank')"><i class="fab fa-whatsapp"></i> BUY NOW</button>
+            <span><i class="fas fa-layer-group"></i> ${product.sub_category || '-'}</span>
+            <span><i class="fas fa-fill-drip"></i> ${product.color || '-'}</span>
           </div>
         </div>
       </div>
@@ -593,28 +474,35 @@ window.renderProducts = function(productsToRender) {
   });
 }
 
-// Carousel JS
-window.changeCardImage = function(button, dir) {
-  const container = button.closest('.product-image');
-  const imgs = container.querySelectorAll('.card-img');
-  const counter = container.querySelector('.image-counter');
-  let curr = Array.from(imgs).findIndex(img => img.classList.contains('active'));
-  imgs[curr].classList.remove('active');
-  let next = (curr + dir + imgs.length) % imgs.length;
-  imgs[next].classList.add('active');
-  if(counter) counter.textContent = `${next + 1} / ${imgs.length}`;
-}
+// Auto-Play Image Carousel for Cards
+setInterval(() => {
+  document.querySelectorAll('.product-image').forEach(container => {
+    const imgs = container.querySelectorAll('.card-img');
+    if (imgs.length > 1) {
+      const counter = container.querySelector('.image-counter');
+      let curr = Array.from(imgs).findIndex(img => img.classList.contains('active'));
+      
+      imgs[curr].classList.remove('active');
+      let next = (curr + 1) % imgs.length;
+      imgs[next].classList.add('active');
+      
+      if (counter) counter.textContent = `${next + 1} / ${imgs.length}`;
+    }
+  });
+}, 3000); // Changes image every 3 seconds
 
-// Sample Data Fallback (In case Firebase fails)
+// Load Data
 async function loadProducts() {
   try {
     const snap = await getDocs(collection(db, "products"));
     snap.forEach(doc => products.push({id: doc.id, ...doc.data()}));
     renderProducts(products);
   } catch (e) {
+    console.error("Database error, showing fallbacks.", e);
+    // Fallback data if DB fails
     products = [
-      {stone_name: "RAJ GREEN", category: "SANDSTONE", price: 85, price_unit: "SQFT", images: ["https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?ixlib=rb-4.0.3"]},
-      {stone_name: "KOTA BROWN", category: "KOTA", price: 65, price_unit: "SQFT", images: ["https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3"]}
+      { id: '1', stone_name: "RAJ GREEN", category: "SANDSTONE", color: "GREEN", images: ["https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?ixlib=rb-4.0.3", "https://images.unsplash.com/photo-1582735689272-29b68d399c1c?ixlib=rb-4.0.3"] },
+      { id: '2', stone_name: "KOTA BROWN", category: "KOTA", color: "BROWN", images: ["https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3"] }
     ];
     renderProducts(products);
   }
