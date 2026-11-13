@@ -10,533 +10,845 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="icon" href="stone.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 /* ============================================================
-   RAJASTHAN SANDSTONE HUB — AMAZON / FLIPKART STYLE
+   VARIABLES — ORIGINAL DARK/GOLD THEME
    ============================================================ */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", "Montserrat", sans-serif;
+:root {
+  --primary: #c7a97b;
+  --primary-dark: #a88958;
+  --bg-dark: #0a0a0a;
+  --bg-card: #151515;
+  --bg-elev: #1d1d1d;
+  --text-light: #ffffff;
+  --text-muted: #888888;
+  --border-color: #222222;
+  --transition: all 0.3s ease;
+  --font-head: 'Oswald', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
+  --star: #ffa41c;
+  --badge-red: #cc0c39;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: #f3f3f3;
-  color: #0f1111;
+  font-family: var(--font-body);
+  color: var(--text-light);
+  background: var(--bg-dark);
+  overflow-x: hidden;
   font-size: 14px;
 }
 
 /* ============================================================
-   TOP HEADER (Amazon Style)
+   TOP NAVBAR (Original style, enhanced)
    ============================================================ */
-header {
-  background: #131921;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  gap: 20px;
+.top-navbar {
   position: sticky;
   top: 0;
-  z-index: 100;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  flex-wrap: wrap;
-}
-
-header h1 {
-  font-size: 1.4rem;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 700;
-  white-space: nowrap;
-  letter-spacing: 0.5px;
-}
-header h1 span { color: #c7a97b; }
-
-/* Search form */
-header form {
-  display: flex;
-  flex: 1;
-  max-width: 600px;
-  min-width: 200px;
-}
-
-header input {
-  padding: 10px 16px;
   width: 100%;
-  border: none;
-  border-radius: 4px 0 0 4px;
-  font-size: 14px;
-  outline: none;
-  background: #fff;
-}
-header input:focus { box-shadow: 0 0 0 2px #c7a97b; }
-
-header form button {
-  padding: 10px 18px;
-  border: none;
-  background: #c7a97b;
-  color: #fff;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
-}
-header form button:hover { background: #d1b68d; }
-
-/* Header action buttons */
-.header-actions {
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
   display: flex;
-  gap: 10px;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  height: 72px;
+  gap: 20px;
 }
 
-.header-actions button {
-  padding: 10px 16px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 13px;
-  transition: 0.2s;
-  white-space: nowrap;
+.nav-brand {
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 1px;
   display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.nav-brand span { color: var(--primary); }
+.nav-brand img { height: 35px; }
+
+.nav-links {
+  display: flex;
+  gap: 22px;
+}
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  transition: var(--transition);
+  white-space: nowrap;
+  position: relative;
+  padding: 4px 0;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: var(--transition);
+}
+.nav-links a:hover::after,
+.nav-links a.active::after { width: 100%; }
+.nav-links a:hover,
+.nav-links a.active { color: var(--primary); }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Buttons */
+.btn {
+  padding: 9px 18px;
+  border-radius: 4px;
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--transition);
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-}
-.header-actions button:hover {
-  border: 1px solid #fff;
-  background: rgba(255,255,255,0.08);
-}
-
-/* ============================================================
-   CATEGORY NAVIGATION
-   ============================================================ */
-nav {
-  background: #232f3e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 20px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-nav::-webkit-scrollbar { display: none; }
-
-nav a {
-  color: #fff;
   text-decoration: none;
-  font-weight: 500;
-  font-size: 13px;
-  padding: 8px 14px;
-  border-radius: 4px;
-  transition: 0.2s;
   white-space: nowrap;
-  border: 1px solid transparent;
 }
-nav a:hover, nav a.active {
-  background: #37475a;
-  border: 1px solid #fff;
+.btn-primary { background: var(--primary); color: #000; }
+.btn-primary:hover { background: transparent; border-color: var(--primary); color: var(--primary); }
+.btn-outline { background: transparent; border: 1px solid #333; color: var(--text-light); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.user-avatar {
+  width: 36px; height: 36px;
+  background: var(--primary); color: #000;
+  display: flex; justify-content: center; align-items: center;
+  font-family: var(--font-head); font-weight: 700; border-radius: 50%;
+  font-size: 0.9rem;
+}
+.user-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px;
 }
 
 /* ============================================================
-   BANNER / HERO
+   SEARCH BAR — integrated into navbar
    ============================================================ */
-.banner {
-  background: linear-gradient(135deg, #c7a97b 0%, #a88958 100%);
-  height: 260px;
+.search-wrap {
+  flex: 1;
+  max-width: 480px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-  font-size: 2rem;
-  font-weight: bold;
-  position: relative;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 10px;
-  text-align: center;
-  padding: 0 20px;
+  background: #000;
 }
-.banner::after {
-  content: "Premium Sandstone · Kota · Granite · Marble";
-  font-size: 1rem;
-  font-weight: 400;
-  margin-top: 12px;
-  opacity: 0.95;
+.search-wrap input {
+  flex: 1;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 13px;
+  font-family: var(--font-body);
+}
+.search-wrap input::placeholder { color: #555; }
+.search-wrap button {
+  padding: 10px 18px;
+  background: var(--primary);
+  border: none;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.search-wrap button:hover { background: var(--primary-dark); }
+
+/* ============================================================
+   HERO MARQUEE (original)
+   ============================================================ */
+.hero-section {
+  padding: 30px 0 20px;
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  position: relative;
+}
+.hero-section::before,
+.hero-section::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 100px;
+  z-index: 2;
+  pointer-events: none;
+}
+.hero-section::before { left: 0; background: linear-gradient(to right, var(--bg-dark), transparent); }
+.hero-section::after { right: 0; background: linear-gradient(to left, var(--bg-dark), transparent); }
+
+.highlight-marquee {
+  display: flex;
+  width: max-content;
+  animation: scrollMarquee 40s linear infinite;
+}
+.highlight-marquee:hover { animation-play-state: paused; }
+
+@keyframes scrollMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.highlight-item {
+  width: 280px;
+  height: 360px;
+  margin: 0 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  flex-shrink: 0;
+  position: relative;
+  transition: var(--transition);
+}
+.highlight-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent 40%);
+  pointer-events: none;
+}
+.highlight-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+.highlight-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(15%) contrast(1.1);
+  transition: transform 0.8s ease, filter 0.8s ease;
+}
+.highlight-item:hover img {
+  transform: scale(1.06);
+  filter: grayscale(0%) contrast(1.2);
 }
 
 /* ============================================================
    MAIN SECTION
    ============================================================ */
-section {
-  padding: 20px;
-  max-width: 1500px;
+.products-section {
+  padding: 40px 30px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
-section h2 {
-  font-size: 1.4rem;
-  margin-bottom: 20px;
-  color: #0f1111;
-  text-align: left;
-  font-weight: 700;
-  border-left: 4px solid #c7a97b;
-  padding-left: 12px;
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-/* Sidebar + Grid layout */
+.section-title {
+  font-size: 1.9rem;
+  font-family: var(--font-head);
+  color: white;
+  letter-spacing: 2px;
+  font-weight: 600;
+  position: relative;
+  padding-left: 15px;
+}
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  background: var(--primary);
+}
+.section-title span { color: var(--primary); }
+
+.result-count {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.result-count strong { color: var(--primary); }
+
+/* Layout wrapper */
 .layout {
   display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 20px;
+  grid-template-columns: 250px 1fr;
+  gap: 25px;
   align-items: start;
 }
 
 /* ============================================================
-   SIDEBAR FILTERS
+   SIDEBAR FILTERS (Dark themed, Amazon layout)
    ============================================================ */
 .filters {
-  background: #fff;
-  border-radius: 8px;
-  padding: 18px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   position: sticky;
-  top: 130px;
+  top: 100px;
 }
 
 .filters h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: #0f1111;
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   margin-bottom: 4px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e7e7e7;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+.filters h3 i { color: var(--primary); font-size: 0.9rem; }
 
 .filters label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #565959;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.8px;
+  margin-bottom: -6px;
 }
 
 .filters select,
 .filters input {
-  padding: 9px 10px;
-  border-radius: 6px;
-  border: 1px solid #d5d9d9;
-  background: #fff;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: #000;
+  color: white;
   font-size: 13px;
+  font-family: var(--font-body);
   width: 100%;
   outline: none;
-  transition: 0.2s;
+  transition: var(--transition);
+  cursor: pointer;
 }
 .filters select:focus,
 .filters input:focus {
-  border-color: #c7a97b;
-  box-shadow: 0 0 0 2px rgba(199,169,123,0.25);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(199,169,123,0.2);
 }
 
 .filters button {
-  padding: 10px;
-  background: #c7a97b;
-  color: #fff;
+  padding: 11px;
+  background: var(--primary);
+  color: #000;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
+  font-family: var(--font-head);
+  font-size: 0.82rem;
   font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: 0.2s;
+  transition: var(--transition);
 }
-.filters button:hover { background: #b39868; }
+.filters button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
 .filters .btn-clear {
-  background: #fff;
-  color: #565959;
-  border: 1px solid #d5d9d9;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid #333;
 }
 .filters .btn-clear:hover {
-  background: #f0f0f0;
-  color: #0f1111;
+  background: #222;
+  color: var(--text-light);
+  transform: none;
 }
 
 /* ============================================================
-   PRODUCT GRID (Amazon / Flipkart style)
+   PRODUCT GRID
    ============================================================ */
-.grid {
+.products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 22px;
 }
 
-.card {
-  background: #fff;
-  border-radius: 8px;
+/* ============================================================
+   PRODUCT CARD (Amazon-style, Dark theme)
+   ============================================================ */
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
+  transition: var(--transition);
   display: flex;
   flex-direction: column;
-  border: 1px solid #f0f0f0;
   position: relative;
 }
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-  border-color: #ddd;
+.product-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
 }
 
-/* Image container (for carousel + badge) */
-.card .img-wrap {
+/* Image container */
+.product-image {
   position: relative;
+  height: 240px;
+  background: #000;
   overflow: hidden;
-  height: 200px;
-  background: #f8f8f8;
 }
-.card .img-wrap img {
+.product-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease, opacity 0.6s ease;
   position: absolute;
   top: 0; left: 0;
   opacity: 0;
+  transition: opacity 0.7s ease, transform 0.8s ease;
 }
-.card .img-wrap img.active { opacity: 1; }
-.card:hover .img-wrap img.active { transform: scale(1.05); }
+.product-image img.active {
+  opacity: 1;
+}
+.product-card:hover .product-image img.active {
+  transform: scale(1.06);
+}
+
+/* Badge */
+.product-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--primary);
+  color: #000;
+  padding: 4px 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: var(--font-head);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  z-index: 3;
+}
+.product-badge.hot {
+  background: var(--badge-red);
+  color: white;
+}
 
 /* Image counter */
-.card .img-counter {
+.image-counter {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0,0,0,0.7);
-  color: #fff;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  color: white;
   font-size: 10px;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 10px;
-  z-index: 2;
+  z-index: 3;
+  letter-spacing: 0.5px;
 }
 
-/* Product title */
-.card h3 {
-  padding: 12px 12px 4px;
-  font-size: 14px;
-  color: #0f1111;
-  text-align: left;
+/* Info section */
+.product-info {
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-family: var(--font-head);
+  color: white;
   font-weight: 500;
-  line-height: 1.4;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 48px;
+  min-height: 42px;
 }
 
-/* Sub-info */
-.card .meta {
-  text-align: left;
-  color: #565959;
-  font-size: 12px;
-  padding: 0 12px 8px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.card .meta span {
+/* Rating */
+.product-rating {
+  color: var(--star);
+  font-size: 0.78rem;
   display: flex;
   align-items: center;
-  gap: 4px;
-}
-
-/* Rating stars */
-.card .rating {
-  color: #ffa41c;
-  font-size: 13px;
-  padding: 0 12px;
-  margin-bottom: 6px;
-}
-.card .rating small {
-  color: #565959;
-  font-size: 11px;
-  margin-left: 4px;
-}
-
-/* Price */
-.card .price {
-  padding: 0 12px 14px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #0f1111;
-  display: flex;
-  align-items: baseline;
   gap: 6px;
 }
-.card .price::before {
-  content: "₹";
-  font-size: 13px;
-  vertical-align: super;
-  margin-right: 1px;
-  font-weight: 600;
-}
-.card .price .old {
-  font-size: 12px;
-  color: #888;
-  text-decoration: line-through;
-  font-weight: 400;
-}
-.card .price .off {
-  font-size: 11px;
-  color: #cc0c39;
-  font-weight: 600;
+.product-rating small {
+  color: var(--text-muted);
+  font-size: 0.7rem;
 }
 
-/* Add to cart button */
-.card .btn-cart {
-  margin: 0 12px 14px;
-  padding: 9px;
-  background: #ffd814;
-  border: 1px solid #fcd200;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-  transition: 0.2s;
-  color: #0f1111;
-}
-.card .btn-cart:hover { background: #f7ca00; }
-
-/* Badge */
-.card .badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: #cc0c39;
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  z-index: 3;
+/* Meta */
+.product-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+.product-meta span { display: flex; align-items: center; gap: 4px; }
+.product-meta i { color: var(--primary); font-size: 0.7rem; }
+
+/* Price */
+.product-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.price-new {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+}
+.price-new::before {
+  content: '₹';
+  font-size: 0.85rem;
+  margin-right: 2px;
+  vertical-align: super;
+}
+.price-old {
+  font-size: 0.78rem;
+  color: #666;
+  text-decoration: line-through;
+}
+.price-off {
+  font-size: 0.68rem;
+  color: #4caf50;
+  font-weight: 700;
+  background: rgba(76,175,80,0.12);
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+/* Add to cart */
+.btn-cart {
+  margin-top: auto;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-cart:hover {
+  background: var(--primary);
+  color: #000;
 }
 
 /* ============================================================
    FOOTER
    ============================================================ */
 footer {
-  background: #232f3e;
-  color: #ddd;
+  background: #000;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
   text-align: center;
-  padding: 30px 15px;
-  margin-top: 50px;
-  font-size: 13px;
+  padding: 30px 20px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 40px;
 }
-footer a {
-  color: #c7a97b;
-  text-decoration: none;
-}
+footer a { color: var(--primary); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
+footer .footer-brand {
+  color: white;
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+footer .footer-brand span { color: var(--primary); }
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+.modal.active { display: flex; }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 38px 34px;
+  border-radius: 6px;
+  width: 400px;
+  max-width: 100%;
+  position: relative;
+}
+.modal-content h2 {
+  color: white;
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  text-align: center;
+  font-family: var(--font-head);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.modal-content h2 span { color: var(--primary); }
+.form-group { margin-bottom: 14px; }
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  background: #000;
+  border: 1px solid var(--border-color);
+  color: white;
+  font-size: 13px;
+  border-radius: 4px;
+  outline: none;
+  font-family: var(--font-body);
+  transition: var(--transition);
+}
+.form-group input:focus { border-color: var(--primary); }
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 22px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-close:hover { color: var(--primary); }
+.modal-link {
+  color: var(--primary);
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  font-size: 0.82rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.modal-link:hover { text-decoration: underline; }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
-  .filters { position: static; }
+@media (max-width: 1100px) {
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 0.75rem; }
+  .search-wrap { max-width: 280px; }
 }
 
-@media (max-width: 600px) {
-  header {
+@media (max-width: 992px) {
+  .top-navbar { padding: 0 20px; height: 64px; gap: 12px; }
+  .nav-links {
+    position: fixed;
+    top: 64px;
+    left: -100%;
+    width: 260px;
+    height: calc(100vh - 64px);
+    background: var(--bg-card);
     flex-direction: column;
-    gap: 10px;
-    padding: 12px 15px;
+    gap: 0;
+    border-right: 1px solid var(--border-color);
+    transition: var(--transition);
+    padding-top: 10px;
   }
-  header form { width: 100%; max-width: 100%; }
-  .header-actions { width: 100%; justify-content: space-around; }
-  .header-actions button { flex: 1; justify-content: center; }
-
-  nav {
-    gap: 4px;
-    padding: 6px 10px;
-    justify-content: flex-start;
+  .nav-links.active { left: 0; }
+  .nav-links a {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.85rem;
   }
-  nav a { font-size: 12px; padding: 6px 10px; }
+  .nav-links a::after { display: none; }
+  .mobile-toggle { display: block; }
+  .nav-brand { font-size: 1.2rem; }
+  .nav-brand span.text { display: none; }
+  .search-wrap { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  .filters { position: static; }
+  .section-title { font-size: 1.5rem; }
+}
 
-  .banner { height: 160px; font-size: 1.3rem; }
-  .banner::after { font-size: 0.8rem; }
-
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
+@media (max-width: 576px) {
+  .top-navbar { padding: 0 14px; height: 60px; }
+  .nav-brand img { height: 30px; }
+  .user-name { display: none; }
+  .btn { padding: 7px 12px; font-size: 0.72rem; }
+  .products-section { padding: 25px 15px; }
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
   }
-  .card .img-wrap { height: 150px; }
-  .card h3 { font-size: 13px; min-height: 42px; }
-  .card .price { font-size: 16px; }
-  .card .btn-cart { font-size: 12px; padding: 7px; }
-  section { padding: 15px; }
+  .product-image { height: 170px; }
+  .product-title { font-size: 0.85rem; min-height: 36px; }
+  .price-new { font-size: 1.05rem; }
+  .product-info { padding: 12px; gap: 6px; }
+  .btn-cart { font-size: 0.7rem; padding: 8px; }
+  .highlight-item { width: 200px; height: 260px; }
+  .section-title { font-size: 1.3rem; padding-left: 12px; }
+  .section-title::before { width: 3px; }
 }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     TOP HEADER
+     TOP NAVBAR
      ============================================================ -->
-<header>
-  <h1>Rajasthan<span>Hub</span></h1>
+<header class="top-navbar">
+  <div style="display:flex; align-items:center; gap:14px;">
+    <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
+    <div class="nav-brand" onclick="window.location.href='index.html'">
+      <img src="stone.png" alt="Logo">
+      <span class="text">RAJASTHAN</span> <span>HUB</span>
+    </div>
+  </div>
 
-  <form onsubmit="event.preventDefault();">
+  <div class="search-wrap">
     <input type="text" id="search-input" placeholder="Search stones, marble, granite...">
-    <button type="submit"><i class="fas fa-search"></i></button>
-  </form>
+    <button id="search-btn"><i class="fas fa-search"></i></button>
+  </div>
 
-  <div class="header-actions">
-    <button id="btn-open-signin"><i class="fas fa-user"></i> Sign In</button>
-    <button id="btn-signout" style="display:none;"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-    <button id="btn-cart"><i class="fas fa-shopping-cart"></i> Cart</button>
+  <nav class="nav-links" id="nav-links">
+    <a href="sandstone.html" class="active">Sand Stone</a>
+    <a href="kota.html">Kota Stone</a>
+    <a href="granite.html">Granite</a>
+    <a href="marble.html">Marble</a>
+    <a href="dholpur.html">Dholpur</a>
+    <a href="tiles.html">Tiles</a>
+    <a href="mandana.html">Mandana</a>
+  </nav>
+
+  <div class="nav-actions">
+    <button id="btn-post" style="display:none;" class="btn btn-outline"><i class="fas fa-plus"></i> Post</button>
+    <button id="btn-open-signin" class="btn btn-primary"><i class="fas fa-user"></i> Sign In</button>
+    <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
+
+    <div class="user-info">
+      <div class="user-avatar" id="user-avatar">G</div>
+      <span class="user-name" id="user-name">GUEST</span>
+    </div>
   </div>
 </header>
 
 <!-- ============================================================
-     CATEGORY NAV
+     HERO MARQUEE
      ============================================================ -->
-<nav>
-  <a href="sandstone.html" class="active">Sandstone</a>
-  <a href="kota.html">Kota Stone</a>
-  <a href="granite.html">Granite</a>
-  <a href="marble.html">Marble</a>
-  <a href="dholpur.html">Dholpur</a>
-  <a href="tiles.html">Tiles</a>
-  <a href="mandana.html">Mandana</a>
-</nav>
-
-<!-- ============================================================
-     BANNER
-     ============================================================ -->
-<div class="banner">Rajasthan Sandstone Hub</div>
+<section class="hero-section">
+  <div class="highlight-marquee">
+    <div class="highlight-item"><img src="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/dwty45tv/48ae17733978.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/dw6MN0xv/412d7b05dece.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/1tLNNTFG/b5860f80e753.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/xKgwbTYM/96a984185507.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/fYx3bfJs/0956c514f616.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/S4pxysNG/16f01166b907.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/nq4qj1MM/02043e775803.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/HpzGW2px/6699d34bfe9d.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/NGBHKFc/07c34bda7a8a.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/dwty45tv/48ae17733978.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/dw6MN0xv/412d7b05dece.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/1tLNNTFG/b5860f80e753.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/xKgwbTYM/96a984185507.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/fYx3bfJs/0956c514f616.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/S4pxysNG/16f01166b907.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/nq4qj1MM/02043e775803.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/HpzGW2px/6699d34bfe9d.png" alt=""></div>
+    <div class="highlight-item"><img src="https://i.ibb.co/NGBHKFc/07c34bda7a8a.png" alt=""></div>
+  </div>
+</section>
 
 <!-- ============================================================
      PRODUCTS SECTION
      ============================================================ -->
-<section>
-  <h2>Premium Inventory</h2>
+<section class="products-section">
+  <div class="section-header">
+    <h2 class="section-title">PREMIUM <span>INVENTORY</span></h2>
+    <div class="result-count"><strong id="result-total">0</strong> Products</div>
+  </div>
 
   <div class="layout">
 
@@ -557,12 +869,12 @@ footer a:hover { text-decoration: underline; }
       <select id="filter-type"><option value="">All</option></select>
 
       <button id="filter-btn">Apply Filters</button>
-      <button id="clear-filter-btn" class="btn-clear">Clear</button>
+      <button id="clear-filter-btn" class="btn-clear">Clear All</button>
     </aside>
 
     <!-- PRODUCT GRID -->
-    <div class="grid" id="product-grid">
-      <div style="color:#888; text-align:center; grid-column:1/-1; padding:40px;">Loading...</div>
+    <div class="products-grid" id="product-grid">
+      <div style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px; letter-spacing:1px;">LOADING...</div>
     </div>
 
   </div>
@@ -572,40 +884,34 @@ footer a:hover { text-decoration: underline; }
      FOOTER
      ============================================================ -->
 <footer>
+  <div class="footer-brand">RAJASTHAN <span>HUB</span></div>
   &copy; 2025 Rajasthan Sandstone Hub · <a href="contact.html">Contact Support</a>
 </footer>
 
 <!-- ============================================================
-     SIGN IN MODAL
+     MODALS
      ============================================================ -->
-<div class="modal" id="signin-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:2000; justify-content:center; align-items:center;">
-  <div style="background:#fff; padding:35px; border-radius:10px; width:380px; max-width:90vw; position:relative;">
-    <button onclick="document.getElementById('signin-modal').style.display='none';" style="position:absolute; top:10px; right:14px; background:none; border:none; font-size:22px; cursor:pointer; color:#888;">&times;</button>
-    <h2 style="text-align:center; margin-bottom:20px; font-size:1.5rem;">Sign In</h2>
-    <input type="email" id="signin-email" placeholder="Email" style="width:100%; padding:11px; margin-bottom:12px; border:1px solid #ccc; border-radius:6px; outline:none;">
-    <input type="password" id="signin-password" placeholder="Password" style="width:100%; padding:11px; margin-bottom:16px; border:1px solid #ccc; border-radius:6px; outline:none;">
-    <button class="btn-cart" style="width:100%; padding:11px; background:#ffd814; border:1px solid #fcd200; border-radius:20px; font-weight:600; cursor:pointer;">Login</button>
-    <p style="text-align:center; margin-top:14px; font-size:13px; color:#565959;">
-      New here? <a href="#" onclick="event.preventDefault(); document.getElementById('signin-modal').style.display='none'; document.getElementById('signup-modal').style.display='flex';" style="color:#c7a97b;">Create account</a>
-    </p>
+<div class="modal" id="signin-modal">
+  <div class="modal-content">
+    <button class="modal-close">&times;</button>
+    <h2>SIGN <span>IN</span></h2>
+    <div class="form-group"><input type="email" id="signin-email" placeholder="EMAIL ADDRESS"></div>
+    <div class="form-group"><input type="password" id="signin-password" placeholder="PASSWORD"></div>
+    <button id="signin-btn" class="btn btn-primary" style="width:100%; justify-content:center;">LOGIN</button>
+    <a href="#" class="modal-link" id="switch-to-signup">CREATE NEW ACCOUNT</a>
   </div>
 </div>
 
-<!-- ============================================================
-     SIGN UP MODAL
-     ============================================================ -->
-<div class="modal" id="signup-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:2000; justify-content:center; align-items:center;">
-  <div style="background:#fff; padding:35px; border-radius:10px; width:380px; max-width:90vw; position:relative;">
-    <button onclick="document.getElementById('signup-modal').style.display='none';" style="position:absolute; top:10px; right:14px; background:none; border:none; font-size:22px; cursor:pointer; color:#888;">&times;</button>
-    <h2 style="text-align:center; margin-bottom:20px; font-size:1.5rem;">Register</h2>
-    <input type="text" placeholder="Full Name" style="width:100%; padding:11px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; outline:none;">
-    <input type="email" placeholder="Email" style="width:100%; padding:11px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; outline:none;">
-    <input type="text" placeholder="Phone" style="width:100%; padding:11px; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; outline:none;">
-    <input type="password" placeholder="Password" style="width:100%; padding:11px; margin-bottom:16px; border:1px solid #ccc; border-radius:6px; outline:none;">
-    <button class="btn-cart" style="width:100%; padding:11px; background:#ffd814; border:1px solid #fcd200; border-radius:20px; font-weight:600; cursor:pointer;">Create Account</button>
-    <p style="text-align:center; margin-top:14px; font-size:13px; color:#565959;">
-      Already registered? <a href="#" onclick="event.preventDefault(); document.getElementById('signup-modal').style.display='none'; document.getElementById('signin-modal').style.display='flex';" style="color:#c7a97b;">Login</a>
-    </p>
+<div class="modal" id="signup-modal">
+  <div class="modal-content">
+    <button class="modal-close">&times;</button>
+    <h2>REGIS<span>TER</span></h2>
+    <div class="form-group"><input type="text" id="signup-name" placeholder="FULL NAME"></div>
+    <div class="form-group"><input type="email" id="signup-email" placeholder="EMAIL ADDRESS"></div>
+    <div class="form-group"><input type="text" id="signup-phone" placeholder="PHONE NUMBER"></div>
+    <div class="form-group"><input type="password" id="signup-password" placeholder="PASSWORD"></div>
+    <button id="signup-btn" class="btn btn-primary" style="width:100%; justify-content:center;">CREATE ACCOUNT</button>
+    <a href="#" class="modal-link" id="switch-to-signin">ALREADY REGISTERED? LOGIN</a>
   </div>
 </div>
 
@@ -616,15 +922,29 @@ footer a:hover { text-decoration: underline; }
 import { db, auth } from './firebase-config.js';
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-let products = [];
 let allProducts = [];
 
-/* -------- MODAL OPEN -------- */
-document.getElementById('btn-open-signin').onclick = () => {
-  document.getElementById('signin-modal').style.display = 'flex';
+/* -------- MOBILE MENU -------- */
+document.getElementById('mobile-toggle').addEventListener('click', () => {
+  document.getElementById('nav-links').classList.toggle('active');
+});
+
+/* -------- MODALS -------- */
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+document.getElementById('btn-open-signin').onclick = () => openModal('signin-modal');
+document.querySelectorAll('.modal-close').forEach(btn => {
+  btn.onclick = function() { closeModal(this.closest('.modal').id); };
+});
+document.getElementById('switch-to-signup').onclick = (e) => {
+  e.preventDefault(); closeModal('signin-modal'); openModal('signup-modal');
+};
+document.getElementById('switch-to-signin').onclick = (e) => {
+  e.preventDefault(); closeModal('signup-modal'); openModal('signin-modal');
 };
 
-/* -------- FILTERS POPULATE -------- */
+/* -------- POPULATE FILTERS -------- */
 function populateFilters(list) {
   const cats = new Set(), subcats = new Set(), colors = new Set(), types = new Set();
 
@@ -651,77 +971,85 @@ function populateFilters(list) {
   fill('filter-type', types);
 }
 
-/* -------- RENDER PRODUCTS (Amazon Style) -------- */
+/* -------- RENDER PRODUCTS -------- */
 window.renderProducts = function(list) {
   const grid = document.getElementById('product-grid');
+  const total = document.getElementById('result-total');
   grid.innerHTML = '';
+  total.textContent = list.length;
 
   if (list.length === 0) {
-    grid.innerHTML = '<div style="color:#888; grid-column:1/-1; text-align:center; padding:40px;">No products found</div>';
+    grid.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:60px 20px; letter-spacing:1px;">NO INVENTORY MATCHES FOUND</div>';
     return;
   }
 
-  // Save for detail page
   localStorage.setItem('stoneProducts', JSON.stringify(list));
 
   list.forEach((product, idx) => {
-    // Images
-    let imagesHtml = '';
+    /* Images */
     const imgs = (product.images && product.images.length) ? product.images : ['stone-placeholder.png'];
-    imagesHtml = imgs.map((img, i) =>
+    const imagesHtml = imgs.map((img, i) =>
       `<img src="${img}" class="card-img ${i === 0 ? 'active' : ''}" alt="stone">`
     ).join('');
 
     const counterHtml = imgs.length > 1
-      ? `<div class="img-counter">1 / ${imgs.length}</div>` : '';
+      ? `<div class="image-counter">1 / ${imgs.length}</div>` : '';
 
-    // Badge — first 2 products ko "Best Seller" ya "Deal"
+    /* Badge — first 2 items */
     let badgeHtml = '';
-    if (idx === 0) badgeHtml = '<span class="badge">Best Seller</span>';
-    else if (idx === 1) badgeHtml = '<span class="badge" style="background:#ff6200;">Deal</span>';
+    if (idx === 0) badgeHtml = `<span class="product-badge">Best Seller</span>`;
+    else if (idx === 1) badgeHtml = `<span class="product-badge hot">Deal</span>`;
+    else badgeHtml = `<span class="product-badge">${product.category || 'STONE'}</span>`;
 
-    // Price simulation (₹ per sq.ft.)
+    /* Price simulation */
     const price = product.price || (Math.floor(Math.random() * 150) + 50);
     const oldPrice = Math.floor(price * 1.25);
     const off = Math.round(((oldPrice - price) / oldPrice) * 100);
 
-    // Rating simulation
+    /* Rating */
     const rating = (4 + Math.random()).toFixed(1);
     const reviews = Math.floor(Math.random() * 200) + 20;
-    const stars = '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+    const starCount = Math.round(rating);
+    const stars = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
 
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'product-card';
     card.innerHTML = `
       ${badgeHtml}
-      <div class="img-wrap" onclick="window.location.href='product-details.html?id=${product.id}'">
+      <div class="product-image" onclick="window.location.href='product-details.html?id=${product.id}'">
         ${imagesHtml}
         ${counterHtml}
       </div>
-      <h3 onclick="window.location.href='product-details.html?id=${product.id}'">${product.stone_name || 'Premium Stone'}</h3>
-      <div class="rating">${stars} <small>(${reviews})</small></div>
-      <div class="meta">
-        <span><i class="fas fa-layer-group"></i> ${product.sub_category || product.category || '-'}</span>
-        <span><i class="fas fa-fill-drip"></i> ${product.color || '-'}</span>
+      <div class="product-info">
+        <h3 class="product-title" onclick="window.location.href='product-details.html?id=${product.id}'">${product.stone_name || 'PREMIUM STONE'}</h3>
+        <div class="product-rating">
+          ${stars} <small>(${reviews})</small>
+        </div>
+        <div class="product-meta">
+          <span><i class="fas fa-layer-group"></i> ${product.sub_category || product.category || '—'}</span>
+          <span><i class="fas fa-fill-drip"></i> ${product.color || '—'}</span>
+        </div>
+        <div class="product-price">
+          <span class="price-new">${price}</span>
+          <span class="price-old">₹${oldPrice}</span>
+          <span class="price-off">${off}% OFF</span>
+        </div>
+        <button class="btn-cart" onclick="event.stopPropagation(); alert('Added to cart: ${product.stone_name || 'Stone'}');">
+          <i class="fas fa-cart-plus"></i> Add to Cart
+        </button>
       </div>
-      <div class="price">
-        ${price} <span class="old">₹${oldPrice}</span> <span class="off">${off}% off</span>
-      </div>
-      <button class="btn-cart" onclick="event.stopPropagation(); alert('Added to cart: ${product.stone_name || 'Stone'}');">
-        <i class="fas fa-cart-plus"></i> Add to Cart
-      </button>
     `;
 
     grid.appendChild(card);
   });
 };
 
-/* -------- IMAGE CAROUSEL AUTOPLAY -------- */
+/* -------- IMAGE CAROUSEL -------- */
 setInterval(() => {
-  document.querySelectorAll('.card .img-wrap').forEach(wrap => {
+  document.querySelectorAll('.product-image').forEach(wrap => {
     const imgs = wrap.querySelectorAll('.card-img');
     if (imgs.length > 1) {
-      const counter = wrap.querySelector('.img-counter');
+      const counter = wrap.querySelector('.image-counter');
       let curr = Array.from(imgs).findIndex(i => i.classList.contains('active'));
       imgs[curr].classList.remove('active');
       const next = (curr + 1) % imgs.length;
@@ -729,7 +1057,7 @@ setInterval(() => {
       if (counter) counter.textContent = `${next + 1} / ${imgs.length}`;
     }
   });
-}, 3000);
+}, 3500);
 
 /* -------- FILTER LOGIC -------- */
 document.getElementById('filter-btn').onclick = () => {
@@ -755,16 +1083,19 @@ document.getElementById('clear-filter-btn').onclick = () => {
 };
 
 /* -------- SEARCH -------- */
-document.getElementById('search-input').addEventListener('input', (e) => {
-  const q = e.target.value.toLowerCase();
+function doSearch() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
   if (!q) { renderProducts(allProducts); return; }
   const filtered = allProducts.filter(p =>
     (p.stone_name || '').toLowerCase().includes(q) ||
     (p.category || '').toLowerCase().includes(q) ||
-    (p.color || '').toLowerCase().includes(q)
+    (p.color || '').toLowerCase().includes(q) ||
+    (p.sub_category || '').toLowerCase().includes(q)
   );
   renderProducts(filtered);
-});
+}
+document.getElementById('search-input').addEventListener('input', doSearch);
+document.getElementById('search-btn').addEventListener('click', doSearch);
 
 /* -------- LOAD DATA -------- */
 async function loadProducts() {
@@ -774,7 +1105,7 @@ async function loadProducts() {
     populateFilters(allProducts);
     renderProducts(allProducts);
   } catch (e) {
-    console.error("DB error, showing fallbacks.", e);
+    console.error("DB error, using fallbacks.", e);
     allProducts = [
       { id: '1', stone_name: "Raj Green Sandstone", category: "SANDSTONE", sub_category: "Slab", color: "Green", images: ["https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?w=600", "https://images.unsplash.com/photo-1582735689272-29b68d399c1c?w=600"] },
       { id: '2', stone_name: "Kota Brown Stone", category: "KOTA", sub_category: "Tile", color: "Brown", images: ["https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600"] },
