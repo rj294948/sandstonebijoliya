@@ -46,7 +46,7 @@ body {
   padding-bottom: 80px;
 }
 
-a { color: inherit; }
+a { color: inherit; text-decoration: none; }
 
 /* ============================================================
    NAVBAR WRAPPER
@@ -229,22 +229,10 @@ a { color: inherit; }
 }
 
 /* ============================================================
-   MOBILE SIDEBAR OVERLAY
+   MOBILE SIDEBAR (HIDDEN BY DEFAULT)
    ============================================================ */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  z-index: 998;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.sidebar-overlay.active { display: block; opacity: 1; }
-
 .nav-links-sidebar {
+  display: none !important; /* Force hide on desktop */
   position: fixed;
   top: 64px;
   left: -100%;
@@ -258,9 +246,8 @@ a { color: inherit; }
   padding-top: 10px;
   overflow-y: auto;
   z-index: 999;
-  display: flex;
 }
-.nav-links-sidebar.active { left: 0; }
+.nav-links-sidebar.active { left: 0; display: flex !important; }
 .nav-links-sidebar a {
   padding: 16px 24px;
   border-bottom: 1px solid var(--border-color);
@@ -278,6 +265,20 @@ a { color: inherit; }
   color: var(--primary);
   background: rgba(199,169,123,0.08);
 }
+
+/* Sidebar overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.sidebar-overlay.active { display: block; opacity: 1; }
 
 /* ============================================================
    HERO MARQUEE
@@ -698,7 +699,6 @@ footer .footer-copy {
     flex-wrap: wrap;
   }
   .nav-row-bottom { display: none; }
-  .nav-links-sidebar { top: 64px; height: calc(100vh - 64px); }
   
   .mobile-toggle { display: block; }
   .nav-brand { font-size: 1.15rem; }
@@ -713,6 +713,9 @@ footer .footer-copy {
   }
   .nav-row-top { height: auto; padding-top: 10px; padding-bottom: 10px; }
 
+  /* Show sidebar only on mobile/tablet */
+  .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); }
+  
   .section-title { font-size: 1.5rem; }
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -723,9 +726,7 @@ footer .footer-copy {
 @media (max-width: 768px) {
   body { padding-bottom: 75px; }
 
-  /* Navbar spacing for mobile */
   .nav-row-top { padding: 10px 12px; gap: 10px; }
-  .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); } /* Adjust top based on navbar height */
   
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 28px; }
@@ -743,14 +744,13 @@ footer .footer-copy {
   .search-wrap input { font-size: 13px; padding: 8px 12px; }
   .search-wrap button { padding: 8px 16px; font-size: 13px; }
 
-  /* Product Section */
   .products-section { padding: 20px 8px 50px; }
   .section-header { padding: 0 8px; margin-bottom: 16px; }
   .section-title { font-size: 1.15rem; padding-left: 10px; letter-spacing: 1px; }
   .section-title::before { width: 3px; }
   .result-count { font-size: 0.7rem; }
 
-  /* Mobile Grid: 4 items per row */
+  /* Mobile Grid */
   .products-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
@@ -772,7 +772,6 @@ footer .footer-copy {
     padding: 1px 5px;
   }
 
-  /* Item details visible on mobile too */
   .product-info { padding: 6px 5px 8px; gap: 4px; }
   .product-title {
     font-size: 0.65rem;
@@ -782,7 +781,7 @@ footer .footer-copy {
     text-align: center;
   }
   .product-meta { 
-    display: flex; /* Show details */
+    display: flex; 
     flex-direction: column;
     gap: 2px;
     font-size: 0.5rem;
@@ -791,7 +790,6 @@ footer .footer-copy {
   }
   .product-meta i { font-size: 0.5rem; }
 
-  /* Hero & Footer */
   .highlight-item { width: 140px; height: 180px; margin: 0 4px; }
   .hero-section { padding: 15px 0 12px; }
 
@@ -1025,7 +1023,7 @@ import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/f
 let allProducts = [];
 
 /* ==================================================
-   MOBILE SIDEBAR
+   MOBILE SIDEBAR LOGIC
    ================================================== */
 const mobileToggle = document.getElementById('mobile-toggle');
 const navLinksMobile = document.getElementById('nav-links-mobile');
@@ -1033,6 +1031,7 @@ const overlay = document.getElementById('sidebar-overlay');
 
 function openSidebar() {
   navLinksMobile.classList.add('active');
+  navLinksMobile.style.display = 'flex'; // Force display on open
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
