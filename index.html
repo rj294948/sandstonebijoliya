@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1200, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="31nH3FVV0op1VtiEtdejD-D1wxT6pvgUj9WWVFexrG0" />
 <meta name="google-site-verification" content="Jy6Gj4ivr8cX6dFW5cqY3OGZ0IqiI4Sp9b7FHXlYo8w" />
 <title>Rajasthan Sandstone Hub - Premium Stone Supplier</title>
 <meta name="description" content="Rajasthan's No.1 Sandstone Supplier in Bijoliya. Premium quality Sandstone, Kota Stone, Granite, Marble.">
 
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
@@ -29,24 +30,20 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-
 body {
   font-family: var(--font-body);
   color: var(--text-light);
   background: var(--bg-dark);
   overflow-x: hidden;
-  min-width: 1200px; /* Force desktop layout on mobile */
 }
 
-/* ===== TOP NAVIGATION ===== */
+/* ===== TOP NAVIGATION (Replaced Sidebar) ===== */
 .top-navbar {
   position: sticky;
   top: 0;
   width: 100%;
   background: rgba(10, 10, 10, 0.85);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
   z-index: 1000;
   display: flex;
@@ -54,7 +51,6 @@ body {
   justify-content: space-between;
   padding: 0 30px;
   height: 70px;
-  min-width: 1200px;
 }
 
 .nav-brand {
@@ -66,7 +62,6 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  white-space: nowrap;
 }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 35px; }
@@ -83,7 +78,6 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: var(--transition);
-  white-space: nowrap;
 }
 .nav-links a:hover, .nav-links a.active { color: var(--primary); }
 
@@ -93,6 +87,7 @@ body {
   gap: 15px;
 }
 
+/* Auth Buttons & Profile in Navbar */
 .btn {
   padding: 8px 18px;
   border-radius: 0;
@@ -108,7 +103,6 @@ body {
   align-items: center;
   gap: 6px;
   text-decoration: none;
-  white-space: nowrap;
 }
 .btn-primary { background: var(--primary); color: #000; }
 .btn-primary:hover { background: transparent; border-color: var(--primary); color: var(--primary); }
@@ -129,10 +123,11 @@ body {
 }
 .user-name { font-size: 0.85rem; font-weight: 600; color: white; }
 
-/* Hide mobile toggle — not needed since we keep desktop layout */
-.mobile-toggle { display: none !important; }
+.mobile-toggle {
+  display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;
+}
 
-/* ===== HERO & INFINITE HIGHLIGHT SCROLL ===== */
+/* ===== NEW HERO & INFINITE HIGHLIGHT SCROLL ===== */
 .hero-section {
   padding: 40px 0 20px;
   border-bottom: 1px solid var(--border-color);
@@ -158,7 +153,6 @@ body {
   overflow: hidden;
   border: 1px solid var(--border-color);
   background: var(--bg-card);
-  flex-shrink: 0;
 }
 .highlight-item img {
   width: 100%;
@@ -273,54 +267,24 @@ footer {
 }
 footer a { color: var(--primary); text-decoration: none; }
 
-/* ============================================================
-   MOBILE FIX — Desktop layout forced on ALL screens
-   ============================================================ */
-@media (max-width: 1199px) {
-  body {
-    min-width: 1200px;
-    zoom: 1;
-  }
-  .top-navbar {
-    min-width: 1200px;
-  }
-}
-
-/* Real small-phone scaling: browser will auto-fit because viewport=1200 */
-@media (max-width: 767px) {
-  body {
-    min-width: 1200px;
-  }
-  .top-navbar {
-    min-width: 1200px;
-    padding: 0 30px;
-  }
-  /* keep everything horizontal — do NOT stack */
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
   .nav-links {
-    display: flex !important;
-    position: static !important;
-    flex-direction: row !important;
-    left: auto !important;
-    width: auto !important;
-    height: auto !important;
-    background: transparent !important;
-    border: none !important;
+    position: fixed; top: 70px; left: -100%; width: 250px; height: calc(100vh - 70px);
+    background: var(--bg-card); flex-direction: column; gap: 0;
+    border-right: 1px solid var(--border-color); transition: var(--transition);
   }
-  .nav-links a {
-    padding: 0 !important;
-    border: none !important;
-  }
-  .highlight-item {
-    width: 300px !important;
-    height: 400px !important;
-  }
-  .products-section { padding: 40px 30px; }
-  .btn-outline, .btn-primary {
-    padding: 8px 18px !important;
-    font-size: 0.85rem !important;
-  }
-  .user-name { display: inline !important; }
-  .nav-brand span.text { display: inline !important; }
+  .nav-links.active { left: 0; }
+  .nav-links a { padding: 20px; border-bottom: 1px solid var(--border-color); }
+  .mobile-toggle { display: block; }
+  .nav-brand span.text { display: none; }
+  .highlight-item { width: 220px; height: 300px; }
+}
+@media (max-width: 576px) {
+  .top-navbar { padding: 0 15px; }
+  .btn-outline, .btn-primary { padding: 6px 12px; font-size: 0.75rem; }
+  .user-name { display: none; }
+  .products-section { padding: 30px 15px; }
 }
 </style>
 </head>
@@ -357,9 +321,10 @@ footer a { color: var(--primary); text-decoration: none; }
   </div>
 </header>
 
-<!-- INFINITE HIGHLIGHT MARQUEE -->
+<!-- INFINITE HIGHLIGHT MARQUEE (NO TEXT, PURE VISUAL) -->
 <section class="hero-section">
   <div class="highlight-marquee">
+    <!-- First set of images -->
     <div class="highlight-item"><img src="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/dwty45tv/48ae17733978.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/dw6MN0xv/412d7b05dece.png" alt=""></div>
@@ -370,6 +335,7 @@ footer a { color: var(--primary); text-decoration: none; }
     <div class="highlight-item"><img src="https://i.ibb.co/nq4qj1MM/02043e775803.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/HpzGW2px/6699d34bfe9d.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/NGBHKFc/07c34bda7a8a.png" alt=""></div>
+    <!-- Duplicated set for seamless infinite scrolling -->
     <div class="highlight-item"><img src="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/dwty45tv/48ae17733978.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/dw6MN0xv/412d7b05dece.png" alt=""></div>
@@ -444,10 +410,12 @@ import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/f
 
 let products = [];
 
+// Mobile Menu Toggle
 document.getElementById('mobile-toggle').addEventListener('click', () => {
   document.getElementById('nav-links').classList.toggle('active');
 });
 
+// Modals Setup
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 document.getElementById('btn-open-signin').onclick = () => openModal('signin-modal');
@@ -455,10 +423,12 @@ document.querySelectorAll('.modal-close').forEach(btn => btn.onclick = function(
 document.getElementById('switch-to-signup').onclick = (e) => { e.preventDefault(); closeModal('signin-modal'); openModal('signup-modal'); };
 document.getElementById('switch-to-signin').onclick = (e) => { e.preventDefault(); closeModal('signup-modal'); openModal('signin-modal'); };
 
+// Filters Toggle
 document.getElementById('filter-toggle-btn').onclick = function() {
   document.getElementById('filter-container').classList.toggle('active');
 };
 
+// Render Products (No Prices, No Buy Buttons, Fully Clickable)
 window.renderProducts = function(productsToRender) {
   const grid = document.getElementById('product-grid');
   grid.innerHTML = '';
@@ -468,9 +438,11 @@ window.renderProducts = function(productsToRender) {
     return; 
   }
   
+  // Save for details page
   localStorage.setItem('stoneProducts', JSON.stringify(productsToRender));
   
   productsToRender.forEach(product => {
+    // Generate image HTML (all images stacked, first is active)
     let imagesHtml = '';
     if (product.images && product.images.length > 0) {
       imagesHtml = product.images.map((img, idx) => 
@@ -502,6 +474,7 @@ window.renderProducts = function(productsToRender) {
   });
 }
 
+// Auto-Play Image Carousel for Cards
 setInterval(() => {
   document.querySelectorAll('.product-image').forEach(container => {
     const imgs = container.querySelectorAll('.card-img');
@@ -516,8 +489,9 @@ setInterval(() => {
       if (counter) counter.textContent = `${next + 1} / ${imgs.length}`;
     }
   });
-}, 3000);
+}, 3000); // Changes image every 3 seconds
 
+// Load Data
 async function loadProducts() {
   try {
     const snap = await getDocs(collection(db, "products"));
@@ -525,6 +499,7 @@ async function loadProducts() {
     renderProducts(products);
   } catch (e) {
     console.error("Database error, showing fallbacks.", e);
+    // Fallback data if DB fails
     products = [
       { id: '1', stone_name: "RAJ GREEN", category: "SANDSTONE", color: "GREEN", images: ["https://images.unsplash.com/photo-1582735689362-4b5b9ca0b787?ixlib=rb-4.0.3", "https://images.unsplash.com/photo-1582735689272-29b68d399c1c?ixlib=rb-4.0.3"] },
       { id: '2', stone_name: "KOTA BROWN", category: "KOTA", color: "BROWN", images: ["https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3"] }
