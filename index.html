@@ -23,14 +23,12 @@
   --primary-dark: #a88958;
   --bg-dark: #0a0a0a;
   --bg-card: #151515;
-  --bg-elev: #1d1d1d;
   --text-light: #ffffff;
   --text-muted: #888888;
   --border-color: #222222;
   --transition: all 0.3s ease;
   --font-head: 'Oswald', sans-serif;
   --font-body: 'Montserrat', sans-serif;
-  --badge-red: #cc0c39;
   --whatsapp: #25D366;
   --facebook: #1877F2;
   --instagram: #E4405F;
@@ -51,29 +49,34 @@ body {
 a { color: inherit; }
 
 /* ============================================================
-   TOP NAVBAR — AUTO-FIT (NO OVERLAP)
+   NEW NAVBAR — 2 ROWS (Perfect fit, no overlap)
    ============================================================ */
-.top-navbar {
+.navbar-wrapper {
   position: sticky;
   top: 0;
   width: 100%;
-  background: rgba(10, 10, 10, 0.92);
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
   z-index: 1000;
+}
+
+/* ROW 1: Logo + Search + Sign In */
+.nav-row-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  height: 68px;
+  padding: 10px 24px;
   gap: 16px;
-  flex-wrap: nowrap;
+  height: 62px;
+  max-width: 1700px;
+  margin: 0 auto;
 }
 
 .nav-brand {
   font-family: var(--font-head);
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: white;
   letter-spacing: 1px;
@@ -88,39 +91,43 @@ a { color: inherit; }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 32px; }
 
-.nav-links {
+/* Search bar */
+.search-wrap {
+  flex: 1;
+  max-width: 460px;
+  min-width: 120px;
   display: flex;
-  gap: 16px;
-  flex-shrink: 1;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
   overflow: hidden;
+  background: #000;
+  height: 38px;
 }
-.nav-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  transition: var(--transition);
-  white-space: nowrap;
-  position: relative;
-  padding: 4px 0;
+.search-wrap input {
+  flex: 1;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 12px;
+  font-family: var(--font-body);
+  min-width: 0;
 }
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
+.search-wrap input::placeholder { color: #555; }
+.search-wrap button {
+  padding: 8px 16px;
   background: var(--primary);
+  border: none;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
   transition: var(--transition);
+  font-size: 12px;
 }
-.nav-links a:hover::after,
-.nav-links a.active::after { width: 100%; }
-.nav-links a:hover,
-.nav-links a.active { color: var(--primary); }
+.search-wrap button:hover { background: var(--primary-dark); }
 
+/* Right side actions */
 .nav-actions {
   display: flex;
   align-items: center;
@@ -172,6 +179,44 @@ a { color: inherit; }
   letter-spacing: 0.4px;
 }
 
+/* ROW 2: Navigation links (FULL WIDTH) */
+.nav-row-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0 24px;
+  height: 44px;
+  border-top: 1px solid var(--border-color);
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 1700px;
+  margin: 0 auto;
+}
+.nav-row-bottom::-webkit-scrollbar { display: none; }
+
+.nav-row-bottom a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 0 18px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  transition: var(--transition);
+  white-space: nowrap;
+  position: relative;
+  border-bottom: 2px solid transparent;
+}
+.nav-row-bottom a:hover,
+.nav-row-bottom a.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
 .mobile-toggle {
   display: none;
   background: none;
@@ -180,45 +225,11 @@ a { color: inherit; }
   font-size: 1.4rem;
   cursor: pointer;
   padding: 4px;
+  flex-shrink: 0;
 }
-
-/* Search bar — small & fits */
-.search-wrap {
-  flex: 1;
-  max-width: 320px;
-  min-width: 140px;
-  display: flex;
-  border: 1px solid #2a2a2a;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #000;
-}
-.search-wrap input {
-  flex: 1;
-  padding: 8px 12px;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 12px;
-  font-family: var(--font-body);
-  min-width: 0;
-}
-.search-wrap input::placeholder { color: #555; }
-.search-wrap button {
-  padding: 8px 14px;
-  background: var(--primary);
-  border: none;
-  color: #000;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  font-size: 12px;
-}
-.search-wrap button:hover { background: var(--primary-dark); }
 
 /* ============================================================
-   SIDEBAR OVERLAY
+   MOBILE SIDEBAR OVERLAY
    ============================================================ */
 .sidebar-overlay {
   display: none;
@@ -231,10 +242,7 @@ a { color: inherit; }
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.sidebar-overlay.active {
-  display: block;
-  opacity: 1;
-}
+.sidebar-overlay.active { display: block; opacity: 1; }
 
 /* ============================================================
    HERO MARQUEE
@@ -352,7 +360,7 @@ a { color: inherit; }
 }
 
 /* ============================================================
-   PRODUCT CARD (BASIC ONLY)
+   PRODUCT CARD — CLEAN (no badge, no tag)
    ============================================================ */
 .product-card {
   background: var(--bg-card);
@@ -395,26 +403,7 @@ a { color: inherit; }
 }
 .product-image img.active { opacity: 1; }
 
-.product-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: var(--primary);
-  color: #000;
-  padding: 4px 12px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  font-family: var(--font-head);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  border-radius: 3px;
-  z-index: 3;
-}
-.product-badge.hot {
-  background: var(--badge-red);
-  color: white;
-}
-
+/* Image counter only (no badge, no tag) */
 .image-counter {
   position: absolute;
   bottom: 10px;
@@ -429,7 +418,7 @@ a { color: inherit; }
   letter-spacing: 0.5px;
 }
 
-/* Basic info only — no price, no button, no rating */
+/* Basic info only */
 .product-info {
   padding: 16px;
   display: flex;
@@ -590,7 +579,6 @@ footer .footer-copy {
   font-size: 0.68rem;
   margin-top: 12px;
 }
-footer .footer-copy a { color: var(--primary); text-decoration: none; }
 
 /* ============================================================
    MODAL
@@ -665,36 +653,27 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
 .modal-link:hover { text-decoration: underline; }
 
 /* ============================================================
-   RESPONSIVE — DESKTOP AUTO-FIT
+   RESPONSIVE — TABLET / MOBILE
    ============================================================ */
-@media (max-width: 1400px) {
-  .nav-links { gap: 12px; }
-  .nav-links a { font-size: 0.72rem; letter-spacing: 0.3px; }
-  .nav-brand { font-size: 1.2rem; }
-  .search-wrap { max-width: 260px; }
-  .btn { padding: 7px 12px; font-size: 0.7rem; }
-}
-
-@media (max-width: 1200px) {
-  .top-navbar { padding: 0 14px; gap: 10px; height: 62px; }
-  .nav-links { gap: 9px; }
-  .nav-links a { font-size: 0.68rem; letter-spacing: 0.2px; }
-  .nav-brand { font-size: 1.05rem; }
-  .nav-brand img { height: 28px; }
-  .search-wrap { max-width: 200px; }
-  .btn { padding: 6px 10px; font-size: 0.65rem; }
-  .user-name { display: none; }
-}
-
-/* Tablet / Mobile — switch to hamburger */
 @media (max-width: 992px) {
-  .top-navbar { padding: 0 16px; height: 60px; gap: 10px; }
-  .nav-links {
+  /* Mobile hamburger menu */
+  .nav-row-top {
+    padding: 10px 16px;
+    height: 58px;
+    gap: 10px;
+  }
+
+  .nav-row-bottom {
+    display: none;
+  }
+
+  /* Sidebar version of nav-links */
+  .nav-links-sidebar {
     position: fixed;
-    top: 60px;
+    top: 58px;
     left: -100%;
-    width: 260px;
-    height: calc(100vh - 60px);
+    width: 280px;
+    height: calc(100vh - 58px);
     background: var(--bg-card);
     flex-direction: column;
     gap: 0;
@@ -703,19 +682,30 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     padding-top: 10px;
     overflow-y: auto;
     z-index: 999;
+    display: flex;
   }
-  .nav-links.active { left: 0; }
-  .nav-links a {
-    padding: 18px 24px;
+  .nav-links-sidebar.active { left: 0; }
+  .nav-links-sidebar a {
+    padding: 16px 24px;
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-muted);
+    text-decoration: none;
     font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
+    transition: var(--transition);
+    display: block;
   }
-  .nav-links a::after { display: none; }
+  .nav-links-sidebar a:hover,
+  .nav-links-sidebar a.active {
+    color: var(--primary);
+    background: rgba(199,169,123,0.08);
+  }
   .mobile-toggle { display: block; }
   .nav-brand { font-size: 1.15rem; }
-  .nav-brand span.text { display: none; }
-  .search-wrap { display: none; }
+  .search-wrap { max-width: 220px; }
+
   .section-title { font-size: 1.5rem; }
 
   .products-grid {
@@ -747,14 +737,6 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
   }
   .product-image img { padding: 4px; }
 
-  .product-badge {
-    top: 4px;
-    left: 4px;
-    padding: 2px 5px;
-    font-size: 0.5rem;
-    letter-spacing: 0.3px;
-    border-radius: 2px;
-  }
   .image-counter {
     bottom: 4px;
     right: 4px;
@@ -771,13 +753,14 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
   }
   .product-meta { display: none; }
 
-  .top-navbar { padding: 0 10px; height: 56px; }
+  .nav-row-top { padding: 8px 10px; height: 54px; }
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 26px; }
   .user-name { display: none; }
   .user-avatar { width: 30px; height: 30px; font-size: 0.75rem; }
   .btn { padding: 6px 10px; font-size: 0.65rem; gap: 3px; }
   #btn-open-signin i { display: none; }
+  .search-wrap { display: none; }
 
   .highlight-item { width: 140px; height: 180px; margin: 0 4px; }
   .hero-section { padding: 15px 0 12px; }
@@ -808,23 +791,37 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
 <body>
 
 <!-- ============================================================
-     TOP NAVBAR
+     NEW NAVBAR — 2 ROWS (Perfect fit)
      ============================================================ -->
-<header class="top-navbar">
-  <div style="display:flex; align-items:center; gap:14px; flex-shrink:0;">
-    <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
-    <a href="index.html" class="nav-brand">
-      <img src="stone.png" alt="Logo">
-      <span class="text">RAJASTHAN</span> <span>HUB</span>
-    </a>
+<div class="navbar-wrapper">
+  <!-- ROW 1: Logo + Search + Sign In -->
+  <div class="nav-row-top">
+    <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+      <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
+      <a href="index.html" class="nav-brand">
+        <img src="stone.png" alt="Logo">
+        <span class="text">RAJASTHAN</span> <span>HUB</span>
+      </a>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="Search stones...">
+      <button id="search-btn"><i class="fas fa-search"></i></button>
+    </div>
+
+    <div class="nav-actions">
+      <button id="btn-open-signin" class="btn btn-primary"><i class="fas fa-user"></i> Sign In</button>
+      <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
+
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">G</div>
+        <span class="user-name" id="user-name">GUEST</span>
+      </div>
+    </div>
   </div>
 
-  <div class="search-wrap">
-    <input type="text" id="search-input" placeholder="Search stones...">
-    <button id="search-btn"><i class="fas fa-search"></i></button>
-  </div>
-
-  <nav class="nav-links" id="nav-links">
+  <!-- ROW 2: Navigation links (desktop only) -->
+  <nav class="nav-row-bottom" id="nav-links">
     <a href="index.html" class="active">Home</a>
     <a href="sandstone.html">Sandstone</a>
     <a href="kota.html">Kota</a>
@@ -838,17 +835,23 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     <a href="privacy.html">Privacy</a>
     <a href="terms.html">Terms</a>
   </nav>
+</div>
 
-  <div class="nav-actions">
-    <button id="btn-open-signin" class="btn btn-primary"><i class="fas fa-user"></i> Sign In</button>
-    <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
-
-    <div class="user-info">
-      <div class="user-avatar" id="user-avatar">G</div>
-      <span class="user-name" id="user-name">GUEST</span>
-    </div>
-  </div>
-</header>
+<!-- Mobile sidebar (hidden on desktop) -->
+<nav class="nav-links-sidebar" id="nav-links-mobile">
+  <a href="index.html" class="active">Home</a>
+  <a href="sandstone.html">Sandstone</a>
+  <a href="kota.html">Kota Stone</a>
+  <a href="granite.html">Granite</a>
+  <a href="marble.html">Marble</a>
+  <a href="dholpur.html">Dholpur</a>
+  <a href="tiles.html">Tiles</a>
+  <a href="mandana.html">Mandana</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Privacy Policy</a>
+  <a href="terms.html">Terms &amp; Conditions</a>
+</nav>
 
 <!-- Sidebar overlay -->
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -998,39 +1001,39 @@ import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/f
 let allProducts = [];
 
 /* ==================================================
-   SIDEBAR MENU
+   MOBILE SIDEBAR
    ================================================== */
 const mobileToggle = document.getElementById('mobile-toggle');
-const navLinks = document.getElementById('nav-links');
+const navLinksMobile = document.getElementById('nav-links-mobile');
 const overlay = document.getElementById('sidebar-overlay');
 
 function openSidebar() {
-  navLinks.classList.add('active');
+  navLinksMobile.classList.add('active');
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 function closeSidebar() {
-  navLinks.classList.remove('active');
+  navLinksMobile.classList.remove('active');
   overlay.classList.remove('active');
   document.body.style.overflow = '';
 }
 
 mobileToggle.addEventListener('click', (e) => {
   e.stopPropagation();
-  navLinks.classList.contains('active') ? closeSidebar() : openSidebar();
+  navLinksMobile.classList.contains('active') ? closeSidebar() : openSidebar();
 });
 overlay.addEventListener('click', closeSidebar);
 document.addEventListener('click', (e) => {
-  if (navLinks.classList.contains('active')) {
-    if (!navLinks.contains(e.target) && !mobileToggle.contains(e.target)) {
+  if (navLinksMobile.classList.contains('active')) {
+    if (!navLinksMobile.contains(e.target) && !mobileToggle.contains(e.target)) {
       closeSidebar();
     }
   }
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && navLinks.classList.contains('active')) closeSidebar();
+  if (e.key === 'Escape' && navLinksMobile.classList.contains('active')) closeSidebar();
 });
-navLinks.querySelectorAll('a').forEach(link => {
+navLinksMobile.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', closeSidebar);
 });
 
@@ -1057,7 +1060,7 @@ document.querySelectorAll('.modal').forEach(m => {
 });
 
 /* ==================================================
-   RENDER PRODUCTS — BASIC ONLY (no price/rating/cart)
+   RENDER PRODUCTS — NO BADGE (clean image)
    ================================================== */
 window.renderProducts = function(list) {
   const grid = document.getElementById('product-grid');
@@ -1072,7 +1075,7 @@ window.renderProducts = function(list) {
 
   localStorage.setItem('stoneProducts', JSON.stringify(list));
 
-  list.forEach((product, idx) => {
+  list.forEach((product) => {
     const imgs = (product.images && product.images.length) ? product.images : ['stone-placeholder.png'];
     const imagesHtml = imgs.map((img, i) =>
       `<img src="${img}" class="card-img ${i === 0 ? 'active' : ''}" alt="stone">`
@@ -1081,18 +1084,12 @@ window.renderProducts = function(list) {
     const counterHtml = imgs.length > 1
       ? `<div class="image-counter">1 / ${imgs.length}</div>` : '';
 
-    let badgeHtml = '';
-    if (idx === 0) badgeHtml = `<span class="product-badge">Best Seller</span>`;
-    else if (idx === 1) badgeHtml = `<span class="product-badge hot">Deal</span>`;
-    else badgeHtml = `<span class="product-badge">${product.category || 'STONE'}</span>`;
-
     const detailUrl = `product-details.html?id=${product.id}`;
 
     const card = document.createElement('a');
     card.className = 'product-card';
     card.href = detailUrl;
     card.innerHTML = `
-      ${badgeHtml}
       <div class="product-image">
         ${imagesHtml}
         ${counterHtml}
