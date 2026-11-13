@@ -274,66 +274,6 @@ a { color: inherit; text-decoration: none; }
 .sidebar-overlay.active { display: block; opacity: 1; }
 
 /* ============================================================
-   PAGE HERO / BREADCRUMB
-   ============================================================ */
-.page-hero {
-  padding: 45px 30px 35px;
-  max-width: 1700px;
-  margin: 0 auto;
-  border-bottom: 1px solid var(--border-color);
-  position: relative;
-  overflow: hidden;
-}
-.page-hero::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(199,169,123,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-.breadcrumb {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.breadcrumb a {
-  color: var(--text-muted);
-  transition: var(--transition);
-}
-.breadcrumb a:hover { color: var(--primary); }
-.breadcrumb span.sep { color: #444; }
-.breadcrumb span.current { color: var(--primary); }
-
-.page-title {
-  font-family: var(--font-head);
-  font-size: 2.4rem;
-  font-weight: 600;
-  color: white;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  line-height: 1.1;
-  margin-bottom: 10px;
-}
-.page-title span { color: var(--primary); }
-
-.page-subtitle {
-  font-size: 0.92rem;
-  color: var(--text-muted);
-  max-width: 720px;
-  line-height: 1.6;
-  letter-spacing: 0.3px;
-}
-
-/* ============================================================
    PRODUCTS SECTION
    ============================================================ */
 .products-section {
@@ -718,9 +658,6 @@ footer .footer-copy {
 
   .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); }
 
-  .page-hero { padding: 30px 16px 25px; }
-  .page-title { font-size: 1.8rem; }
-
   .section-title { font-size: 1.5rem; }
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -747,11 +684,6 @@ footer .footer-copy {
   }
   .search-wrap input { font-size: 13px; padding: 8px 12px; }
   .search-wrap button { padding: 8px 16px; font-size: 13px; }
-
-  .page-hero { padding: 24px 12px 20px; }
-  .page-title { font-size: 1.4rem; letter-spacing: 1px; }
-  .page-subtitle { font-size: 0.8rem; }
-  .breadcrumb { font-size: 0.65rem; margin-bottom: 10px; }
 
   .products-section { padding: 20px 8px 50px; }
   .section-header { padding: 0 8px; margin-bottom: 16px; }
@@ -873,24 +805,11 @@ footer .footer-copy {
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <!-- ============================================================
-     PAGE HERO / BREADCRUMB
-     ============================================================ -->
-<section class="page-hero">
-  <div class="breadcrumb">
-    <a href="index.html">Home</a>
-    <span class="sep">/</span>
-    <span class="current">Sandstone</span>
-  </div>
-  <h1 class="page-title">NATURAL <span>SANDSTONE</span></h1>
-  <p class="page-subtitle">Explore our premium collection of sandstone sourced directly from Rajasthan's finest quarries — durable, timeless and beautifully textured.</p>
-</section>
-
-<!-- ============================================================
      PRODUCTS SECTION
      ============================================================ -->
 <section class="products-section">
   <div class="section-header">
-    <h2 class="section-title">SANDSTONE <span>COLLECTION</span></h2>
+    <h2 class="section-title">PREMIUM <span>INVENTORY</span></h2>
     <div class="result-count"><strong id="result-total">0</strong> Products</div>
   </div>
 
@@ -1002,7 +921,7 @@ import { collection, getDocs, query, where } from "https://www.gstatic.com/fireb
 let allProducts = [];
 
 /* ==================================================
-   MOBILE SIDEBAR LOGIC (same as index.html)
+   MOBILE SIDEBAR LOGIC
    ================================================== */
 const mobileToggle = document.getElementById('mobile-toggle');
 const navLinksMobile = document.getElementById('nav-links-mobile');
@@ -1062,7 +981,7 @@ document.querySelectorAll('.modal').forEach(m => {
 });
 
 /* ==================================================
-   RENDER PRODUCTS (same clean format as index.html)
+   RENDER PRODUCTS
    ================================================== */
 window.renderProducts = function(list) {
   const grid = document.getElementById('product-grid');
@@ -1110,7 +1029,7 @@ window.renderProducts = function(list) {
 };
 
 /* ==================================================
-   IMAGE CAROUSEL (3.5s)
+   IMAGE CAROUSEL
    ================================================== */
 setInterval(() => {
   document.querySelectorAll('.product-image').forEach(wrap => {
@@ -1127,7 +1046,7 @@ setInterval(() => {
 }, 3500);
 
 /* ==================================================
-   SEARCH (sandstone-only filter)
+   SEARCH
    ================================================== */
 function doSearch() {
   const q = document.getElementById('search-input').value.toLowerCase().trim();
@@ -1144,7 +1063,7 @@ document.getElementById('search-input').addEventListener('input', doSearch);
 document.getElementById('search-btn').addEventListener('click', doSearch);
 
 /* ==================================================
-   LOAD SANDSTONE PRODUCTS FROM FIRESTORE
+   LOAD SANDSTONE PRODUCTS
    ================================================== */
 async function loadProducts() {
   try {
@@ -1155,7 +1074,6 @@ async function loadProducts() {
     const snap = await getDocs(q);
     snap.forEach(doc => allProducts.push({ id: doc.id, ...doc.data() }));
 
-    // Sort by created_at (newest first) if available
     allProducts.sort((a, b) => {
       const ta = a.created_at?.toDate ? a.created_at.toDate().getTime() : 0;
       const tb = b.created_at?.toDate ? b.created_at.toDate().getTime() : 0;
