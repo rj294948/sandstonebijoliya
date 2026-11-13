@@ -713,7 +713,6 @@ footer .footer-copy {
   }
   .nav-row-top { height: auto; padding-top: 10px; padding-bottom: 10px; }
 
-  /* Show sidebar only on mobile/tablet */
   .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); }
   
   .section-title { font-size: 1.5rem; }
@@ -780,15 +779,11 @@ footer .footer-copy {
     line-height: 1.2;
     text-align: center;
   }
+  
+  /* Mobile details hide */
   .product-meta { 
-    display: flex; 
-    flex-direction: column;
-    gap: 2px;
-    font-size: 0.5rem;
-    text-align: center;
-    align-items: center;
+    display: none !important; 
   }
-  .product-meta i { font-size: 0.5rem; }
 
   .highlight-item { width: 140px; height: 180px; margin: 0 4px; }
   .hero-section { padding: 15px 0 12px; }
@@ -806,7 +801,6 @@ footer .footer-copy {
   .products-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; }
   .product-image { height: 78px; }
   .product-title { font-size: 0.55rem; min-height: 24px; }
-  .product-meta { font-size: 0.45rem; }
 }
 </style>
 </head>
@@ -1031,7 +1025,7 @@ const overlay = document.getElementById('sidebar-overlay');
 
 function openSidebar() {
   navLinksMobile.classList.add('active');
-  navLinksMobile.style.display = 'flex'; // Force display on open
+  navLinksMobile.style.display = 'flex';
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
