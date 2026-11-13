@@ -30,8 +30,11 @@
   --transition: all 0.3s ease;
   --font-head: 'Oswald', sans-serif;
   --font-body: 'Montserrat', sans-serif;
-  --star: #ffa41c;
   --badge-red: #cc0c39;
+  --whatsapp: #25D366;
+  --facebook: #1877F2;
+  --instagram: #E4405F;
+  --gmail: #EA4335;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -42,6 +45,7 @@ body {
   background: var(--bg-dark);
   overflow-x: hidden;
   font-size: 14px;
+  padding-bottom: 80px; /* space for floating WhatsApp */
 }
 
 a { color: inherit; }
@@ -205,7 +209,7 @@ a { color: inherit; }
 .search-wrap button:hover { background: var(--primary-dark); }
 
 /* ============================================================
-   MOBILE SIDEBAR OVERLAY
+   SIDEBAR OVERLAY
    ============================================================ */
 .sidebar-overlay {
   display: none;
@@ -443,18 +447,6 @@ a { color: inherit; }
   min-height: 42px;
 }
 
-.product-rating {
-  color: var(--star);
-  font-size: 0.78rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.product-rating small {
-  color: var(--text-muted);
-  font-size: 0.7rem;
-}
-
 .product-meta {
   display: flex;
   flex-wrap: wrap;
@@ -467,42 +459,8 @@ a { color: inherit; }
 .product-meta span { display: flex; align-items: center; gap: 4px; }
 .product-meta i { color: var(--primary); font-size: 0.7rem; }
 
-.product-price {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-top: 4px;
-  flex-wrap: wrap;
-}
-.price-new {
-  font-family: var(--font-head);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--primary);
-  letter-spacing: 0.5px;
-}
-.price-new::before {
-  content: '₹';
-  font-size: 0.85rem;
-  margin-right: 2px;
-  vertical-align: super;
-}
-.price-old {
-  font-size: 0.78rem;
-  color: #666;
-  text-decoration: line-through;
-}
-.price-off {
-  font-size: 0.68rem;
-  color: #4caf50;
-  font-weight: 700;
-  background: rgba(76,175,80,0.12);
-  padding: 2px 7px;
-  border-radius: 3px;
-  letter-spacing: 0.5px;
-}
-
-.view-details {
+/* Contact for price (replaces price + cart) */
+.contact-price {
   margin-top: auto;
   padding: 10px;
   background: transparent;
@@ -519,10 +477,43 @@ a { color: inherit; }
   align-items: center;
   justify-content: center;
   gap: 6px;
+  text-align: center;
 }
-.product-card:hover .view-details {
+.product-card:hover .contact-price {
   background: var(--primary);
   color: #000;
+}
+.contact-price i { font-size: 0.85rem; }
+
+/* ============================================================
+   FLOATING WHATSAPP BUTTON
+   ============================================================ */
+.float-whatsapp {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 58px;
+  height: 58px;
+  background: var(--whatsapp);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
+  z-index: 1500;
+  text-decoration: none;
+  transition: var(--transition);
+  animation: floatPulse 2s ease-in-out infinite;
+}
+.float-whatsapp:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.7);
+}
+@keyframes floatPulse {
+  0%, 100% { box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45), 0 0 0 0 rgba(37, 211, 102, 0.5); }
+  50% { box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45), 0 0 0 14px rgba(37, 211, 102, 0); }
 }
 
 /* ============================================================
@@ -533,7 +524,7 @@ footer {
   border-top: 1px solid var(--border-color);
   color: var(--text-muted);
   text-align: center;
-  padding: 40px 20px 25px;
+  padding: 45px 20px 30px;
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -542,18 +533,78 @@ footer {
 footer .footer-brand {
   color: white;
   font-family: var(--font-head);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   letter-spacing: 2px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 footer .footer-brand span { color: var(--primary); }
+
+/* Contact info row */
+.footer-contact {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-bottom: 22px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.82rem;
+}
+.footer-contact a {
+  color: var(--text-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+.footer-contact a:hover { color: var(--primary); }
+.footer-contact i {
+  font-size: 1rem;
+}
+.footer-contact .wa-icon i { color: var(--whatsapp); }
+.footer-contact .gm-icon i { color: var(--gmail); }
+
+/* Social icons */
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.footer-social a {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  text-decoration: none;
+  transition: var(--transition);
+}
+.footer-social a:hover {
+  transform: translateY(-3px);
+  color: #fff;
+}
+.footer-social a.wa:hover { background: var(--whatsapp); border-color: var(--whatsapp); }
+.footer-social a.fb:hover { background: var(--facebook); border-color: var(--facebook); }
+.footer-social a.ig:hover { background: var(--instagram); border-color: var(--instagram); }
+.footer-social a.gm:hover { background: var(--gmail); border-color: var(--gmail); }
+
+/* Footer links */
 footer .footer-links {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px 24px;
-  margin-bottom: 18px;
+  gap: 10px 22px;
+  margin-bottom: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
 }
 footer .footer-links a {
   color: var(--text-muted);
@@ -687,6 +738,8 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
 }
 
 @media (max-width: 768px) {
+  body { padding-bottom: 75px; }
+
   .products-section {
     padding: 20px 8px 50px;
   }
@@ -712,9 +765,7 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     padding: 4px;
     background: #1a1a1a;
   }
-  .product-image img {
-    padding: 4px;
-  }
+  .product-image img { padding: 4px; }
 
   .product-badge {
     top: 4px;
@@ -731,54 +782,25 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     padding: 1px 5px;
   }
 
-  .product-info {
-    padding: 6px 5px 8px;
-    gap: 3px;
-  }
+  .product-info { padding: 6px 5px 8px; gap: 3px; }
   .product-title {
     font-size: 0.62rem;
     min-height: 26px;
     letter-spacing: 0;
     line-height: 1.2;
   }
-  .product-rating {
-    font-size: 0.55rem;
-    gap: 2px;
-  }
-  .product-rating small { font-size: 0.5rem; }
+  .product-meta { display: none; }
 
-  .product-meta {
-    display: none;
-  }
-
-  .product-price {
-    gap: 3px;
-    margin-top: 2px;
-    flex-wrap: nowrap;
-    overflow: hidden;
-  }
-  .price-new {
-    font-size: 0.72rem;
-    letter-spacing: 0;
-  }
-  .price-new::before { font-size: 0.55rem; }
-  .price-old { display: none; }
-  .price-off {
-    font-size: 0.48rem;
-    padding: 1px 3px;
-    border-radius: 2px;
-    white-space: nowrap;
-  }
-
-  .view-details {
+  .contact-price {
     padding: 5px 2px;
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     letter-spacing: 0.3px;
     gap: 2px;
     border-radius: 3px;
     margin-top: 2px;
+    font-weight: 700;
   }
-  .view-details i { font-size: 0.6rem; }
+  .contact-price i { font-size: 0.55rem; }
 
   .top-navbar { padding: 0 10px; height: 56px; }
   .nav-brand { font-size: 1rem; gap: 6px; }
@@ -790,6 +812,19 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
 
   .highlight-item { width: 140px; height: 180px; margin: 0 4px; }
   .hero-section { padding: 15px 0 12px; }
+
+  /* Floating WhatsApp — smaller on mobile */
+  .float-whatsapp {
+    width: 52px;
+    height: 52px;
+    font-size: 1.6rem;
+    bottom: 18px;
+    right: 18px;
+  }
+
+  .footer-contact { gap: 8px 16px; font-size: 0.72rem; }
+  .footer-contact i { font-size: 0.85rem; }
+  .footer-social a { width: 38px; height: 38px; font-size: 1rem; }
 }
 
 @media (max-width: 400px) {
@@ -799,8 +834,7 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
   }
   .product-image { height: 78px; }
   .product-title { font-size: 0.55rem; min-height: 24px; }
-  .price-new { font-size: 0.65rem; }
-  .view-details { font-size: 0.5rem; padding: 4px 1px; }
+  .contact-price { font-size: 0.45rem; padding: 4px 1px; }
 }
 </style>
 </head>
@@ -895,10 +929,54 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
 </section>
 
 <!-- ============================================================
+     FLOATING WHATSAPP BUTTON
+     ============================================================ -->
+<a href="https://wa.me/917737740207?text=Hello%20Rajasthan%20Sandstone%20Hub%2C%20I%20want%20to%20enquire%20about%20your%20products."
+   class="float-whatsapp"
+   target="_blank"
+   rel="noopener"
+   aria-label="WhatsApp Us">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- ============================================================
      FOOTER
      ============================================================ -->
 <footer>
   <div class="footer-brand">RAJASTHAN <span>HUB</span></div>
+
+  <!-- Contact info -->
+  <div class="footer-contact">
+    <a href="https://wa.me/917737740207?text=Hello%20Rajasthan%20Sandstone%20Hub%2C%20I%20want%20to%20enquire%20about%20your%20products."
+       class="wa-icon" target="_blank" rel="noopener">
+      <i class="fab fa-whatsapp"></i> +91 77377 40207
+    </a>
+    <a href="mailto:ravijain236129@gmail.com?subject=Enquiry%20from%20Website&body=Hello%20Rajasthan%20Sandstone%20Hub%2C%0A%0AI%20want%20to%20enquire%20about%3A%20"
+       class="gm-icon">
+      <i class="fas fa-envelope"></i> ravijain236129@gmail.com
+    </a>
+  </div>
+
+  <!-- Social icons -->
+  <div class="footer-social">
+    <a href="https://wa.me/917737740207?text=Hello%20Rajasthan%20Sandstone%20Hub%2C%20I%20want%20to%20enquire%20about%20your%20products."
+       class="wa" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="https://www.facebook.com/profile.php?id=61583935116529"
+       class="fb" target="_blank" rel="noopener" aria-label="Facebook">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="#" class="ig" aria-label="Instagram (Coming Soon)" title="Instagram - Coming Soon">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <a href="mailto:ravijain236129@gmail.com?subject=Enquiry%20from%20Website"
+       class="gm" aria-label="Gmail">
+      <i class="fas fa-envelope"></i>
+    </a>
+  </div>
+
+  <!-- Quick links -->
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="sandstone.html">Sandstone</a>
@@ -913,6 +991,7 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     <a href="privacy.html">Privacy Policy</a>
     <a href="terms.html">Terms &amp; Conditions</a>
   </div>
+
   <div class="footer-copy">
     &copy; 2025 Rajasthan Sandstone Hub · All Rights Reserved
   </div>
@@ -955,7 +1034,7 @@ import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/f
 let allProducts = [];
 
 /* ==================================================
-   SIDEBAR MENU — open / close + outside click + ESC
+   SIDEBAR MENU — open/close + outside + ESC
    ================================================== */
 const mobileToggle = document.getElementById('mobile-toggle');
 const navLinks = document.getElementById('nav-links');
@@ -964,7 +1043,7 @@ const overlay = document.getElementById('sidebar-overlay');
 function openSidebar() {
   navLinks.classList.add('active');
   overlay.classList.add('active');
-  document.body.style.overflow = 'hidden'; // prevent bg scroll
+  document.body.style.overflow = 'hidden';
 }
 function closeSidebar() {
   navLinks.classList.remove('active');
@@ -974,17 +1053,11 @@ function closeSidebar() {
 
 mobileToggle.addEventListener('click', (e) => {
   e.stopPropagation();
-  if (navLinks.classList.contains('active')) {
-    closeSidebar();
-  } else {
-    openSidebar();
-  }
+  navLinks.classList.contains('active') ? closeSidebar() : openSidebar();
 });
 
-/* Click outside (on overlay) closes menu */
 overlay.addEventListener('click', closeSidebar);
 
-/* Click anywhere on page outside nav-links closes menu */
 document.addEventListener('click', (e) => {
   if (navLinks.classList.contains('active')) {
     if (!navLinks.contains(e.target) && !mobileToggle.contains(e.target)) {
@@ -993,14 +1066,10 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* Escape key closes menu */
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && navLinks.classList.contains('active')) {
-    closeSidebar();
-  }
+  if (e.key === 'Escape' && navLinks.classList.contains('active')) closeSidebar();
 });
 
-/* Clicking any nav link closes menu */
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', closeSidebar);
 });
@@ -1021,8 +1090,6 @@ document.getElementById('switch-to-signup').onclick = (e) => {
 document.getElementById('switch-to-signin').onclick = (e) => {
   e.preventDefault(); closeModal('signup-modal'); openModal('signin-modal');
 };
-
-/* Click on modal backdrop closes modal */
 document.querySelectorAll('.modal').forEach(m => {
   m.addEventListener('click', (e) => {
     if (e.target === m) m.classList.remove('active');
@@ -1030,7 +1097,7 @@ document.querySelectorAll('.modal').forEach(m => {
 });
 
 /* ==================================================
-   RENDER PRODUCTS
+   RENDER PRODUCTS (no price, no rating)
    ================================================== */
 window.renderProducts = function(list) {
   const grid = document.getElementById('product-grid');
@@ -1059,15 +1126,6 @@ window.renderProducts = function(list) {
     else if (idx === 1) badgeHtml = `<span class="product-badge hot">Deal</span>`;
     else badgeHtml = `<span class="product-badge">${product.category || 'STONE'}</span>`;
 
-    const price = product.price || (Math.floor(Math.random() * 150) + 50);
-    const oldPrice = Math.floor(price * 1.25);
-    const off = Math.round(((oldPrice - price) / oldPrice) * 100);
-
-    const rating = (4 + Math.random()).toFixed(1);
-    const reviews = Math.floor(Math.random() * 200) + 20;
-    const starCount = Math.round(rating);
-    const stars = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
-
     const detailUrl = `product-details.html?id=${product.id}`;
 
     const card = document.createElement('a');
@@ -1081,20 +1139,12 @@ window.renderProducts = function(list) {
       </div>
       <div class="product-info">
         <h3 class="product-title">${product.stone_name || 'PREMIUM STONE'}</h3>
-        <div class="product-rating">
-          ${stars} <small>(${reviews})</small>
-        </div>
         <div class="product-meta">
           <span><i class="fas fa-layer-group"></i> ${product.sub_category || product.category || '—'}</span>
           <span><i class="fas fa-fill-drip"></i> ${product.color || '—'}</span>
         </div>
-        <div class="product-price">
-          <span class="price-new">${price}</span>
-          <span class="price-old">₹${oldPrice}</span>
-          <span class="price-off">${off}% OFF</span>
-        </div>
-        <span class="view-details">
-          <i class="fas fa-eye"></i> View Details
+        <span class="contact-price">
+          <i class="fab fa-whatsapp"></i> Contact for Price
         </span>
       </div>
     `;
