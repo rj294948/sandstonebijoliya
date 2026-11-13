@@ -44,6 +44,8 @@ body {
   font-size: 14px;
 }
 
+a { color: inherit; }
+
 /* ============================================================
    TOP NAVBAR
    ============================================================ */
@@ -75,6 +77,7 @@ body {
   gap: 10px;
   white-space: nowrap;
   cursor: pointer;
+  text-decoration: none;
 }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 35px; }
@@ -202,7 +205,7 @@ body {
 .search-wrap button:hover { background: var(--primary-dark); }
 
 /* ============================================================
-   HERO MARQUEE
+   HERO MARQUEE (Non-stop, no hover pause, no pointer)
    ============================================================ */
 .hero-section {
   padding: 30px 0 20px;
@@ -226,8 +229,9 @@ body {
   display: flex;
   width: max-content;
   animation: scrollMarquee 40s linear infinite;
+  /* Hover pe kuch nahi hoga — non-stop run */
 }
-.highlight-marquee:hover { animation-play-state: paused; }
+/* Pause hover REMOVED — always running */
 
 @keyframes scrollMarquee {
   0% { transform: translateX(0); }
@@ -243,7 +247,10 @@ body {
   background: var(--bg-card);
   flex-shrink: 0;
   position: relative;
-  transition: var(--transition);
+  /* IMPORTANT: No pointer cursor, no click — image only */
+  cursor: default;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .highlight-item::after {
   content: '';
@@ -252,20 +259,14 @@ body {
   background: linear-gradient(to top, rgba(0,0,0,0.6), transparent 40%);
   pointer-events: none;
 }
-.highlight-item:hover {
-  border-color: var(--primary);
-  transform: translateY(-3px);
-}
 .highlight-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   filter: grayscale(15%) contrast(1.1);
-  transition: transform 0.8s ease, filter 0.8s ease;
-}
-.highlight-item:hover img {
-  transform: scale(1.06);
-  filter: grayscale(0%) contrast(1.2);
+  pointer-events: none; /* No hover feel */
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 /* ============================================================
@@ -315,7 +316,7 @@ body {
 .result-count strong { color: var(--primary); }
 
 /* ============================================================
-   PRODUCT GRID — Desktop: many, Mobile: 4+ items
+   PRODUCT GRID
    ============================================================ */
 .products-grid {
   display: grid;
@@ -336,6 +337,8 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
+  text-decoration: none;
+  color: inherit;
 }
 .product-card:hover {
   border-color: var(--primary);
@@ -362,13 +365,10 @@ body {
   top: 0; left: 0;
   padding: 10px;
   opacity: 0;
-  transition: opacity 0.7s ease, transform 0.8s ease;
+  transition: opacity 0.7s ease;
 }
 .product-image img.active {
   opacity: 1;
-}
-.product-card:hover .product-image img.active {
-  transform: scale(1.04);
 }
 
 /* Badge */
@@ -490,7 +490,8 @@ body {
   letter-spacing: 0.5px;
 }
 
-.btn-cart {
+/* "View Details" indicator link */
+.view-details {
   margin-top: auto;
   padding: 10px;
   background: transparent;
@@ -502,14 +503,13 @@ body {
   letter-spacing: 1.2px;
   text-transform: uppercase;
   border-radius: 4px;
-  cursor: pointer;
   transition: var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
 }
-.btn-cart:hover {
+.product-card:hover .view-details {
   background: var(--primary);
   color: #000;
 }
@@ -522,23 +522,41 @@ footer {
   border-top: 1px solid var(--border-color);
   color: var(--text-muted);
   text-align: center;
-  padding: 30px 20px;
+  padding: 40px 20px 25px;
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 40px;
 }
-footer a { color: var(--primary); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
 footer .footer-brand {
   color: white;
   font-family: var(--font-head);
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 2px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 }
 footer .footer-brand span { color: var(--primary); }
+footer .footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-bottom: 18px;
+}
+footer .footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: var(--transition);
+  font-size: 0.72rem;
+}
+footer .footer-links a:hover { color: var(--primary); }
+footer .footer-copy {
+  color: #555;
+  font-size: 0.68rem;
+  margin-top: 12px;
+}
+footer .footer-copy a { color: var(--primary); text-decoration: none; }
 
 /* ============================================================
    MODAL
@@ -635,6 +653,7 @@ footer .footer-brand span { color: var(--primary); }
     border-right: 1px solid var(--border-color);
     transition: var(--transition);
     padding-top: 10px;
+    overflow-y: auto;
   }
   .nav-links.active { left: 0; }
   .nav-links a {
@@ -649,16 +668,13 @@ footer .footer-brand span { color: var(--primary); }
   .search-wrap { display: none; }
   .section-title { font-size: 1.5rem; }
 
-  /* Tablet: 3 items */
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
   }
 }
 
-/* ============================================================
-   MOBILE — 4 items per row (min)
-   ============================================================ */
+/* MOBILE — 4 items per row */
 @media (max-width: 768px) {
   .products-section {
     padding: 20px 8px 50px;
@@ -671,7 +687,6 @@ footer .footer-brand span { color: var(--primary); }
   .section-title::before { width: 3px; }
   .result-count { font-size: 0.7rem; }
 
-  /* 4-column grid on mobile */
   .products-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
@@ -722,7 +737,7 @@ footer .footer-brand span { color: var(--primary); }
   .product-rating small { font-size: 0.5rem; }
 
   .product-meta {
-    display: none; /* hide meta on tiny screens to save space */
+    display: none;
   }
 
   .product-price {
@@ -744,7 +759,7 @@ footer .footer-brand span { color: var(--primary); }
     white-space: nowrap;
   }
 
-  .btn-cart {
+  .view-details {
     padding: 5px 2px;
     font-size: 0.55rem;
     letter-spacing: 0.3px;
@@ -752,9 +767,8 @@ footer .footer-brand span { color: var(--primary); }
     border-radius: 3px;
     margin-top: 2px;
   }
-  .btn-cart i { font-size: 0.6rem; }
+  .view-details i { font-size: 0.6rem; }
 
-  /* Navbar compact */
   .top-navbar { padding: 0 10px; height: 56px; }
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 26px; }
@@ -767,7 +781,6 @@ footer .footer-brand span { color: var(--primary); }
   .hero-section { padding: 15px 0 12px; }
 }
 
-/* Very small phones — still 4 */
 @media (max-width: 400px) {
   .products-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -776,22 +789,22 @@ footer .footer-brand span { color: var(--primary); }
   .product-image { height: 78px; }
   .product-title { font-size: 0.55rem; min-height: 24px; }
   .price-new { font-size: 0.65rem; }
-  .btn-cart { font-size: 0.5rem; padding: 4px 1px; }
+  .view-details { font-size: 0.5rem; padding: 4px 1px; }
 }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     TOP NAVBAR
+     TOP NAVBAR — All important links set
      ============================================================ -->
 <header class="top-navbar">
   <div style="display:flex; align-items:center; gap:14px;">
     <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
-    <div class="nav-brand" onclick="window.location.href='index.html'">
+    <a href="index.html" class="nav-brand">
       <img src="stone.png" alt="Logo">
       <span class="text">RAJASTHAN</span> <span>HUB</span>
-    </div>
+    </a>
   </div>
 
   <div class="search-wrap">
@@ -800,17 +813,19 @@ footer .footer-brand span { color: var(--primary); }
   </div>
 
   <nav class="nav-links" id="nav-links">
-    <a href="sandstone.html" class="active">Sand Stone</a>
-    <a href="kota.html">Kota Stone</a>
+    <a href="index.html" class="active">Home</a>
+    <a href="sandstone.html">Sandstone</a>
+    <a href="kota.html">Kota</a>
     <a href="granite.html">Granite</a>
     <a href="marble.html">Marble</a>
     <a href="dholpur.html">Dholpur</a>
     <a href="tiles.html">Tiles</a>
     <a href="mandana.html">Mandana</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
   </nav>
 
   <div class="nav-actions">
-    <button id="btn-post" style="display:none;" class="btn btn-outline"><i class="fas fa-plus"></i> Post</button>
     <button id="btn-open-signin" class="btn btn-primary"><i class="fas fa-user"></i> Sign In</button>
     <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
 
@@ -822,7 +837,7 @@ footer .footer-brand span { color: var(--primary); }
 </header>
 
 <!-- ============================================================
-     HERO MARQUEE
+     HERO MARQUEE — non-stop, no link feel
      ============================================================ -->
 <section class="hero-section">
   <div class="highlight-marquee">
@@ -836,6 +851,7 @@ footer .footer-brand span { color: var(--primary); }
     <div class="highlight-item"><img src="https://i.ibb.co/nq4qj1MM/02043e775803.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/HpzGW2px/6699d34bfe9d.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/NGBHKFc/07c34bda7a8a.png" alt=""></div>
+    <!-- Duplicate set for seamless loop -->
     <div class="highlight-item"><img src="https://i.ibb.co/9mWg7qhZ/de29e2179f30.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/dwty45tv/48ae17733978.png" alt=""></div>
     <div class="highlight-item"><img src="https://i.ibb.co/dw6MN0xv/412d7b05dece.png" alt=""></div>
@@ -864,11 +880,27 @@ footer .footer-brand span { color: var(--primary); }
 </section>
 
 <!-- ============================================================
-     FOOTER
+     FOOTER — All important links
      ============================================================ -->
 <footer>
   <div class="footer-brand">RAJASTHAN <span>HUB</span></div>
-  &copy; 2025 Rajasthan Sandstone Hub · <a href="contact.html">Contact Support</a>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="sandstone.html">Sandstone</a>
+    <a href="kota.html">Kota Stone</a>
+    <a href="granite.html">Granite</a>
+    <a href="marble.html">Marble</a>
+    <a href="dholpur.html">Dholpur</a>
+    <a href="tiles.html">Tiles</a>
+    <a href="mandana.html">Mandana</a>
+    <a href="about.html">About Us</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms &amp; Conditions</a>
+  </div>
+  <div class="footer-copy">
+    &copy; 2025 Rajasthan Sandstone Hub · All Rights Reserved
+  </div>
 </footer>
 
 <!-- ============================================================
@@ -968,16 +1000,20 @@ window.renderProducts = function(list) {
     const starCount = Math.round(rating);
     const stars = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
 
-    const card = document.createElement('div');
+    const detailUrl = `product-details.html?id=${product.id}`;
+
+    /* FULL CARD is a link — no Add to Cart, click anywhere opens detail */
+    const card = document.createElement('a');
     card.className = 'product-card';
+    card.href = detailUrl;
     card.innerHTML = `
       ${badgeHtml}
-      <div class="product-image" onclick="window.location.href='product-details.html?id=${product.id}'">
+      <div class="product-image">
         ${imagesHtml}
         ${counterHtml}
       </div>
       <div class="product-info">
-        <h3 class="product-title" onclick="window.location.href='product-details.html?id=${product.id}'">${product.stone_name || 'PREMIUM STONE'}</h3>
+        <h3 class="product-title">${product.stone_name || 'PREMIUM STONE'}</h3>
         <div class="product-rating">
           ${stars} <small>(${reviews})</small>
         </div>
@@ -990,9 +1026,9 @@ window.renderProducts = function(list) {
           <span class="price-old">₹${oldPrice}</span>
           <span class="price-off">${off}% OFF</span>
         </div>
-        <button class="btn-cart" onclick="event.stopPropagation(); alert('Added to cart: ${product.stone_name || 'Stone'}');">
-          <i class="fas fa-cart-plus"></i> Add to Cart
-        </button>
+        <span class="view-details">
+          <i class="fas fa-eye"></i> View Details
+        </span>
       </div>
     `;
 
