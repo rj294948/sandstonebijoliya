@@ -45,13 +45,13 @@ body {
   background: var(--bg-dark);
   overflow-x: hidden;
   font-size: 14px;
-  padding-bottom: 80px; /* space for floating WhatsApp */
+  padding-bottom: 80px;
 }
 
 a { color: inherit; }
 
 /* ============================================================
-   TOP NAVBAR
+   TOP NAVBAR — AUTO-FIT (NO OVERLAP)
    ============================================================ */
 .top-navbar {
   position: sticky;
@@ -65,38 +65,42 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 30px;
-  height: 72px;
-  gap: 20px;
+  padding: 0 20px;
+  height: 68px;
+  gap: 16px;
+  flex-wrap: nowrap;
 }
 
 .nav-brand {
   font-family: var(--font-head);
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: white;
   letter-spacing: 1px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   white-space: nowrap;
   cursor: pointer;
   text-decoration: none;
+  flex-shrink: 0;
 }
 .nav-brand span { color: var(--primary); }
-.nav-brand img { height: 35px; }
+.nav-brand img { height: 32px; }
 
 .nav-links {
   display: flex;
-  gap: 22px;
+  gap: 16px;
+  flex-shrink: 1;
+  overflow: hidden;
 }
 .nav-links a {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.4px;
   transition: var(--transition);
   white-space: nowrap;
   position: relative;
@@ -120,23 +124,24 @@ a { color: inherit; }
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .btn {
-  padding: 9px 18px;
+  padding: 8px 14px;
   border-radius: 4px;
   font-family: var(--font-head);
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   cursor: pointer;
   border: 1px solid transparent;
   transition: var(--transition);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -148,22 +153,23 @@ a { color: inherit; }
 .user-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 .user-avatar {
-  width: 36px; height: 36px;
+  width: 32px; height: 32px;
   background: var(--primary); color: #000;
   display: flex; justify-content: center; align-items: center;
   font-family: var(--font-head); font-weight: 700; border-radius: 50%;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .user-name {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: white;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
 }
 
 .mobile-toggle {
@@ -176,10 +182,11 @@ a { color: inherit; }
   padding: 4px;
 }
 
-/* Search bar */
+/* Search bar — small & fits */
 .search-wrap {
   flex: 1;
-  max-width: 480px;
+  max-width: 320px;
+  min-width: 140px;
   display: flex;
   border: 1px solid #2a2a2a;
   border-radius: 4px;
@@ -188,23 +195,25 @@ a { color: inherit; }
 }
 .search-wrap input {
   flex: 1;
-  padding: 10px 14px;
+  padding: 8px 12px;
   background: transparent;
   border: none;
   outline: none;
   color: white;
-  font-size: 13px;
+  font-size: 12px;
   font-family: var(--font-body);
+  min-width: 0;
 }
 .search-wrap input::placeholder { color: #555; }
 .search-wrap button {
-  padding: 10px 18px;
+  padding: 8px 14px;
   background: var(--primary);
   border: none;
   color: #000;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
+  font-size: 12px;
 }
 .search-wrap button:hover { background: var(--primary-dark); }
 
@@ -253,12 +262,10 @@ a { color: inherit; }
   width: max-content;
   animation: scrollMarquee 40s linear infinite;
 }
-
 @keyframes scrollMarquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-
 .highlight-item {
   width: 280px;
   height: 360px;
@@ -345,7 +352,7 @@ a { color: inherit; }
 }
 
 /* ============================================================
-   PRODUCT CARD
+   PRODUCT CARD (BASIC ONLY)
    ============================================================ */
 .product-card {
   background: var(--bg-card);
@@ -386,9 +393,7 @@ a { color: inherit; }
   opacity: 0;
   transition: opacity 0.7s ease;
 }
-.product-image img.active {
-  opacity: 1;
-}
+.product-image img.active { opacity: 1; }
 
 .product-badge {
   position: absolute;
@@ -424,8 +429,9 @@ a { color: inherit; }
   letter-spacing: 0.5px;
 }
 
+/* Basic info only — no price, no button, no rating */
 .product-info {
-  padding: 16px 16px 18px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -458,32 +464,6 @@ a { color: inherit; }
 }
 .product-meta span { display: flex; align-items: center; gap: 4px; }
 .product-meta i { color: var(--primary); font-size: 0.7rem; }
-
-/* Contact for price (replaces price + cart) */
-.contact-price {
-  margin-top: auto;
-  padding: 10px;
-  background: transparent;
-  border: 1px solid var(--primary);
-  color: var(--primary);
-  font-family: var(--font-head);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  border-radius: 4px;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-align: center;
-}
-.product-card:hover .contact-price {
-  background: var(--primary);
-  color: #000;
-}
-.contact-price i { font-size: 0.85rem; }
 
 /* ============================================================
    FLOATING WHATSAPP BUTTON
@@ -540,7 +520,6 @@ footer .footer-brand {
 }
 footer .footer-brand span { color: var(--primary); }
 
-/* Contact info row */
 .footer-contact {
   display: flex;
   justify-content: center;
@@ -560,13 +539,10 @@ footer .footer-brand span { color: var(--primary); }
   transition: var(--transition);
 }
 .footer-contact a:hover { color: var(--primary); }
-.footer-contact i {
-  font-size: 1rem;
-}
+.footer-contact i { font-size: 1rem; }
 .footer-contact .wa-icon i { color: var(--whatsapp); }
 .footer-contact .gm-icon i { color: var(--gmail); }
 
-/* Social icons */
 .footer-social {
   display: flex;
   justify-content: center;
@@ -587,16 +563,12 @@ footer .footer-brand span { color: var(--primary); }
   text-decoration: none;
   transition: var(--transition);
 }
-.footer-social a:hover {
-  transform: translateY(-3px);
-  color: #fff;
-}
+.footer-social a:hover { transform: translateY(-3px); color: #fff; }
 .footer-social a.wa:hover { background: var(--whatsapp); border-color: var(--whatsapp); }
 .footer-social a.fb:hover { background: var(--facebook); border-color: var(--facebook); }
 .footer-social a.ig:hover { background: var(--instagram); border-color: var(--instagram); }
 .footer-social a.gm:hover { background: var(--gmail); border-color: var(--gmail); }
 
-/* Footer links */
 footer .footer-links {
   display: flex;
   justify-content: center;
@@ -693,22 +665,36 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
 .modal-link:hover { text-decoration: underline; }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE — DESKTOP AUTO-FIT
    ============================================================ */
-@media (max-width: 1100px) {
-  .nav-links { gap: 14px; }
-  .nav-links a { font-size: 0.75rem; }
-  .search-wrap { max-width: 280px; }
+@media (max-width: 1400px) {
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 0.72rem; letter-spacing: 0.3px; }
+  .nav-brand { font-size: 1.2rem; }
+  .search-wrap { max-width: 260px; }
+  .btn { padding: 7px 12px; font-size: 0.7rem; }
 }
 
+@media (max-width: 1200px) {
+  .top-navbar { padding: 0 14px; gap: 10px; height: 62px; }
+  .nav-links { gap: 9px; }
+  .nav-links a { font-size: 0.68rem; letter-spacing: 0.2px; }
+  .nav-brand { font-size: 1.05rem; }
+  .nav-brand img { height: 28px; }
+  .search-wrap { max-width: 200px; }
+  .btn { padding: 6px 10px; font-size: 0.65rem; }
+  .user-name { display: none; }
+}
+
+/* Tablet / Mobile — switch to hamburger */
 @media (max-width: 992px) {
-  .top-navbar { padding: 0 20px; height: 64px; gap: 12px; }
+  .top-navbar { padding: 0 16px; height: 60px; gap: 10px; }
   .nav-links {
     position: fixed;
-    top: 64px;
+    top: 60px;
     left: -100%;
     width: 260px;
-    height: calc(100vh - 64px);
+    height: calc(100vh - 60px);
     background: var(--bg-card);
     flex-direction: column;
     gap: 0;
@@ -723,10 +709,11 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     padding: 18px 24px;
     border-bottom: 1px solid var(--border-color);
     font-size: 0.85rem;
+    letter-spacing: 0.5px;
   }
   .nav-links a::after { display: none; }
   .mobile-toggle { display: block; }
-  .nav-brand { font-size: 1.2rem; }
+  .nav-brand { font-size: 1.15rem; }
   .nav-brand span.text { display: none; }
   .search-wrap { display: none; }
   .section-title { font-size: 1.5rem; }
@@ -740,13 +727,8 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
 @media (max-width: 768px) {
   body { padding-bottom: 75px; }
 
-  .products-section {
-    padding: 20px 8px 50px;
-  }
-  .section-header {
-    padding: 0 8px;
-    margin-bottom: 16px;
-  }
+  .products-section { padding: 20px 8px 50px; }
+  .section-header { padding: 0 8px; margin-bottom: 16px; }
   .section-title { font-size: 1.15rem; padding-left: 10px; letter-spacing: 1px; }
   .section-title::before { width: 3px; }
   .result-count { font-size: 0.7rem; }
@@ -756,9 +738,7 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     gap: 6px;
   }
 
-  .product-card {
-    border-radius: 4px;
-  }
+  .product-card { border-radius: 4px; }
 
   .product-image {
     height: 90px;
@@ -791,17 +771,6 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
   }
   .product-meta { display: none; }
 
-  .contact-price {
-    padding: 5px 2px;
-    font-size: 0.5rem;
-    letter-spacing: 0.3px;
-    gap: 2px;
-    border-radius: 3px;
-    margin-top: 2px;
-    font-weight: 700;
-  }
-  .contact-price i { font-size: 0.55rem; }
-
   .top-navbar { padding: 0 10px; height: 56px; }
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 26px; }
@@ -813,7 +782,6 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
   .highlight-item { width: 140px; height: 180px; margin: 0 4px; }
   .hero-section { padding: 15px 0 12px; }
 
-  /* Floating WhatsApp — smaller on mobile */
   .float-whatsapp {
     width: 52px;
     height: 52px;
@@ -834,7 +802,6 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
   }
   .product-image { height: 78px; }
   .product-title { font-size: 0.55rem; min-height: 24px; }
-  .contact-price { font-size: 0.45rem; padding: 4px 1px; }
 }
 </style>
 </head>
@@ -844,7 +811,7 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
      TOP NAVBAR
      ============================================================ -->
 <header class="top-navbar">
-  <div style="display:flex; align-items:center; gap:14px;">
+  <div style="display:flex; align-items:center; gap:14px; flex-shrink:0;">
     <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
     <a href="index.html" class="nav-brand">
       <img src="stone.png" alt="Logo">
@@ -945,7 +912,6 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
 <footer>
   <div class="footer-brand">RAJASTHAN <span>HUB</span></div>
 
-  <!-- Contact info -->
   <div class="footer-contact">
     <a href="https://wa.me/917737740207?text=Hello%20Rajasthan%20Sandstone%20Hub%2C%20I%20want%20to%20enquire%20about%20your%20products."
        class="wa-icon" target="_blank" rel="noopener">
@@ -957,7 +923,6 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     </a>
   </div>
 
-  <!-- Social icons -->
   <div class="footer-social">
     <a href="https://wa.me/917737740207?text=Hello%20Rajasthan%20Sandstone%20Hub%2C%20I%20want%20to%20enquire%20about%20your%20products."
        class="wa" target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -976,7 +941,6 @@ footer .footer-copy a { color: var(--primary); text-decoration: none; }
     </a>
   </div>
 
-  <!-- Quick links -->
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="sandstone.html">Sandstone</a>
@@ -1034,7 +998,7 @@ import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/f
 let allProducts = [];
 
 /* ==================================================
-   SIDEBAR MENU — open/close + outside + ESC
+   SIDEBAR MENU
    ================================================== */
 const mobileToggle = document.getElementById('mobile-toggle');
 const navLinks = document.getElementById('nav-links');
@@ -1055,9 +1019,7 @@ mobileToggle.addEventListener('click', (e) => {
   e.stopPropagation();
   navLinks.classList.contains('active') ? closeSidebar() : openSidebar();
 });
-
 overlay.addEventListener('click', closeSidebar);
-
 document.addEventListener('click', (e) => {
   if (navLinks.classList.contains('active')) {
     if (!navLinks.contains(e.target) && !mobileToggle.contains(e.target)) {
@@ -1065,11 +1027,9 @@ document.addEventListener('click', (e) => {
     }
   }
 });
-
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && navLinks.classList.contains('active')) closeSidebar();
 });
-
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', closeSidebar);
 });
@@ -1097,7 +1057,7 @@ document.querySelectorAll('.modal').forEach(m => {
 });
 
 /* ==================================================
-   RENDER PRODUCTS (no price, no rating)
+   RENDER PRODUCTS — BASIC ONLY (no price/rating/cart)
    ================================================== */
 window.renderProducts = function(list) {
   const grid = document.getElementById('product-grid');
@@ -1143,9 +1103,6 @@ window.renderProducts = function(list) {
           <span><i class="fas fa-layer-group"></i> ${product.sub_category || product.category || '—'}</span>
           <span><i class="fas fa-fill-drip"></i> ${product.color || '—'}</span>
         </div>
-        <span class="contact-price">
-          <i class="fab fa-whatsapp"></i> Contact for Price
-        </span>
       </div>
     `;
 
