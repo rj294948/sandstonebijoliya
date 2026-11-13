@@ -16,7 +16,7 @@
 
 <style>
 /* ============================================================
-   VARIABLES — ORIGINAL DARK/GOLD THEME
+   VARIABLES
    ============================================================ */
 :root {
   --primary: #c7a97b;
@@ -45,7 +45,7 @@ body {
 }
 
 /* ============================================================
-   TOP NAVBAR (Original style, enhanced)
+   TOP NAVBAR
    ============================================================ */
 .top-navbar {
   position: sticky;
@@ -116,7 +116,6 @@ body {
   gap: 12px;
 }
 
-/* Buttons */
 .btn {
   padding: 9px 18px;
   border-radius: 4px;
@@ -170,9 +169,7 @@ body {
   padding: 4px;
 }
 
-/* ============================================================
-   SEARCH BAR — integrated into navbar
-   ============================================================ */
+/* Search bar */
 .search-wrap {
   flex: 1;
   max-width: 480px;
@@ -205,7 +202,7 @@ body {
 .search-wrap button:hover { background: var(--primary-dark); }
 
 /* ============================================================
-   HERO MARQUEE (original)
+   HERO MARQUEE
    ============================================================ */
 .hero-section {
   padding: 30px 0 20px;
@@ -275,8 +272,8 @@ body {
    MAIN SECTION
    ============================================================ */
 .products-section {
-  padding: 40px 30px;
-  max-width: 1600px;
+  padding: 40px 30px 60px;
+  max-width: 1700px;
   margin: 0 auto;
 }
 
@@ -317,114 +314,17 @@ body {
 }
 .result-count strong { color: var(--primary); }
 
-/* Layout wrapper */
-.layout {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  gap: 25px;
-  align-items: start;
-}
-
 /* ============================================================
-   SIDEBAR FILTERS (Dark themed, Amazon layout)
-   ============================================================ */
-.filters {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: sticky;
-  top: 100px;
-}
-
-.filters h3 {
-  font-family: var(--font-head);
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.filters h3 i { color: var(--primary); font-size: 0.9rem; }
-
-.filters label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: -6px;
-}
-
-.filters select,
-.filters input {
-  padding: 10px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--border-color);
-  background: #000;
-  color: white;
-  font-size: 13px;
-  font-family: var(--font-body);
-  width: 100%;
-  outline: none;
-  transition: var(--transition);
-  cursor: pointer;
-}
-.filters select:focus,
-.filters input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(199,169,123,0.2);
-}
-
-.filters button {
-  padding: 11px;
-  background: var(--primary);
-  color: #000;
-  border: none;
-  border-radius: 4px;
-  font-family: var(--font-head);
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.filters button:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-}
-.filters .btn-clear {
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid #333;
-}
-.filters .btn-clear:hover {
-  background: #222;
-  color: var(--text-light);
-  transform: none;
-}
-
-/* ============================================================
-   PRODUCT GRID
+   PRODUCT GRID — Desktop: many, Mobile: 4+ items
    ============================================================ */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 22px;
 }
 
 /* ============================================================
-   PRODUCT CARD (Amazon-style, Dark theme)
+   PRODUCT CARD
    ============================================================ */
 .product-card {
   background: var(--bg-card);
@@ -443,19 +343,24 @@ body {
   box-shadow: 0 15px 35px rgba(0,0,0,0.6);
 }
 
-/* Image container */
+/* Image container — FITS full image */
 .product-image {
   position: relative;
   height: 240px;
-  background: #000;
+  background: #f5f5f5;
   overflow: hidden;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   position: absolute;
   top: 0; left: 0;
+  padding: 10px;
   opacity: 0;
   transition: opacity 0.7s ease, transform 0.8s ease;
 }
@@ -463,7 +368,7 @@ body {
   opacity: 1;
 }
 .product-card:hover .product-image img.active {
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
 /* Badge */
@@ -526,7 +431,6 @@ body {
   min-height: 42px;
 }
 
-/* Rating */
 .product-rating {
   color: var(--star);
   font-size: 0.78rem;
@@ -539,7 +443,6 @@ body {
   font-size: 0.7rem;
 }
 
-/* Meta */
 .product-meta {
   display: flex;
   flex-wrap: wrap;
@@ -552,7 +455,6 @@ body {
 .product-meta span { display: flex; align-items: center; gap: 4px; }
 .product-meta i { color: var(--primary); font-size: 0.7rem; }
 
-/* Price */
 .product-price {
   display: flex;
   align-items: baseline;
@@ -588,7 +490,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Add to cart */
 .btn-cart {
   margin-top: auto;
   padding: 10px;
@@ -746,29 +647,136 @@ footer .footer-brand span { color: var(--primary); }
   .nav-brand { font-size: 1.2rem; }
   .nav-brand span.text { display: none; }
   .search-wrap { display: none; }
-  .layout { grid-template-columns: 1fr; }
-  .filters { position: static; }
   .section-title { font-size: 1.5rem; }
+
+  /* Tablet: 3 items */
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
 }
 
-@media (max-width: 576px) {
-  .top-navbar { padding: 0 14px; height: 60px; }
-  .nav-brand img { height: 30px; }
-  .user-name { display: none; }
-  .btn { padding: 7px 12px; font-size: 0.72rem; }
-  .products-section { padding: 25px 15px; }
-  .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
+/* ============================================================
+   MOBILE — 4 items per row (min)
+   ============================================================ */
+@media (max-width: 768px) {
+  .products-section {
+    padding: 20px 8px 50px;
   }
-  .product-image { height: 170px; }
-  .product-title { font-size: 0.85rem; min-height: 36px; }
-  .price-new { font-size: 1.05rem; }
-  .product-info { padding: 12px; gap: 6px; }
-  .btn-cart { font-size: 0.7rem; padding: 8px; }
-  .highlight-item { width: 200px; height: 260px; }
-  .section-title { font-size: 1.3rem; padding-left: 12px; }
+  .section-header {
+    padding: 0 8px;
+    margin-bottom: 16px;
+  }
+  .section-title { font-size: 1.15rem; padding-left: 10px; letter-spacing: 1px; }
   .section-title::before { width: 3px; }
+  .result-count { font-size: 0.7rem; }
+
+  /* 4-column grid on mobile */
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .product-card {
+    border-radius: 4px;
+  }
+
+  .product-image {
+    height: 90px;
+    padding: 4px;
+    background: #1a1a1a;
+  }
+  .product-image img {
+    padding: 4px;
+  }
+
+  .product-badge {
+    top: 4px;
+    left: 4px;
+    padding: 2px 5px;
+    font-size: 0.5rem;
+    letter-spacing: 0.3px;
+    border-radius: 2px;
+  }
+  .image-counter {
+    bottom: 4px;
+    right: 4px;
+    font-size: 8px;
+    padding: 1px 5px;
+  }
+
+  .product-info {
+    padding: 6px 5px 8px;
+    gap: 3px;
+  }
+  .product-title {
+    font-size: 0.62rem;
+    min-height: 26px;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+  .product-rating {
+    font-size: 0.55rem;
+    gap: 2px;
+  }
+  .product-rating small { font-size: 0.5rem; }
+
+  .product-meta {
+    display: none; /* hide meta on tiny screens to save space */
+  }
+
+  .product-price {
+    gap: 3px;
+    margin-top: 2px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  .price-new {
+    font-size: 0.72rem;
+    letter-spacing: 0;
+  }
+  .price-new::before { font-size: 0.55rem; }
+  .price-old { display: none; }
+  .price-off {
+    font-size: 0.48rem;
+    padding: 1px 3px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .btn-cart {
+    padding: 5px 2px;
+    font-size: 0.55rem;
+    letter-spacing: 0.3px;
+    gap: 2px;
+    border-radius: 3px;
+    margin-top: 2px;
+  }
+  .btn-cart i { font-size: 0.6rem; }
+
+  /* Navbar compact */
+  .top-navbar { padding: 0 10px; height: 56px; }
+  .nav-brand { font-size: 1rem; gap: 6px; }
+  .nav-brand img { height: 26px; }
+  .user-name { display: none; }
+  .user-avatar { width: 30px; height: 30px; font-size: 0.75rem; }
+  .btn { padding: 6px 10px; font-size: 0.65rem; gap: 3px; }
+  #btn-open-signin i { display: none; }
+
+  .highlight-item { width: 140px; height: 180px; margin: 0 4px; }
+  .hero-section { padding: 15px 0 12px; }
+}
+
+/* Very small phones — still 4 */
+@media (max-width: 400px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+  .product-image { height: 78px; }
+  .product-title { font-size: 0.55rem; min-height: 24px; }
+  .price-new { font-size: 0.65rem; }
+  .btn-cart { font-size: 0.5rem; padding: 4px 1px; }
 }
 </style>
 </head>
@@ -787,7 +795,7 @@ footer .footer-brand span { color: var(--primary); }
   </div>
 
   <div class="search-wrap">
-    <input type="text" id="search-input" placeholder="Search stones, marble, granite...">
+    <input type="text" id="search-input" placeholder="Search stones...">
     <button id="search-btn"><i class="fas fa-search"></i></button>
   </div>
 
@@ -850,33 +858,8 @@ footer .footer-brand span { color: var(--primary); }
     <div class="result-count"><strong id="result-total">0</strong> Products</div>
   </div>
 
-  <div class="layout">
-
-    <!-- SIDEBAR FILTERS -->
-    <aside class="filters">
-      <h3><i class="fas fa-sliders-h"></i> Filters</h3>
-
-      <label>Category</label>
-      <select id="filter-category"><option value="">All</option></select>
-
-      <label>Sub-category</label>
-      <select id="filter-subcat"><option value="">All</option></select>
-
-      <label>Color</label>
-      <select id="filter-color"><option value="">All</option></select>
-
-      <label>Type</label>
-      <select id="filter-type"><option value="">All</option></select>
-
-      <button id="filter-btn">Apply Filters</button>
-      <button id="clear-filter-btn" class="btn-clear">Clear All</button>
-    </aside>
-
-    <!-- PRODUCT GRID -->
-    <div class="products-grid" id="product-grid">
-      <div style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px; letter-spacing:1px;">LOADING...</div>
-    </div>
-
+  <div class="products-grid" id="product-grid">
+    <div style="color:var(--text-muted); text-align:center; grid-column:1/-1; padding:40px; letter-spacing:1px;">LOADING...</div>
   </div>
 </section>
 
@@ -944,33 +927,6 @@ document.getElementById('switch-to-signin').onclick = (e) => {
   e.preventDefault(); closeModal('signup-modal'); openModal('signin-modal');
 };
 
-/* -------- POPULATE FILTERS -------- */
-function populateFilters(list) {
-  const cats = new Set(), subcats = new Set(), colors = new Set(), types = new Set();
-
-  list.forEach(p => {
-    if (p.category) cats.add(p.category);
-    if (p.sub_category) subcats.add(p.sub_category);
-    if (p.color) colors.add(p.color);
-    if (p.type) types.add(p.type);
-  });
-
-  const fill = (id, values) => {
-    const el = document.getElementById(id);
-    el.innerHTML = '<option value="">All</option>';
-    [...values].sort().forEach(v => {
-      const o = document.createElement('option');
-      o.value = v; o.textContent = v;
-      el.appendChild(o);
-    });
-  };
-
-  fill('filter-category', cats);
-  fill('filter-subcat', subcats);
-  fill('filter-color', colors);
-  fill('filter-type', types);
-}
-
 /* -------- RENDER PRODUCTS -------- */
 window.renderProducts = function(list) {
   const grid = document.getElementById('product-grid');
@@ -995,13 +951,13 @@ window.renderProducts = function(list) {
     const counterHtml = imgs.length > 1
       ? `<div class="image-counter">1 / ${imgs.length}</div>` : '';
 
-    /* Badge — first 2 items */
+    /* Badge */
     let badgeHtml = '';
     if (idx === 0) badgeHtml = `<span class="product-badge">Best Seller</span>`;
     else if (idx === 1) badgeHtml = `<span class="product-badge hot">Deal</span>`;
     else badgeHtml = `<span class="product-badge">${product.category || 'STONE'}</span>`;
 
-    /* Price simulation */
+    /* Price */
     const price = product.price || (Math.floor(Math.random() * 150) + 50);
     const oldPrice = Math.floor(price * 1.25);
     const off = Math.round(((oldPrice - price) / oldPrice) * 100);
@@ -1059,29 +1015,6 @@ setInterval(() => {
   });
 }, 3500);
 
-/* -------- FILTER LOGIC -------- */
-document.getElementById('filter-btn').onclick = () => {
-  const cat  = document.getElementById('filter-category').value;
-  const sub  = document.getElementById('filter-subcat').value;
-  const col  = document.getElementById('filter-color').value;
-  const typ  = document.getElementById('filter-type').value;
-
-  const filtered = allProducts.filter(p =>
-    (!cat || p.category === cat) &&
-    (!sub || p.sub_category === sub) &&
-    (!col || p.color === col) &&
-    (!typ || p.type === typ)
-  );
-  renderProducts(filtered);
-};
-
-document.getElementById('clear-filter-btn').onclick = () => {
-  ['filter-category','filter-subcat','filter-color','filter-type'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  renderProducts(allProducts);
-};
-
 /* -------- SEARCH -------- */
 function doSearch() {
   const q = document.getElementById('search-input').value.toLowerCase().trim();
@@ -1102,7 +1035,6 @@ async function loadProducts() {
   try {
     const snap = await getDocs(collection(db, "products"));
     snap.forEach(doc => allProducts.push({ id: doc.id, ...doc.data() }));
-    populateFilters(allProducts);
     renderProducts(allProducts);
   } catch (e) {
     console.error("DB error, using fallbacks.", e);
@@ -1112,7 +1044,6 @@ async function loadProducts() {
       { id: '3', stone_name: "Black Granite", category: "GRANITE", sub_category: "Slab", color: "Black", images: ["https://images.unsplash.com/photo-1566314668349-1e2f6c4c0e2a?w=600"] },
       { id: '4', stone_name: "Makrana Marble", category: "MARBLE", sub_category: "Tile", color: "White", images: ["https://images.unsplash.com/photo-1615873968403-89e068629265?w=600"] }
     ];
-    populateFilters(allProducts);
     renderProducts(allProducts);
   }
 }
