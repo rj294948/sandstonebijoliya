@@ -49,7 +49,7 @@ body {
 a { color: inherit; }
 
 /* ============================================================
-   NEW NAVBAR — TALLER & 2 ROWS (Search top, Links bottom)
+   NAVBAR WRAPPER
    ============================================================ */
 .navbar-wrapper {
   position: sticky;
@@ -62,7 +62,7 @@ a { color: inherit; }
   z-index: 1000;
 }
 
-/* ROW 1: Logo + Search + Sign In (Height badha di 76px) */
+/* ROW 1: Logo + Search + Sign In */
 .nav-row-top {
   display: flex;
   align-items: center;
@@ -91,7 +91,7 @@ a { color: inherit; }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 38px; }
 
-/* Search bar — big & prominent */
+/* Search bar */
 .search-wrap {
   flex: 1;
   max-width: 600px;
@@ -179,7 +179,7 @@ a { color: inherit; }
   letter-spacing: 0.5px;
 }
 
-/* ROW 2: Navigation links (Height badha di 50px) */
+/* ROW 2: Navigation links */
 .nav-row-bottom {
   display: flex;
   align-items: center;
@@ -243,6 +243,41 @@ a { color: inherit; }
   transition: opacity 0.3s ease;
 }
 .sidebar-overlay.active { display: block; opacity: 1; }
+
+.nav-links-sidebar {
+  position: fixed;
+  top: 64px;
+  left: -100%;
+  width: 280px;
+  height: calc(100vh - 64px);
+  background: var(--bg-card);
+  flex-direction: column;
+  gap: 0;
+  border-right: 1px solid var(--border-color);
+  transition: var(--transition);
+  padding-top: 10px;
+  overflow-y: auto;
+  z-index: 999;
+  display: flex;
+}
+.nav-links-sidebar.active { left: 0; }
+.nav-links-sidebar a {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: var(--transition);
+  display: block;
+}
+.nav-links-sidebar a:hover,
+.nav-links-sidebar a.active {
+  color: var(--primary);
+  background: rgba(199,169,123,0.08);
+}
 
 /* ============================================================
    HERO MARQUEE
@@ -360,7 +395,7 @@ a { color: inherit; }
 }
 
 /* ============================================================
-   PRODUCT CARD — 100% CLEAN (no tags anywhere)
+   PRODUCT CARD
    ============================================================ */
 .product-card {
   background: var(--bg-card);
@@ -383,7 +418,7 @@ a { color: inherit; }
 
 .product-image {
   position: relative;
-  height: 260px; /* Bigger image area */
+  height: 260px;
   background: #f5f5f5;
   overflow: hidden;
   padding: 15px;
@@ -403,7 +438,6 @@ a { color: inherit; }
 }
 .product-image img.active { opacity: 1; }
 
-/* ONLY the image counter — no badge, no tag */
 .image-counter {
   position: absolute;
   bottom: 12px;
@@ -419,7 +453,6 @@ a { color: inherit; }
   font-weight: 600;
 }
 
-/* Basic info only */
 .product-info {
   padding: 18px;
   display: flex;
@@ -654,60 +687,33 @@ footer .footer-copy {
 .modal-link:hover { text-decoration: underline; }
 
 /* ============================================================
-   RESPONSIVE — TABLET / MOBILE
+   RESPONSIVE
    ============================================================ */
 @media (max-width: 992px) {
+  /* Navbar for Tablet */
   .nav-row-top {
     padding: 0 16px;
     height: 64px;
     gap: 12px;
+    flex-wrap: wrap;
   }
-  .nav-row-bottom {
-    display: none;
-  }
-
-  /* Sidebar version */
-  .nav-links-sidebar {
-    position: fixed;
-    top: 64px;
-    left: -100%;
-    width: 280px;
-    height: calc(100vh - 64px);
-    background: var(--bg-card);
-    flex-direction: column;
-    gap: 0;
-    border-right: 1px solid var(--border-color);
-    transition: var(--transition);
-    padding-top: 10px;
-    overflow-y: auto;
-    z-index: 999;
-    display: flex;
-  }
-  .nav-links-sidebar.active { left: 0; }
-  .nav-links-sidebar a {
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border-color);
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: var(--transition);
-    display: block;
-  }
-  .nav-links-sidebar a:hover,
-  .nav-links-sidebar a.active {
-    color: var(--primary);
-    background: rgba(199,169,123,0.08);
-  }
+  .nav-row-bottom { display: none; }
+  .nav-links-sidebar { top: 64px; height: calc(100vh - 64px); }
+  
   .mobile-toggle { display: block; }
   .nav-brand { font-size: 1.15rem; }
   .nav-brand img { height: 32px; }
-  .search-wrap { max-width: 240px; height: 40px; }
+  
+  .search-wrap { 
+    order: 4; 
+    flex: 1 1 100%; 
+    max-width: 100%; 
+    height: 42px; 
+    margin-bottom: 10px;
+  }
+  .nav-row-top { height: auto; padding-top: 10px; padding-bottom: 10px; }
 
   .section-title { font-size: 1.5rem; }
-
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
@@ -717,12 +723,34 @@ footer .footer-copy {
 @media (max-width: 768px) {
   body { padding-bottom: 75px; }
 
+  /* Navbar spacing for mobile */
+  .nav-row-top { padding: 10px 12px; gap: 10px; }
+  .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); } /* Adjust top based on navbar height */
+  
+  .nav-brand { font-size: 1rem; gap: 6px; }
+  .nav-brand img { height: 28px; }
+  .user-name { display: none; }
+  .user-avatar { width: 34px; height: 34px; font-size: 0.85rem; }
+  .btn { padding: 8px 12px; font-size: 0.72rem; gap: 4px; }
+  #btn-open-signin i { display: none; }
+  
+  /* Search bar on mobile */
+  .search-wrap { 
+    height: 40px; 
+    margin-bottom: 0;
+    min-width: 100%;
+  }
+  .search-wrap input { font-size: 13px; padding: 8px 12px; }
+  .search-wrap button { padding: 8px 16px; font-size: 13px; }
+
+  /* Product Section */
   .products-section { padding: 20px 8px 50px; }
   .section-header { padding: 0 8px; margin-bottom: 16px; }
   .section-title { font-size: 1.15rem; padding-left: 10px; letter-spacing: 1px; }
   .section-title::before { width: 3px; }
   .result-count { font-size: 0.7rem; }
 
+  /* Mobile Grid: 4 items per row */
   .products-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
@@ -744,33 +772,31 @@ footer .footer-copy {
     padding: 1px 5px;
   }
 
-  .product-info { padding: 6px 5px 8px; gap: 3px; }
+  /* Item details visible on mobile too */
+  .product-info { padding: 6px 5px 8px; gap: 4px; }
   .product-title {
-    font-size: 0.62rem;
-    min-height: 26px;
+    font-size: 0.65rem;
+    min-height: 28px;
     letter-spacing: 0;
     line-height: 1.2;
+    text-align: center;
   }
-  .product-meta { display: none; }
+  .product-meta { 
+    display: flex; /* Show details */
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.5rem;
+    text-align: center;
+    align-items: center;
+  }
+  .product-meta i { font-size: 0.5rem; }
 
-  .nav-row-top { padding: 0 10px; height: 58px; }
-  .nav-brand { font-size: 1rem; gap: 6px; }
-  .nav-brand img { height: 28px; }
-  .user-name { display: none; }
-  .user-avatar { width: 32px; height: 32px; font-size: 0.8rem; }
-  .btn { padding: 8px 12px; font-size: 0.7rem; gap: 4px; }
-  #btn-open-signin i { display: none; }
-  .search-wrap { display: none; }
-
+  /* Hero & Footer */
   .highlight-item { width: 140px; height: 180px; margin: 0 4px; }
   .hero-section { padding: 15px 0 12px; }
 
   .float-whatsapp {
-    width: 52px;
-    height: 52px;
-    font-size: 1.6rem;
-    bottom: 18px;
-    right: 18px;
+    width: 52px; height: 52px; font-size: 1.6rem; bottom: 18px; right: 18px;
   }
 
   .footer-contact { gap: 8px 16px; font-size: 0.72rem; }
@@ -779,22 +805,20 @@ footer .footer-copy {
 }
 
 @media (max-width: 400px) {
-  .products-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-  }
+  .products-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; }
   .product-image { height: 78px; }
   .product-title { font-size: 0.55rem; min-height: 24px; }
+  .product-meta { font-size: 0.45rem; }
 }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     NEW NAVBAR — TALLER & 2 ROWS
+     NAVBAR
      ============================================================ -->
 <div class="navbar-wrapper">
-  <!-- ROW 1: Logo + Search (bigger) + Sign In -->
+  <!-- ROW 1: Logo + Search + Sign In -->
   <div class="nav-row-top">
     <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
       <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
@@ -820,7 +844,7 @@ footer .footer-copy {
     </div>
   </div>
 
-  <!-- ROW 2: Navigation links -->
+  <!-- ROW 2: Desktop Links -->
   <nav class="nav-row-bottom" id="nav-links">
     <a href="index.html" class="active">Home</a>
     <a href="sandstone.html">Sandstone</a>
@@ -1060,7 +1084,7 @@ document.querySelectorAll('.modal').forEach(m => {
 });
 
 /* ==================================================
-   RENDER PRODUCTS — NO BADGE ANYWHERE
+   RENDER PRODUCTS
    ================================================== */
 window.renderProducts = function(list) {
   const grid = document.getElementById('product-grid');
