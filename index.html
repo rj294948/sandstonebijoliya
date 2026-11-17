@@ -454,12 +454,14 @@ a { color: inherit; text-decoration: none; }
 .highlight-marquee {
   display: flex;
   width: max-content;
-  animation: scrollMarquee 40s linear infinite;
+  /* Animation duration ab JavaScript se dynamic set hoga */
 }
+
 @keyframes scrollMarquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
 .highlight-item {
   width: 280px;
   height: 360px;
@@ -1422,7 +1424,7 @@ loadProducts();
       });
 
       if (imagesList.length > 0) {
-        // Marquee ko smooth chalane ke liye list ko double kar dete hain taaki infinite loop bane
+        // Marquee infinite loop ke liye double items
         const doubleImages = [...imagesList, ...imagesList];
         
         let htmlContent = "";
@@ -1431,16 +1433,22 @@ loadProducts();
         });
 
         marqueeContainer.innerHTML = htmlContent;
+
+        // --- DYNAMIC SPEED CONTROL ---
+        // Jitni zyada images hongi, animation ka time utna hi badh jayega taaki speed slow aur smooth rahe
+        const totalItems = imagesList.length;
+        const animationDuration = totalItems * 6; // Har image ko scroll hone me 6 seconds lagenge
+        marqueeContainer.style.animation = `scrollMarquee ${animationDuration}s linear infinite`;
+
       } else {
-        marqueeContainer.innerHTML = `<div class="grid-msg" style="color: #888;">No banner images found. Upload from Admin panel.</div>`;
+        marqueeContainer.innerHTML = `<div class="grid-msg" style="color: #888; padding: 20px;">No banner images found. Upload from Admin panel.</div>`;
       }
     } catch (error) {
       console.error("Error loading hero banners:", error);
-      marqueeContainer.innerHTML = `<div class="grid-msg" style="color: red;">Failed to load banners.</div>`;
+      marqueeContainer.innerHTML = `<div class="grid-msg" style="color: red; padding: 20px;">Failed to load banners.</div>`;
     }
   }
 
-  // Page load hote hi banners fetch ho jayenge
   loadDynamicHeroBanners();
 </script>
 
