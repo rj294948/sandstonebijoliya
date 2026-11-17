@@ -45,7 +45,7 @@ body {
 a { color: inherit; text-decoration: none; }
 
 /* ============================================================
-   NAVBAR (same as index.html)
+   NAVBAR (with CENTERED Amazon-style search)
    ============================================================ */
 .navbar-wrapper {
   position: sticky;
@@ -66,6 +66,7 @@ a { color: inherit; text-decoration: none; }
   height: 76px;
   max-width: 1700px;
   margin: 0 auto;
+  position: relative;
 }
 .nav-brand {
   font-family: var(--font-head);
@@ -83,16 +84,30 @@ a { color: inherit; text-decoration: none; }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 38px; }
 
+/* Search container (centered, relative for dropdown) */
+.search-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 620px;
+  padding: 0 20px;
+  z-index: 5;
+}
+
 .search-wrap {
-  flex: 1;
-  max-width: 600px;
-  min-width: 150px;
   display: flex;
   border: 1px solid #333;
   border-radius: 6px;
   overflow: hidden;
   background: #000;
   height: 44px;
+  transition: var(--transition);
+}
+.search-wrap:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(199,169,123,0.15);
 }
 .search-wrap input {
   flex: 1;
@@ -106,7 +121,19 @@ a { color: inherit; text-decoration: none; }
   min-width: 0;
 }
 .search-wrap input::placeholder { color: #666; }
-.search-wrap button {
+.search-wrap .search-clear {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 12px;
+  font-size: 14px;
+  display: none;
+  transition: var(--transition);
+}
+.search-wrap .search-clear.visible { display: block; }
+.search-wrap .search-clear:hover { color: var(--primary); }
+.search-wrap .search-icon-btn {
   padding: 10px 22px;
   background: var(--primary);
   border: none;
@@ -116,13 +143,186 @@ a { color: inherit; text-decoration: none; }
   transition: var(--transition);
   font-size: 14px;
 }
-.search-wrap button:hover { background: var(--primary-dark); }
+.search-wrap .search-icon-btn:hover { background: var(--primary-dark); }
 
+/* Suggestions dropdown */
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 20px;
+  right: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+  max-height: 460px;
+  overflow-y: auto;
+  z-index: 2000;
+  display: none;
+  animation: dropdownIn 0.2s ease;
+}
+.search-suggestions.active { display: block; }
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.search-suggestions::-webkit-scrollbar { width: 6px; }
+.search-suggestions::-webkit-scrollbar-track { background: #111; }
+.search-suggestions::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+.search-suggestions::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+.suggestion-header {
+  padding: 10px 16px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  background: #0d0d0d;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: var(--transition);
+  border-bottom: 1px solid rgba(34, 34, 34, 0.5);
+  text-decoration: none;
+  color: inherit;
+}
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover,
+.suggestion-item.highlighted {
+  background: rgba(199,169,123,0.08);
+  border-left: 3px solid var(--primary);
+  padding-left: 13px;
+}
+
+.suggestion-thumb {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: #f5f5f5;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.suggestion-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+
+.suggestion-body {
+  flex: 1;
+  min-width: 0;
+}
+.suggestion-name {
+  font-size: 0.88rem;
+  font-family: var(--font-head);
+  color: white;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.suggestion-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.suggestion-meta i {
+  color: var(--primary);
+  font-size: 0.65rem;
+}
+.suggestion-meta .dot { color: #444; }
+
+.suggestion-arrow {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+.suggestion-item:hover .suggestion-arrow,
+.suggestion-item.highlighted .suggestion-arrow {
+  color: var(--primary);
+  transform: translateX(3px);
+}
+
+.suggestion-state {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.suggestion-state i { color: var(--primary); }
+.suggestion-state .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #333;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.suggestion-view-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: #0d0d0d;
+  color: var(--primary);
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  border-top: 1px solid var(--border-color);
+  transition: var(--transition);
+  text-decoration: none;
+}
+.suggestion-view-all:hover {
+  background: rgba(199,169,123,0.08);
+}
+.suggestion-view-all i {
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+.suggestion-view-all:hover i { transform: translateX(3px); }
+
+/* Nav actions (right side) */
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
+  margin-left: auto;
+  position: relative;
+  z-index: 6;
 }
 .btn {
   padding: 10px 18px;
@@ -289,9 +489,7 @@ a { color: inherit; text-decoration: none; }
   align-items: start;
 }
 
-/* ============================================================
-   IMAGE GALLERY + HOVER ZOOM (Amazon style)
-   ============================================================ */
+/* Image gallery + hover zoom */
 .gallery-wrap {
   position: relative;
   display: flex;
@@ -333,7 +531,6 @@ a { color: inherit; text-decoration: none; }
   object-fit: contain;
 }
 
-/* Main image area */
 .main-image-wrap {
   position: relative;
   flex: 1;
@@ -346,7 +543,6 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   justify-content: center;
 }
-
 .main-image-wrap img {
   width: 100%;
   height: 100%;
@@ -358,7 +554,6 @@ a { color: inherit; text-decoration: none; }
   -webkit-user-drag: none;
 }
 
-/* Hover zoom lens */
 .zoom-lens {
   position: absolute;
   width: 160px;
@@ -371,8 +566,6 @@ a { color: inherit; text-decoration: none; }
   z-index: 5;
   box-shadow: 0 0 20px rgba(199,169,123,0.4);
 }
-
-/* Hover zoom result panel */
 .zoom-result {
   position: absolute;
   top: 0;
@@ -388,8 +581,6 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 20px 50px rgba(0,0,0,0.8);
   background-repeat: no-repeat;
 }
-
-/* Zoom hint badge */
 .zoom-hint {
   position: absolute;
   bottom: 14px;
@@ -408,8 +599,6 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid rgba(199,169,123,0.5);
 }
 .zoom-hint i { color: var(--primary); }
-
-/* Fullscreen zoom button */
 .expand-btn {
   position: absolute;
   top: 14px;
@@ -434,13 +623,8 @@ a { color: inherit; text-decoration: none; }
   transform: scale(1.08);
 }
 
-/* ============================================================
-   PRODUCT INFO PANEL
-   ============================================================ */
-.product-info-panel {
-  padding: 10px 0;
-}
-
+/* Product info panel */
+.product-info-panel { padding: 10px 0; }
 .product-category-pill {
   display: inline-block;
   background: rgba(199,169,123,0.12);
@@ -454,7 +638,6 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 1.2px;
   margin-bottom: 18px;
 }
-
 .product-title {
   font-family: var(--font-head);
   font-size: 2.2rem;
@@ -465,7 +648,6 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 18px;
   text-transform: uppercase;
 }
-
 .meta-pills {
   display: flex;
   flex-wrap: wrap;
@@ -488,9 +670,6 @@ a { color: inherit; text-decoration: none; }
 .meta-pill i { color: var(--primary); font-size: 0.85rem; }
 .meta-pill strong { color: white; font-weight: 600; }
 
-/* ============================================================
-   SPEC SECTIONS
-   ============================================================ */
 .spec-block {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -498,7 +677,6 @@ a { color: inherit; text-decoration: none; }
   padding: 22px 24px;
   margin-bottom: 18px;
 }
-
 .spec-block h3 {
   font-family: var(--font-head);
   font-size: 1rem;
@@ -512,7 +690,6 @@ a { color: inherit; text-decoration: none; }
   font-weight: 600;
 }
 .spec-block h3 i { font-size: 0.9rem; }
-
 .spec-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -541,9 +718,7 @@ a { color: inherit; text-decoration: none; }
   text-align: right;
   word-break: break-word;
 }
-
 .additional-specs .spec-grid { grid-template-columns: 1fr; }
-
 .description-text {
   font-size: 0.88rem;
   line-height: 1.7;
@@ -551,9 +726,6 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.3px;
 }
 
-/* ============================================================
-   ACTION BUTTONS (WhatsApp / Email)
-   ============================================================ */
 .action-buttons {
   display: flex;
   gap: 12px;
@@ -599,13 +771,8 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(-2px);
 }
 
-/* ============================================================
-   RELATED PRODUCTS
-   ============================================================ */
-.related-section {
-  margin-top: 30px;
-}
-
+/* Related products */
+.related-section { margin-top: 30px; }
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -614,7 +781,6 @@ a { color: inherit; text-decoration: none; }
   flex-wrap: wrap;
   gap: 12px;
 }
-
 .section-title {
   font-size: 1.6rem;
   font-family: var(--font-head);
@@ -635,13 +801,11 @@ a { color: inherit; text-decoration: none; }
   background: var(--primary);
 }
 .section-title span { color: var(--primary); }
-
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 22px;
 }
-
 .product-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -659,7 +823,6 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(-5px);
   box-shadow: 0 15px 35px rgba(0,0,0,0.6);
 }
-
 .product-image {
   position: relative;
   height: 220px;
@@ -675,7 +838,6 @@ a { color: inherit; text-decoration: none; }
   height: 100%;
   object-fit: contain;
 }
-
 .product-info {
   padding: 16px;
   display: flex;
@@ -683,7 +845,6 @@ a { color: inherit; text-decoration: none; }
   gap: 8px;
   flex: 1;
 }
-
 .product-title-card {
   font-size: 0.95rem;
   font-family: var(--font-head);
@@ -698,7 +859,6 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   min-height: 40px;
 }
-
 .product-meta {
   display: flex;
   flex-wrap: wrap;
@@ -711,7 +871,6 @@ a { color: inherit; text-decoration: none; }
 .product-meta span { display: flex; align-items: center; gap: 5px; }
 .product-meta i { color: var(--primary); font-size: 0.7rem; }
 
-/* Loading / error / empty */
 .loading-msg, .error-msg, .empty-msg {
   text-align: center;
   padding: 60px 20px;
@@ -723,9 +882,7 @@ a { color: inherit; text-decoration: none; }
 }
 .error-msg { color: #e74c3c; }
 
-/* ============================================================
-   FULLSCREEN ZOOM MODAL (Amazon/Flipkart style)
-   ============================================================ */
+/* Fullscreen zoom modal */
 .fullscreen-zoom {
   display: none;
   position: fixed;
@@ -737,7 +894,6 @@ a { color: inherit; text-decoration: none; }
   touch-action: none;
 }
 .fullscreen-zoom.active { display: block; }
-
 .zoom-stage {
   position: absolute;
   inset: 0;
@@ -749,7 +905,6 @@ a { color: inherit; text-decoration: none; }
   touch-action: none;
 }
 .zoom-stage.dragging { cursor: grabbing; }
-
 .zoom-stage img {
   max-width: 92%;
   max-height: 92%;
@@ -762,14 +917,10 @@ a { color: inherit; text-decoration: none; }
   will-change: transform;
 }
 .zoom-stage.zooming img { transition: none; }
-
-/* Fullscreen controls */
 .fs-close {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
+  top: 20px; right: 20px;
+  width: 50px; height: 50px;
   background: rgba(20,20,20,0.9);
   border: 1px solid rgba(199,169,123,0.5);
   color: white;
@@ -783,13 +934,11 @@ a { color: inherit; text-decoration: none; }
   transition: var(--transition);
 }
 .fs-close:hover { background: var(--primary); color: #000; transform: rotate(90deg); }
-
 .fs-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 54px;
-  height: 54px;
+  width: 54px; height: 54px;
   background: rgba(20,20,20,0.9);
   border: 1px solid rgba(199,169,123,0.5);
   color: white;
@@ -805,8 +954,6 @@ a { color: inherit; text-decoration: none; }
 .fs-nav:hover { background: var(--primary); color: #000; }
 .fs-prev { left: 20px; }
 .fs-next { right: 20px; }
-
-/* Bottom toolbar */
 .fs-toolbar {
   position: absolute;
   bottom: 24px;
@@ -823,8 +970,7 @@ a { color: inherit; text-decoration: none; }
   backdrop-filter: blur(10px);
 }
 .fs-tool-btn {
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   background: transparent;
   border: none;
   color: white;
@@ -847,8 +993,6 @@ a { color: inherit; text-decoration: none; }
   text-align: center;
   letter-spacing: 1px;
 }
-
-/* Top counter */
 .fs-counter {
   position: absolute;
   top: 24px;
@@ -864,8 +1008,6 @@ a { color: inherit; text-decoration: none; }
   z-index: 10;
 }
 .fs-counter strong { color: var(--primary); }
-
-/* Zoom hint at bottom-center */
 .fs-hint {
   position: absolute;
   bottom: 90px;
@@ -883,9 +1025,7 @@ a { color: inherit; text-decoration: none; }
 }
 .fs-hint.hide { opacity: 0; }
 
-/* ============================================================
-   FLOATING WHATSAPP
-   ============================================================ */
+/* Floating WhatsApp */
 .float-whatsapp {
   position: fixed;
   bottom: 24px;
@@ -913,9 +1053,7 @@ a { color: inherit; text-decoration: none; }
   50% { box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45), 0 0 0 14px rgba(37, 211, 102, 0); }
 }
 
-/* ============================================================
-   FOOTER (same as index.html)
-   ============================================================ */
+/* Footer */
 footer {
   background: #000;
   border-top: 1px solid var(--border-color);
@@ -936,7 +1074,6 @@ footer .footer-brand {
   margin-bottom: 18px;
 }
 footer .footer-brand span { color: var(--primary); }
-
 .footer-contact {
   display: flex;
   justify-content: center;
@@ -958,7 +1095,6 @@ footer .footer-brand span { color: var(--primary); }
 .footer-contact i { font-size: 1rem; }
 .footer-contact .wa-icon i { color: var(--whatsapp); }
 .footer-contact .gm-icon i { color: var(--gmail); }
-
 .footer-social {
   display: flex;
   justify-content: center;
@@ -983,7 +1119,6 @@ footer .footer-brand span { color: var(--primary); }
 .footer-social a.fb:hover { background: var(--facebook); border-color: var(--facebook); }
 .footer-social a.ig:hover { background: var(--instagram); border-color: var(--instagram); }
 .footer-social a.gm:hover { background: var(--gmail); border-color: var(--gmail); }
-
 footer .footer-links {
   display: flex;
   justify-content: center;
@@ -1005,9 +1140,7 @@ footer .footer-copy {
   margin-top: 12px;
 }
 
-/* ============================================================
-   MODAL (Sign in)
-   ============================================================ */
+/* Modal (Sign In) */
 .modal {
   display: none;
   position: fixed;
@@ -1095,13 +1228,20 @@ footer .footer-copy {
   .mobile-toggle { display: block; }
   .nav-brand { font-size: 1.15rem; }
   .nav-brand img { height: 32px; }
-  .search-wrap {
+
+  .search-container {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
     order: 4;
     flex: 1 1 100%;
-    max-width: 100%;
-    height: 42px;
     margin-bottom: 10px;
   }
+  .search-suggestions { left: 0; right: 0; }
   .nav-row-top { height: auto; padding-top: 10px; padding-bottom: 10px; }
   .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); }
 
@@ -1114,6 +1254,7 @@ footer .footer-copy {
   .main-image-wrap { height: 420px; }
   .product-title { font-size: 1.7rem; }
   .spec-grid { grid-template-columns: 1fr; }
+  .search-suggestions { max-height: 380px; }
 }
 
 @media (max-width: 768px) {
@@ -1126,14 +1267,18 @@ footer .footer-copy {
   .user-avatar { width: 34px; height: 34px; font-size: 0.85rem; }
   .btn { padding: 8px 12px; font-size: 0.72rem; gap: 4px; }
   #btn-open-signin i { display: none; }
-  .search-wrap { height: 40px; margin-bottom: 0; min-width: 100%; }
+  .search-wrap { height: 40px; }
   .search-wrap input { font-size: 13px; padding: 8px 12px; }
-  .search-wrap button { padding: 8px 16px; font-size: 13px; }
+  .search-wrap .search-icon-btn { padding: 8px 14px; font-size: 13px; }
+  .search-suggestions { max-height: 340px; }
+  .suggestion-item { padding: 9px 12px; gap: 10px; }
+  .suggestion-thumb { width: 42px; height: 42px; }
+  .suggestion-name { font-size: 0.8rem; }
+  .suggestion-meta { font-size: 0.65rem; gap: 6px; }
 
   .breadcrumb-bar { padding: 14px 12px 0; font-size: 0.65rem; }
   .details-section { padding: 14px 12px 30px; }
 
-  /* Mobile gallery: main image on top, thumbs below horizontal */
   .gallery-wrap {
     flex-direction: column-reverse;
     gap: 12px;
@@ -1146,20 +1291,16 @@ footer .footer-copy {
     width: 100%;
   }
   .thumb-btn { width: 56px; height: 56px; }
-
   .main-image-wrap { height: 320px; }
   .main-image-wrap img { padding: 15px; }
 
   .product-title { font-size: 1.4rem; letter-spacing: 1px; }
   .product-category-pill { font-size: 0.65rem; padding: 4px 10px; }
-
   .meta-pills { gap: 6px; }
   .meta-pill { padding: 6px 10px; font-size: 0.65rem; }
-
   .spec-block { padding: 16px 16px; }
   .spec-block h3 { font-size: 0.85rem; }
   .spec-item { font-size: 0.75rem; }
-
   .action-buttons { flex-direction: column; }
   .action-btn { width: 100%; }
 
@@ -1180,7 +1321,6 @@ footer .footer-copy {
   }
   .product-meta { display: none !important; }
 
-  /* Fullscreen zoom mobile */
   .fs-nav { width: 44px; height: 44px; font-size: 1rem; }
   .fs-prev { left: 10px; }
   .fs-next { right: 10px; }
@@ -1192,7 +1332,6 @@ footer .footer-copy {
   .fs-hint { bottom: 78px; font-size: 0.62rem; padding: 0 12px; }
 
   .float-whatsapp { width: 52px; height: 52px; font-size: 1.6rem; bottom: 18px; right: 18px; }
-
   .footer-contact { gap: 8px 16px; font-size: 0.72rem; }
   .footer-contact i { font-size: 0.85rem; }
   .footer-social a { width: 38px; height: 38px; font-size: 1rem; }
@@ -1204,13 +1343,14 @@ footer .footer-copy {
   .products-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; }
   .product-image { height: 78px; }
   .product-title-card { font-size: 0.55rem; min-height: 24px; }
+  .suggestion-thumb { width: 38px; height: 38px; }
 }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     NAVBAR
+     NAVBAR (with CENTERED Amazon-style search)
      ============================================================ -->
 <div class="navbar-wrapper">
   <div class="nav-row-top">
@@ -1222,9 +1362,13 @@ footer .footer-copy {
       </a>
     </div>
 
-    <div class="search-wrap">
-      <input type="text" id="search-input" placeholder="Search stones...">
-      <button id="search-btn" onclick="doSearchRedirect()"><i class="fas fa-search"></i></button>
+    <div class="search-container">
+      <div class="search-wrap">
+        <input type="text" id="search-input" placeholder="Search all stones..." autocomplete="off">
+        <button class="search-clear" id="search-clear" aria-label="Clear"><i class="fas fa-times"></i></button>
+        <button class="search-icon-btn" id="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="search-suggestions" id="search-suggestions"></div>
     </div>
 
     <div class="nav-actions">
@@ -1253,7 +1397,6 @@ footer .footer-copy {
   </nav>
 </div>
 
-<!-- Mobile sidebar -->
 <nav class="nav-links-sidebar" id="nav-links-mobile">
   <a href="index.html">Home</a>
   <a href="sandstone.html">Sandstone</a>
@@ -1271,9 +1414,7 @@ footer .footer-copy {
 
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-<!-- ============================================================
-     BREADCRUMB
-     ============================================================ -->
+<!-- Breadcrumb -->
 <div class="breadcrumb-bar" id="breadcrumbBar" style="display:none;">
   <a href="index.html">Home</a>
   <span class="sep">/</span>
@@ -1282,9 +1423,7 @@ footer .footer-copy {
   <span class="current" id="crumbProduct">Product</span>
 </div>
 
-<!-- ============================================================
-     PRODUCT DETAILS SECTION
-     ============================================================ -->
+<!-- Product Details -->
 <section class="details-section">
   <div class="product-container" id="productContainer">
     <div class="loading-msg">LOADING PRODUCT DETAILS...</div>
@@ -1299,21 +1438,16 @@ footer .footer-copy {
   </div>
 </section>
 
-<!-- ============================================================
-     FULLSCREEN ZOOM MODAL
-     ============================================================ -->
+<!-- Fullscreen Zoom Modal -->
 <div class="fullscreen-zoom" id="fullscreenZoom">
   <div class="zoom-stage" id="zoomStage">
     <img id="zoomImage" src="" alt="Zoomed image">
   </div>
-
   <div class="fs-counter"><strong id="fsCurrent">1</strong> / <span id="fsTotal">1</span></div>
   <div class="fs-hint" id="fsHint">Scroll / Pinch to zoom · Drag to pan · Double-tap to toggle</div>
-
   <button class="fs-close" id="fsClose" aria-label="Close"><i class="fas fa-times"></i></button>
   <button class="fs-nav fs-prev" id="fsPrev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
   <button class="fs-nav fs-next" id="fsNext" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
-
   <div class="fs-toolbar">
     <button class="fs-tool-btn" id="fsZoomOut" aria-label="Zoom out"><i class="fas fa-search-minus"></i></button>
     <span class="fs-zoom-level" id="fsZoomLevel">100%</span>
@@ -1322,20 +1456,15 @@ footer .footer-copy {
   </div>
 </div>
 
-<!-- ============================================================
-     FLOATING WHATSAPP
-     ============================================================ -->
+<!-- Floating WhatsApp -->
 <a href="https://wa.me/917737740207?text=Hello%20Rajasthan%20Sandstone%20Hub%2C%20I%20want%20to%20enquire."
    class="float-whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp Us">
   <i class="fab fa-whatsapp"></i>
 </a>
 
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
+<!-- Footer -->
 <footer>
   <div class="footer-brand">RAJASTHAN <span>HUB</span></div>
-
   <div class="footer-contact">
     <a href="https://wa.me/917737740207?text=Hello%20Rajasthan%20Sandstone%20Hub%2C%20I%20want%20to%20enquire."
        class="wa-icon" target="_blank" rel="noopener">
@@ -1345,7 +1474,6 @@ footer .footer-copy {
       <i class="fas fa-envelope"></i> ravijain236129@gmail.com
     </a>
   </div>
-
   <div class="footer-social">
     <a href="https://wa.me/917737740207?text=Hello%20Rajasthan%20Sandstone%20Hub%2C%20I%20want%20to%20enquire."
        class="wa" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
@@ -1354,7 +1482,6 @@ footer .footer-copy {
     <a href="#" class="ig" aria-label="Instagram (Coming Soon)" title="Instagram - Coming Soon"><i class="fab fa-instagram"></i></a>
     <a href="mailto:ravijain236129@gmail.com?subject=Enquiry%20from%20Website" class="gm" aria-label="Gmail"><i class="fas fa-envelope"></i></a>
   </div>
-
   <div class="footer-links">
     <a href="index.html">Home</a>
     <a href="sandstone.html">Sandstone</a>
@@ -1369,13 +1496,10 @@ footer .footer-copy {
     <a href="privacy.html">Privacy Policy</a>
     <a href="terms.html">Terms &amp; Conditions</a>
   </div>
-
   <div class="footer-copy">&copy; 2025 Rajasthan Sandstone Hub · All Rights Reserved</div>
 </footer>
 
-<!-- ============================================================
-     SIGN IN MODAL
-     ============================================================ -->
+<!-- Sign In Modal -->
 <div class="modal" id="signin-modal">
   <div class="modal-content">
     <button class="modal-close">&times;</button>
@@ -1419,6 +1543,10 @@ const CONTACT_EMAIL = "ravijain236129@gmail.com";
 let currentProduct = null;
 let allProducts = [];
 let currentImageIndex = 0;
+let allProductsCache = null; // cache for search
+let searchDebounceTimer = null;
+let highlightedIndex = -1;
+let currentSuggestions = [];
 
 /* ==================================================
    NAVBAR: MOBILE SIDEBAR
@@ -1474,33 +1602,198 @@ document.querySelectorAll('.modal').forEach(m => {
 });
 
 /* ==================================================
-   SEARCH: redirect to index with query
+   AMAZON-STYLE SEARCH
    ================================================== */
-window.doSearchRedirect = function() {
-  const q = document.getElementById('search-input').value.trim();
-  if (q) window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+const searchInput = document.getElementById('search-input');
+const searchBtn = document.getElementById('search-btn');
+const searchClear = document.getElementById('search-clear');
+const suggestionsBox = document.getElementById('search-suggestions');
+
+const catPages = {
+  sandstone: 'sandstone.html',
+  'sand stone': 'sandstone.html',
+  kota: 'kota.html',
+  'kota stone': 'kota.html',
+  granite: 'granite.html',
+  marble: 'marble.html',
+  dholpur: 'dholpur.html',
+  tiles: 'tiles.html',
+  tile: 'tiles.html',
+  mandana: 'mandana.html',
 };
+
+async function getAllProductsForSearch() {
+  if (allProductsCache) return allProductsCache;
+  try {
+    const snap = await getDocs(collection(db, "products"));
+    const arr = [];
+    snap.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
+    allProductsCache = arr;
+    return arr;
+  } catch (e) {
+    console.error('Search fetch error:', e);
+    return [];
+  }
+}
+
+function filterProducts(products, q) {
+  const ql = q.toLowerCase().trim();
+  if (!ql) return [];
+  return products.filter(p =>
+    (p.stone_name || '').toLowerCase().includes(ql) ||
+    (p.category || '').toLowerCase().includes(ql) ||
+    (p.sub_category || '').toLowerCase().includes(ql) ||
+    (p.color || '').toLowerCase().includes(ql) ||
+    (p.type || '').toLowerCase().includes(ql)
+  );
+}
+
+function showSuggestions(html) {
+  suggestionsBox.innerHTML = html;
+  suggestionsBox.classList.add('active');
+}
+function hideSuggestions() {
+  suggestionsBox.classList.remove('active');
+  suggestionsBox.innerHTML = '';
+  highlightedIndex = -1;
+  currentSuggestions = [];
+}
+
+function renderSuggestionItem(p) {
+  const img = (p.images && p.images.length) ? p.images[0] : 'stone-placeholder.png';
+  const meta = [];
+  if (p.category) meta.push(`<span><i class="fas fa-layer-group"></i> ${p.category}</span>`);
+  if (p.sub_category) meta.push(`<span><i class="fas fa-cube"></i> ${p.sub_category}</span>`);
+  if (p.color) meta.push(`<span><i class="fas fa-fill-drip"></i> ${p.color}</span>`);
+  return `
+    <a class="suggestion-item" href="product-details.html?id=${encodeURIComponent(p.id)}">
+      <div class="suggestion-thumb"><img src="${img}" alt=""></div>
+      <div class="suggestion-body">
+        <div class="suggestion-name">${p.stone_name || 'Premium Stone'}</div>
+        <div class="suggestion-meta">${meta.join('<span class="dot">·</span>')}</div>
+      </div>
+      <i class="fas fa-arrow-right suggestion-arrow"></i>
+    </a>
+  `;
+}
+
+async function runLiveSearch() {
+  const q = searchInput.value.trim();
+  searchClear.classList.toggle('visible', q.length > 0);
+  if (!q) { hideSuggestions(); return; }
+
+  showSuggestions(`<div class="suggestion-state"><div class="spinner"></div>Searching all stones...</div>`);
+
+  const products = await getAllProductsForSearch();
+  const matches = filterProducts(products, q);
+
+  if (matches.length === 0) {
+    showSuggestions(`<div class="suggestion-state"><i class="fas fa-search"></i>No stones found for "<strong>${escapeHtml(q)}</strong>"</div>`);
+    return;
+  }
+
+  const cats = new Set();
+  matches.forEach(p => cats.add((p.category || '').toLowerCase().trim()));
+  let viewAllUrl;
+  if (cats.size === 1) {
+    const onlyCat = [...cats][0];
+    viewAllUrl = `${catPages[onlyCat] || 'index.html'}?q=${encodeURIComponent(q)}`;
+  } else {
+    viewAllUrl = `index.html?q=${encodeURIComponent(q)}`;
+  }
+
+  const top = matches.slice(0, 8);
+  let html = `<div class="suggestion-header">${matches.length} matching stone${matches.length > 1 ? 's' : ''}</div>`;
+  html += top.map(renderSuggestionItem).join('');
+  html += `<a class="suggestion-view-all" href="${viewAllUrl}">View all ${matches.length} result${matches.length > 1 ? 's' : ''} <i class="fas fa-arrow-right"></i></a>`;
+  showSuggestions(html);
+
+  currentSuggestions = top.map(p => ({
+    id: p.id,
+    url: `product-details.html?id=${encodeURIComponent(p.id)}`
+  }));
+  highlightedIndex = -1;
+}
+
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(runLiveSearch, 250);
+});
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  hideSuggestions();
+  searchInput.focus();
+});
+searchBtn.addEventListener('click', () => doFullSearch());
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (currentSuggestions.length === 0) return;
+    highlightedIndex = (highlightedIndex + 1) % currentSuggestions.length;
+    updateHighlight();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (currentSuggestions.length === 0) return;
+    highlightedIndex = (highlightedIndex - 1 + currentSuggestions.length) % currentSuggestions.length;
+    updateHighlight();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (highlightedIndex >= 0 && currentSuggestions[highlightedIndex]) {
+      window.location.href = currentSuggestions[highlightedIndex].url;
+    } else {
+      doFullSearch();
+    }
+  } else if (e.key === 'Escape') {
+    hideSuggestions();
+    searchInput.blur();
+  }
+});
+
+function updateHighlight() {
+  const items = suggestionsBox.querySelectorAll('.suggestion-item');
+  items.forEach((item, i) => {
+    item.classList.toggle('highlighted', i === highlightedIndex);
+    if (i === highlightedIndex) item.scrollIntoView({ block: 'nearest' });
+  });
+}
+
+async function doFullSearch() {
+  const q = searchInput.value.trim();
+  if (!q) return;
+  hideSuggestions();
+  const products = await getAllProductsForSearch();
+  const matches = filterProducts(products, q);
+  if (matches.length === 0) {
+    window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+    return;
+  }
+  const cats = new Set();
+  matches.forEach(p => cats.add((p.category || '').toLowerCase().trim()));
+  if (cats.size === 1) {
+    const onlyCat = [...cats][0];
+    window.location.href = `${catPages[onlyCat] || 'index.html'}?q=${encodeURIComponent(q)}`;
+  } else {
+    window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-container')) hideSuggestions();
+});
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/[&<>"']/g, s => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[s]));
+}
 
 /* ==================================================
    HELPERS
    ================================================== */
 function getProductIdFromURL() {
   return new URLSearchParams(window.location.search).get('id');
-}
-
-function formatFirebaseTimestamp(ts) {
-  if (!ts) return '';
-  try {
-    let d;
-    if (ts.toDate && typeof ts.toDate === 'function') d = ts.toDate();
-    else if (ts.seconds) d = new Date(ts.seconds * 1000);
-    else if (ts._seconds) d = new Date(ts._seconds * 1000);
-    else if (typeof ts === 'string' || typeof ts === 'number') d = new Date(ts);
-    else return '';
-    return d.toLocaleDateString('en-IN', {
-      day: '2-digit', month: 'short', year: 'numeric'
-    });
-  } catch { return ''; }
 }
 
 function filterPersonalInfo(product) {
@@ -1522,13 +1815,6 @@ function filterPersonalInfo(product) {
   return p;
 }
 
-function escapeHtml(str) {
-  if (str === null || str === undefined) return '';
-  return String(str).replace(/[&<>"']/g, s => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[s]));
-}
-
 /* ==================================================
    LOAD PRODUCT
    ================================================== */
@@ -1539,7 +1825,7 @@ async function loadProductDetails() {
     return;
   }
 
-  // 1. Try localStorage first (fast, populated by index/category pages)
+  // 1. Try localStorage first
   try {
     const saved = localStorage.getItem('stoneProducts');
     if (saved) allProducts = JSON.parse(saved) || [];
@@ -1547,7 +1833,7 @@ async function loadProductDetails() {
 
   currentProduct = allProducts.find(p => p.id === id);
 
-  // 2. If not found, fetch directly from Firestore
+  // 2. Try Firestore
   if (!currentProduct) {
     try {
       const snap = await getDoc(doc(db, "products", id));
@@ -1560,7 +1846,7 @@ async function loadProductDetails() {
     }
   }
 
-  // 3. If still not found, use a fallback
+  // 3. Fallback
   if (!currentProduct) {
     const fallback = getFallbackProducts().find(p => p.id === id);
     if (fallback) {
@@ -1576,7 +1862,7 @@ async function loadProductDetails() {
 
   currentProduct = filterPersonalInfo(currentProduct);
   displayProductDetails(currentProduct);
-  loadRelatedProducts(currentProduct);
+  await loadRelatedProducts(currentProduct);
   updateBreadcrumb(currentProduct);
   document.title = `${currentProduct.stone_name || 'Product'} - Rajasthan Sandstone Hub`;
 }
@@ -1586,14 +1872,22 @@ function updateBreadcrumb(p) {
   if (!bar) return;
   bar.style.display = 'flex';
   const catMap = {
-    sandstone: 'Sandstone', kota: 'Kota', granite: 'Granite',
-    marble: 'Marble', dholpur: 'Dholpur', tiles: 'Tiles', mandana: 'Mandana'
+    sandstone: 'Sandstone', 'sand stone': 'Sandstone',
+    kota: 'Kota Stone', 'kota stone': 'Kota Stone',
+    granite: 'Granite', marble: 'Marble',
+    dholpur: 'Dholpur', tiles: 'Tiles', tile: 'Tiles', mandana: 'Mandana'
   };
-  const catKey = (p.category || '').toLowerCase();
+  const pageMap = {
+    sandstone: 'sandstone.html', 'sand stone': 'sandstone.html',
+    kota: 'kota.html', 'kota stone': 'kota.html',
+    granite: 'granite.html', marble: 'marble.html',
+    dholpur: 'dholpur.html', tiles: 'tiles.html', tile: 'tiles.html', mandana: 'mandana.html'
+  };
+  const catKey = (p.category || '').toLowerCase().trim();
   const catLabel = catMap[catKey] || (p.category || 'Collection');
   const crumbCat = document.getElementById('crumbCategory');
   crumbCat.textContent = catLabel;
-  crumbCat.href = catKey && catMap[catKey] ? `${catKey}.html` : 'index.html';
+  crumbCat.href = pageMap[catKey] || 'index.html';
   document.getElementById('crumbProduct').textContent = p.stone_name || 'Product';
 }
 
@@ -1602,11 +1896,9 @@ function updateBreadcrumb(p) {
    ================================================== */
 function displayProductDetails(product) {
   const container = document.getElementById('productContainer');
-
   const images = (product.images && product.images.length) ? product.images : ['stone-placeholder.png'];
   currentImageIndex = 0;
 
-  // Thumbnail column (only if >1 image)
   const thumbsHTML = images.length > 1 ? `
     <div class="thumb-column" id="thumbColumn">
       ${images.map((img, i) => `
@@ -1617,13 +1909,11 @@ function displayProductDetails(product) {
     </div>
   ` : '';
 
-  // Meta pills (no price!)
   const metaPills = [];
   if (product.sub_category) metaPills.push(`<div class="meta-pill"><i class="fas fa-layer-group"></i> ${escapeHtml(product.sub_category)}</div>`);
   if (product.type) metaPills.push(`<div class="meta-pill"><i class="fas fa-cube"></i> ${escapeHtml(product.type)}</div>`);
   if (product.color) metaPills.push(`<div class="meta-pill"><i class="fas fa-fill-drip"></i> ${escapeHtml(product.color)}</div>`);
 
-  // Technical specs
   const techSpecs = [
     { label: 'Thickness', value: product.thickness },
     { label: 'Size', value: product.size },
@@ -1648,7 +1938,6 @@ function displayProductDetails(product) {
     </div>
   ` : '';
 
-  // Additional fields
   const addFields = (product.additional_fields || []).filter(f => f.name && f.value);
   const addHTML = addFields.length ? `
     <div class="spec-block additional-specs">
@@ -1664,7 +1953,6 @@ function displayProductDetails(product) {
     </div>
   ` : '';
 
-  // Description
   const descHTML = product.description ? `
     <div class="spec-block">
       <h3><i class="fas fa-info-circle"></i> DESCRIPTION</h3>
@@ -1705,16 +1993,12 @@ function displayProductDetails(product) {
     </div>
   `;
 
-  // Wire up
   wireThumbnails(images);
   wireHoverZoom(images);
   wireExpandButton(images);
   wireActionButtons();
 }
 
-/* ==================================================
-   THUMBNAILS
-   ================================================== */
 function wireThumbnails(images) {
   const thumbs = document.querySelectorAll('.thumb-btn');
   const mainImg = document.getElementById('mainProductImage');
@@ -1729,12 +2013,8 @@ function wireThumbnails(images) {
   });
 }
 
-/* ==================================================
-   HOVER ZOOM (Amazon style, desktop only)
-   ================================================== */
 function wireHoverZoom(images) {
   if (window.innerWidth <= 1200) return;
-
   const wrap = document.getElementById('mainImageWrap');
   const lens = document.getElementById('zoomLens');
   const result = document.getElementById('zoomResult');
@@ -1762,26 +2042,18 @@ function wireHoverZoom(images) {
     const rect = wrap.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
-    // Clamp lens position
     let lx = x - lensSize / 2;
     let ly = y - lensSize / 2;
     lx = Math.max(0, Math.min(rect.width - lensSize, lx));
     ly = Math.max(0, Math.min(rect.height - lensSize, ly));
-
     lens.style.left = lx + 'px';
     lens.style.top = ly + 'px';
-
-    // Background position for result panel
     const bgX = -(lx * ZOOM);
     const bgY = -(ly * ZOOM);
     result.style.backgroundPosition = `${bgX}px ${bgY}px`;
   });
 }
 
-/* ==================================================
-   EXPAND → FULLSCREEN ZOOM
-   ================================================== */
 function wireExpandButton(images) {
   const btn = document.getElementById('expandBtn');
   const main = document.getElementById('mainProductImage');
@@ -1794,7 +2066,7 @@ function wireExpandButton(images) {
 }
 
 /* ==================================================
-   FULLSCREEN ZOOM (Amazon/Flipkart style)
+   FULLSCREEN ZOOM
    ================================================== */
 const fsModal = document.getElementById('fullscreenZoom');
 const zoomStage = document.getElementById('zoomStage');
@@ -1837,7 +2109,6 @@ function resetTransform() {
 }
 
 function clampTranslate() {
-  // Prevent panning too far off-screen
   const maxPanX = (scale - 1) * zoomStage.clientWidth / 2;
   const maxPanY = (scale - 1) * zoomStage.clientHeight / 2;
   translateX = Math.max(-maxPanX, Math.min(maxPanX, translateX));
@@ -1848,8 +2119,6 @@ function setZoom(newScale, focusX, focusY) {
   const oldScale = scale;
   scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale));
   if (scale === oldScale) return;
-
-  // Zoom toward cursor/finger point
   if (focusX !== undefined && focusY !== undefined) {
     const rect = zoomStage.getBoundingClientRect();
     const cx = focusX - rect.left - rect.width / 2;
@@ -1858,7 +2127,6 @@ function setZoom(newScale, focusX, focusY) {
     translateX = cx - ratio * (cx - translateX);
     translateY = cy - ratio * (cy - translateY);
   }
-
   clampTranslate();
   applyTransform();
 }
@@ -1872,12 +2140,8 @@ window.openFullscreenZoom = function(images, startIndex) {
   resetTransform();
   fsModal.classList.add('active');
   document.body.style.overflow = 'hidden';
-
-  // Show navigation only if >1 image
   document.getElementById('fsPrev').style.display = fsImages.length > 1 ? 'flex' : 'none';
   document.getElementById('fsNext').style.display = fsImages.length > 1 ? 'flex' : 'none';
-
-  // Hide hint after a few seconds
   fsHint.classList.remove('hide');
   setTimeout(() => fsHint.classList.add('hide'), 4000);
 };
@@ -1888,35 +2152,29 @@ function closeFullscreenZoom() {
   resetTransform();
 }
 
-/* ---------------- Fullscreen Controls ---------------- */
 document.getElementById('fsClose').onclick = closeFullscreenZoom;
-
 document.getElementById('fsPrev').onclick = () => {
   fsIndex = (fsIndex - 1 + fsImages.length) % fsImages.length;
   zoomImg.src = fsImages[fsIndex];
   fsCurrent.textContent = fsIndex + 1;
   resetTransform();
 };
-
 document.getElementById('fsNext').onclick = () => {
   fsIndex = (fsIndex + 1) % fsImages.length;
   zoomImg.src = fsImages[fsIndex];
   fsCurrent.textContent = fsIndex + 1;
   resetTransform();
 };
-
 document.getElementById('fsZoomIn').onclick = () => setZoom(scale + 0.5);
 document.getElementById('fsZoomOut').onclick = () => setZoom(scale - 0.5);
 document.getElementById('fsReset').onclick = resetTransform;
 
-/* ---------------- Wheel zoom ---------------- */
 zoomStage.addEventListener('wheel', (e) => {
   e.preventDefault();
   const delta = e.deltaY > 0 ? -0.25 : 0.25;
   setZoom(scale + delta, e.clientX, e.clientY);
 }, { passive: false });
 
-/* ---------------- Mouse drag to pan ---------------- */
 zoomStage.addEventListener('mousedown', (e) => {
   if (scale <= 1) return;
   isDragging = true;
@@ -1942,16 +2200,13 @@ window.addEventListener('mouseup', () => {
   }
 });
 
-/* ---------------- Double-click to toggle zoom ---------------- */
 zoomStage.addEventListener('dblclick', (e) => {
   if (scale > 1) resetTransform();
   else setZoom(2.5, e.clientX, e.clientY);
 });
 
-/* ---------------- Touch: pinch zoom, drag, double-tap ---------------- */
 zoomStage.addEventListener('touchstart', (e) => {
   if (e.touches.length === 2) {
-    // Pinch
     const dx = e.touches[0].clientX - e.touches[1].clientX;
     const dy = e.touches[0].clientY - e.touches[1].clientY;
     pinchStartDist = Math.hypot(dx, dy);
@@ -1959,7 +2214,6 @@ zoomStage.addEventListener('touchstart', (e) => {
   } else if (e.touches.length === 1) {
     const now = Date.now();
     if (now - lastTapTime < 300) {
-      // Double-tap
       e.preventDefault();
       if (scale > 1) resetTransform();
       else setZoom(2.5, e.touches[0].clientX, e.touches[0].clientY);
@@ -1967,7 +2221,6 @@ zoomStage.addEventListener('touchstart', (e) => {
       return;
     }
     lastTapTime = now;
-
     if (scale > 1) {
       isDragging = true;
       dragStartX = e.touches[0].clientX;
@@ -1999,7 +2252,6 @@ zoomStage.addEventListener('touchend', () => {
   isDragging = false;
 });
 
-/* ---------------- Keyboard nav ---------------- */
 document.addEventListener('keydown', (e) => {
   if (!fsModal.classList.contains('active')) return;
   if (e.key === 'Escape') closeFullscreenZoom();
@@ -2010,13 +2262,12 @@ document.addEventListener('keydown', (e) => {
   if (e.key === '0') resetTransform();
 });
 
-/* ---------------- Click outside to close ---------------- */
 zoomStage.addEventListener('click', (e) => {
   if (e.target === zoomStage && scale === 1) closeFullscreenZoom();
 });
 
 /* ==================================================
-   ACTION BUTTONS (WhatsApp / Email)
+   ACTION BUTTONS
    ================================================== */
 function wireActionButtons() {
   const wa = document.getElementById('waBtn');
@@ -2042,8 +2293,7 @@ function buildInquiryText(p) {
   if (p.usage) lines.push(`🏗️ Usage: ${p.usage}`);
   if (p.description) lines.push(`📝 Description: ${p.description}`);
   if (p.images && p.images.length) lines.push(`🖼️ Image: ${p.images[0]}`);
-  const url = window.location.href;
-  lines.push(`🔗 Link: ${url}`);
+  lines.push(`🔗 Link: ${window.location.href}`);
   lines.push('');
   lines.push('Please provide more details and availability.');
   return lines.join('\n');
@@ -2063,46 +2313,121 @@ function contactViaEmail() {
 }
 
 /* ==================================================
-   RELATED PRODUCTS
+   RELATED PRODUCTS — FIRESTORE SE FETCH (reliable)
    ================================================== */
-function loadRelatedProducts(p) {
+async function loadRelatedProducts(p) {
   const section = document.getElementById('relatedSection');
   const grid = document.getElementById('relatedProducts');
   if (!section || !grid) return;
 
-  const related = allProducts
-    .filter(x =>
-      x.id !== p.id &&
-      (x.category || '').toLowerCase() === (p.category || '').toLowerCase() &&
-      x.stone_name
-    )
-    .slice(0, 8)
-    .map(filterPersonalInfo);
-
-  if (!related.length) {
-    section.style.display = 'none';
-    return;
-  }
-
-  grid.innerHTML = related.map(x => {
-    const img = (x.images && x.images.length) ? x.images[0] : 'stone-placeholder.png';
-    return `
-      <a class="product-card" href="product-details.html?id=${encodeURIComponent(x.id)}">
-        <div class="product-image">
-          <img src="${img}" alt="${escapeHtml(x.stone_name || '')}">
-        </div>
-        <div class="product-info">
-          <h3 class="product-title-card">${escapeHtml(x.stone_name || 'PREMIUM STONE')}</h3>
-          <div class="product-meta">
-            <span><i class="fas fa-layer-group"></i> ${escapeHtml(x.sub_category || x.category || '—')}</span>
-            <span><i class="fas fa-fill-drip"></i> ${escapeHtml(x.color || '—')}</span>
-          </div>
-        </div>
-      </a>
-    `;
-  }).join('');
-
+  // Show loading state
   section.style.display = 'block';
+  grid.innerHTML = '<div class="loading-msg">LOADING SIMILAR STONES...</div>';
+
+  try {
+    // ✅ Firestore se same category ke products fetch karo
+    const q = query(
+      collection(db, "products"),
+      where("category", "==", p.category || '')
+    );
+    const snap = await getDocs(q);
+
+    const related = [];
+    snap.forEach(d => {
+      if (d.id !== p.id) {
+        related.push({ id: d.id, ...d.data() });
+      }
+    });
+
+    // Agar same category mein sirf current product hai, toh sub_category match karo
+    if (related.length === 0 && p.sub_category) {
+      try {
+        const q2 = query(
+          collection(db, "products"),
+          where("sub_category", "==", p.sub_category)
+        );
+        const snap2 = await getDocs(q2);
+        snap2.forEach(d => {
+          if (d.id !== p.id && !related.find(r => r.id === d.id)) {
+            related.push({ id: d.id, ...d.data() });
+          }
+        });
+      } catch {}
+    }
+
+    if (related.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    // Max 8 dikhao
+    const top = related.slice(0, 8).map(filterPersonalInfo);
+
+    // Sort by created_at (newest first) if available
+    top.sort((a, b) => {
+      const ta = a.created_at?.toDate ? a.created_at.toDate().getTime() : 0;
+      const tb = b.created_at?.toDate ? b.created_at.toDate().getTime() : 0;
+      return tb - ta;
+    });
+
+    grid.innerHTML = top.map(x => {
+      const img = (x.images && x.images.length) ? x.images[0] : 'stone-placeholder.png';
+      return `
+        <a class="product-card" href="product-details.html?id=${encodeURIComponent(x.id)}">
+          <div class="product-image">
+            <img src="${img}" alt="${escapeHtml(x.stone_name || '')}" loading="lazy">
+          </div>
+          <div class="product-info">
+            <h3 class="product-title-card">${escapeHtml(x.stone_name || 'PREMIUM STONE')}</h3>
+            <div class="product-meta">
+              <span><i class="fas fa-layer-group"></i> ${escapeHtml(x.sub_category || x.category || '—')}</span>
+              <span><i class="fas fa-fill-drip"></i> ${escapeHtml(x.color || '—')}</span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('');
+
+    section.style.display = 'block';
+
+  } catch (e) {
+    console.warn('Related products fetch failed, trying localStorage:', e);
+
+    // Fallback: localStorage se try karo
+    const related = allProducts
+      .filter(x =>
+        x.id !== p.id &&
+        (x.category || '').toLowerCase() === (p.category || '').toLowerCase() &&
+        x.stone_name
+      )
+      .slice(0, 8)
+      .map(filterPersonalInfo);
+
+    if (!related.length) {
+      section.style.display = 'none';
+      return;
+    }
+
+    grid.innerHTML = related.map(x => {
+      const img = (x.images && x.images.length) ? x.images[0] : 'stone-placeholder.png';
+      return `
+        <a class="product-card" href="product-details.html?id=${encodeURIComponent(x.id)}">
+          <div class="product-image">
+            <img src="${img}" alt="${escapeHtml(x.stone_name || '')}">
+          </div>
+          <div class="product-info">
+            <h3 class="product-title-card">${escapeHtml(x.stone_name || 'PREMIUM STONE')}</h3>
+            <div class="product-meta">
+              <span><i class="fas fa-layer-group"></i> ${escapeHtml(x.sub_category || x.category || '—')}</span>
+              <span><i class="fas fa-fill-drip"></i> ${escapeHtml(x.color || '—')}</span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('');
+
+    section.style.display = 'block';
+  }
 }
 
 /* ==================================================
@@ -2115,7 +2440,7 @@ function showError(msg) {
 }
 
 /* ==================================================
-   FALLBACK
+   FALLBACK PRODUCTS
    ================================================== */
 function getFallbackProducts() {
   return [
