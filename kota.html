@@ -47,7 +47,7 @@ body {
 a { color: inherit; text-decoration: none; }
 
 /* ============================================================
-   NAVBAR (with Amazon-style search)
+   NAVBAR (with CENTERED Amazon-style search)
    ============================================================ */
 .navbar-wrapper {
   position: sticky;
@@ -68,6 +68,7 @@ a { color: inherit; text-decoration: none; }
   height: 76px;
   max-width: 1700px;
   margin: 0 auto;
+  position: relative;
 }
 .nav-brand {
   font-family: var(--font-head);
@@ -85,12 +86,16 @@ a { color: inherit; text-decoration: none; }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 38px; }
 
-/* Search container (relative for dropdown) */
+/* Search container — CENTERED */
 .search-container {
-  flex: 1;
-  max-width: 600px;
-  min-width: 150px;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 620px;
+  padding: 0 20px;
+  z-index: 5;
 }
 
 .search-wrap {
@@ -146,8 +151,8 @@ a { color: inherit; text-decoration: none; }
 .search-suggestions {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
-  right: 0;
+  left: 20px;
+  right: 20px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -262,7 +267,6 @@ a { color: inherit; text-decoration: none; }
   transform: translateX(3px);
 }
 
-/* Loading / no results / view-all states */
 .suggestion-state {
   padding: 24px 16px;
   text-align: center;
@@ -695,13 +699,20 @@ footer .footer-copy {
   .mobile-toggle { display: block; }
   .nav-brand { font-size: 1.15rem; }
   .nav-brand img { height: 32px; }
+
   .search-container {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
     order: 4;
     flex: 1 1 100%;
-    max-width: 100%;
     margin-bottom: 10px;
   }
-  .search-wrap { height: 42px; }
+  .search-suggestions { left: 0; right: 0; }
   .nav-row-top { height: auto; padding-top: 10px; padding-bottom: 10px; }
   .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); }
 
@@ -719,7 +730,14 @@ footer .footer-copy {
   .nav-row-top { padding: 10px 12px; gap: 10px; }
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 28px; }
-  .search-container { min-width: 100%; margin-bottom: 0; }
+  .search-container {
+    min-width: 100%;
+    margin-bottom: 0;
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+  }
   .search-wrap { height: 40px; }
   .search-wrap input { font-size: 13px; padding: 8px 12px; }
   .search-wrap .search-icon-btn { padding: 8px 14px; font-size: 13px; }
@@ -786,7 +804,7 @@ footer .footer-copy {
 <body>
 
 <!-- ============================================================
-     NAVBAR (with Amazon-style search)
+     NAVBAR
      ============================================================ -->
 <div class="navbar-wrapper">
   <div class="nav-row-top">
@@ -914,7 +932,7 @@ import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 let allProducts = [];
-let globalProductCache = null; // cached all products for search
+let globalProductCache = null;
 let searchDebounceTimer = null;
 let highlightedIndex = -1;
 let currentSuggestions = [];
@@ -960,7 +978,6 @@ const searchBtn = document.getElementById('search-btn');
 const searchClear = document.getElementById('search-clear');
 const suggestionsBox = document.getElementById('search-suggestions');
 
-/* Category → page mapping for "View all results" */
 const catPages = {
   sandstone: 'sandstone.html',
   'sand stone': 'sandstone.html',
@@ -974,8 +991,7 @@ const catPages = {
   mandana: 'mandana.html',
 };
 
-/* Fetch all products once (cached) */
-async function getAllProducts() {
+async function getAllProductsForSearch() {
   if (globalProductCache) return globalProductCache;
   try {
     const snap = await getDocs(collection(db, "products"));
@@ -989,7 +1005,6 @@ async function getAllProducts() {
   }
 }
 
-/* Filter products by query */
 function filterProducts(products, q) {
   const ql = q.toLowerCase().trim();
   if (!ql) return [];
@@ -1002,7 +1017,6 @@ function filterProducts(products, q) {
   );
 }
 
-/* Show suggestions dropdown */
 function showSuggestions(html) {
   suggestionsBox.innerHTML = html;
   suggestionsBox.classList.add('active');
@@ -1014,16 +1028,14 @@ function hideSuggestions() {
   currentSuggestions = [];
 }
 
-/* Render suggestion item */
 function renderSuggestionItem(p) {
   const img = (p.images && p.images.length) ? p.images[0] : 'stone-placeholder.png';
   const meta = [];
   if (p.category) meta.push(`<span><i class="fas fa-layer-group"></i> ${p.category}</span>`);
   if (p.sub_category) meta.push(`<span><i class="fas fa-cube"></i> ${p.sub_category}</span>`);
   if (p.color) meta.push(`<span><i class="fas fa-fill-drip"></i> ${p.color}</span>`);
-
   return `
-    <a class="suggestion-item" href="product-details.html?id=${encodeURIComponent(p.id)}" data-id="${p.id}">
+    <a class="suggestion-item" href="product-details.html?id=${encodeURIComponent(p.id)}">
       <div class="suggestion-thumb"><img src="${img}" alt=""></div>
       <div class="suggestion-body">
         <div class="suggestion-name">${p.stone_name || 'Premium Stone'}</div>
@@ -1034,40 +1046,21 @@ function renderSuggestionItem(p) {
   `;
 }
 
-/* Run live search */
 async function runLiveSearch() {
   const q = searchInput.value.trim();
-
-  // Show/hide clear button
   searchClear.classList.toggle('visible', q.length > 0);
+  if (!q) { hideSuggestions(); return; }
 
-  if (!q) {
-    hideSuggestions();
-    return;
-  }
+  showSuggestions(`<div class="suggestion-state"><div class="spinner"></div>Searching all stones...</div>`);
 
-  // Show loading
-  showSuggestions(`
-    <div class="suggestion-state">
-      <div class="spinner"></div>
-      Searching all stones...
-    </div>
-  `);
-
-  const products = await getAllProducts();
+  const products = await getAllProductsForSearch();
   const matches = filterProducts(products, q);
 
   if (matches.length === 0) {
-    showSuggestions(`
-      <div class="suggestion-state">
-        <i class="fas fa-search"></i>
-        No stones found for "<strong>${escapeHtml(q)}</strong>"
-      </div>
-    `);
+    showSuggestions(`<div class="suggestion-state"><i class="fas fa-search"></i>No stones found for "<strong>${escapeHtml(q)}</strong>"</div>`);
     return;
   }
 
-  // Determine if all matches are in same category
   const cats = new Set();
   matches.forEach(p => cats.add((p.category || '').toLowerCase().trim()));
   let viewAllUrl;
@@ -1078,18 +1071,12 @@ async function runLiveSearch() {
     viewAllUrl = `index.html?q=${encodeURIComponent(q)}`;
   }
 
-  // Show top 8 matches
   const top = matches.slice(0, 8);
   let html = `<div class="suggestion-header">${matches.length} matching stone${matches.length > 1 ? 's' : ''}</div>`;
   html += top.map(renderSuggestionItem).join('');
-  html += `
-    <a class="suggestion-view-all" href="${viewAllUrl}">
-      View all ${matches.length} result${matches.length > 1 ? 's' : ''} <i class="fas fa-arrow-right"></i>
-    </a>
-  `;
+  html += `<a class="suggestion-view-all" href="${viewAllUrl}">View all ${matches.length} result${matches.length > 1 ? 's' : ''} <i class="fas fa-arrow-right"></i></a>`;
   showSuggestions(html);
 
-  // Store current suggestions for keyboard nav
   currentSuggestions = top.map(p => ({
     id: p.id,
     url: `product-details.html?id=${encodeURIComponent(p.id)}`
@@ -1097,24 +1084,18 @@ async function runLiveSearch() {
   highlightedIndex = -1;
 }
 
-/* Debounce live search */
 searchInput.addEventListener('input', () => {
   clearTimeout(searchDebounceTimer);
   searchDebounceTimer = setTimeout(runLiveSearch, 250);
 });
-
-/* Clear button */
 searchClear.addEventListener('click', () => {
   searchInput.value = '';
   searchClear.classList.remove('visible');
   hideSuggestions();
   searchInput.focus();
 });
-
-/* Search button (Enter) — go to results page */
 searchBtn.addEventListener('click', () => doFullSearch());
 searchInput.addEventListener('keydown', (e) => {
-  // Arrow navigation
   if (e.key === 'ArrowDown') {
     e.preventDefault();
     if (currentSuggestions.length === 0) return;
@@ -1128,7 +1109,6 @@ searchInput.addEventListener('keydown', (e) => {
   } else if (e.key === 'Enter') {
     e.preventDefault();
     if (highlightedIndex >= 0 && currentSuggestions[highlightedIndex]) {
-      // Navigate to highlighted suggestion
       window.location.href = currentSuggestions[highlightedIndex].url;
     } else {
       doFullSearch();
@@ -1139,35 +1119,26 @@ searchInput.addEventListener('keydown', (e) => {
   }
 });
 
-/* Highlight suggestion on keyboard nav */
 function updateHighlight() {
   const items = suggestionsBox.querySelectorAll('.suggestion-item');
   items.forEach((item, i) => {
     item.classList.toggle('highlighted', i === highlightedIndex);
-    if (i === highlightedIndex) {
-      item.scrollIntoView({ block: 'nearest' });
-    }
+    if (i === highlightedIndex) item.scrollIntoView({ block: 'nearest' });
   });
 }
 
-/* Full search — redirect to results page */
 async function doFullSearch() {
   const q = searchInput.value.trim();
   if (!q) return;
-
   hideSuggestions();
-
-  const products = await getAllProducts();
+  const products = await getAllProductsForSearch();
   const matches = filterProducts(products, q);
-
   if (matches.length === 0) {
     window.location.href = `index.html?q=${encodeURIComponent(q)}`;
     return;
   }
-
   const cats = new Set();
   matches.forEach(p => cats.add((p.category || '').toLowerCase().trim()));
-
   if (cats.size === 1) {
     const onlyCat = [...cats][0];
     window.location.href = `${catPages[onlyCat] || 'index.html'}?q=${encodeURIComponent(q)}`;
@@ -1176,25 +1147,14 @@ async function doFullSearch() {
   }
 }
 
-/* Close suggestions on outside click */
 document.addEventListener('click', (e) => {
-  if (!e.target.closest('.search-container')) {
-    hideSuggestions();
-  }
+  if (!e.target.closest('.search-container')) hideSuggestions();
 });
 
-/* Helper */
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
-}
-
-/* ==================================================
-   URL QUERY support
-   ================================================== */
-function getQueryParam() {
-  return new URLSearchParams(window.location.search).get('q');
 }
 
 /* ==================================================
@@ -1244,7 +1204,7 @@ window.renderProducts = function(list) {
 };
 
 /* ==================================================
-   IMAGE CAROUSEL
+   IMAGE CAROUSEL (3.5s)
    ================================================== */
 setInterval(() => {
   document.querySelectorAll('.product-image').forEach(wrap => {
@@ -1259,6 +1219,13 @@ setInterval(() => {
     }
   });
 }, 3500);
+
+/* ==================================================
+   URL QUERY — If arriving with ?q=, filter local products
+   ================================================== */
+function getQueryParam() {
+  return new URLSearchParams(window.location.search).get('q');
+}
 
 /* ==================================================
    LOAD KOTA STONE PRODUCTS
@@ -1278,7 +1245,6 @@ async function loadProducts() {
       return tb - ta;
     });
 
-    // If ?q= present in URL, filter and show
     const urlQ = getQueryParam();
     if (urlQ) {
       searchInput.value = urlQ;
