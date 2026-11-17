@@ -60,6 +60,7 @@ a { color: inherit; text-decoration: none; }
   z-index: 1000;
 }
 
+/* ROW 1: Logo + Search (Centered) */
 .nav-row-top {
   display: flex;
   align-items: center;
@@ -69,6 +70,7 @@ a { color: inherit; text-decoration: none; }
   height: 76px;
   max-width: 1700px;
   margin: 0 auto;
+  position: relative;
 }
 
 .nav-brand {
@@ -88,16 +90,30 @@ a { color: inherit; text-decoration: none; }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 38px; }
 
+/* Search container — CENTERED (Amazon-style) */
+.search-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 620px;
+  padding: 0 20px;
+  z-index: 5;
+}
+
 .search-wrap {
-  flex: 1;
-  max-width: 600px;
-  min-width: 150px;
   display: flex;
   border: 1px solid #333;
   border-radius: 6px;
   overflow: hidden;
   background: #000;
   height: 44px;
+  transition: var(--transition);
+}
+.search-wrap:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(199,169,123,0.15);
 }
 .search-wrap input {
   flex: 1;
@@ -111,7 +127,19 @@ a { color: inherit; text-decoration: none; }
   min-width: 0;
 }
 .search-wrap input::placeholder { color: #666; }
-.search-wrap button {
+.search-wrap .search-clear {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 12px;
+  font-size: 14px;
+  display: none;
+  transition: var(--transition);
+}
+.search-wrap .search-clear.visible { display: block; }
+.search-wrap .search-clear:hover { color: var(--primary); }
+.search-wrap .search-icon-btn {
   padding: 10px 22px;
   background: var(--primary);
   border: none;
@@ -121,59 +149,185 @@ a { color: inherit; text-decoration: none; }
   transition: var(--transition);
   font-size: 14px;
 }
-.search-wrap button:hover { background: var(--primary-dark); }
+.search-wrap .search-icon-btn:hover { background: var(--primary-dark); }
 
-.nav-actions {
+/* Suggestions dropdown */
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 20px;
+  right: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+  max-height: 460px;
+  overflow-y: auto;
+  z-index: 2000;
+  display: none;
+  animation: dropdownIn 0.2s ease;
+}
+.search-suggestions.active { display: block; }
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.search-suggestions::-webkit-scrollbar { width: 6px; }
+.search-suggestions::-webkit-scrollbar-track { background: #111; }
+.search-suggestions::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+.search-suggestions::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+.suggestion-header {
+  padding: 10px 16px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  background: #0d0d0d;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.suggestion-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-shrink: 0;
-}
-
-.btn {
-  padding: 10px 18px;
-  border-radius: 4px;
-  font-family: var(--font-head);
-  font-size: 0.82rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  padding: 10px 16px;
   cursor: pointer;
-  border: 1px solid transparent;
   transition: var(--transition);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  border-bottom: 1px solid rgba(34, 34, 34, 0.5);
   text-decoration: none;
-  white-space: nowrap;
+  color: inherit;
 }
-.btn-primary { background: var(--primary); color: #000; }
-.btn-primary:hover { background: transparent; border-color: var(--primary); color: var(--primary); }
-.btn-outline { background: transparent; border: 1px solid #333; color: var(--text-light); }
-.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover,
+.suggestion-item.highlighted {
+  background: rgba(199,169,123,0.08);
+  border-left: 3px solid var(--primary);
+  padding-left: 13px;
+}
 
-.user-info {
+.suggestion-thumb {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: #f5f5f5;
+  border-radius: 6px;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  flex-shrink: 0;
+  justify-content: center;
 }
-.user-avatar {
-  width: 38px; height: 38px;
-  background: var(--primary); color: #000;
-  display: flex; justify-content: center; align-items: center;
-  font-family: var(--font-head); font-weight: 700; border-radius: 50%;
-  font-size: 0.95rem;
-}
-.user-name {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.suggestion-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
 }
 
+.suggestion-body {
+  flex: 1;
+  min-width: 0;
+}
+.suggestion-name {
+  font-size: 0.88rem;
+  font-family: var(--font-head);
+  color: white;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.suggestion-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.suggestion-meta i {
+  color: var(--primary);
+  font-size: 0.65rem;
+}
+.suggestion-meta .dot { color: #444; }
+
+.suggestion-arrow {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+.suggestion-item:hover .suggestion-arrow,
+.suggestion-item.highlighted .suggestion-arrow {
+  color: var(--primary);
+  transform: translateX(3px);
+}
+
+.suggestion-state {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.suggestion-state i { color: var(--primary); }
+.suggestion-state .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #333;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.suggestion-view-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: #0d0d0d;
+  color: var(--primary);
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  border-top: 1px solid var(--border-color);
+  transition: var(--transition);
+  text-decoration: none;
+}
+.suggestion-view-all:hover {
+  background: rgba(199,169,123,0.08);
+}
+.suggestion-view-all i {
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+.suggestion-view-all:hover i { transform: translateX(3px); }
+
+/* Spacer for symmetry (no sign in) */
+.nav-spacer {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+/* ROW 2: Navigation links */
 .nav-row-bottom {
   display: flex;
   align-items: center;
@@ -560,78 +714,6 @@ footer .footer-copy {
 }
 
 /* ============================================================
-   MODAL
-   ============================================================ */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(6px);
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  padding: 20px;
-}
-.modal.active { display: flex; }
-.modal-content {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 38px 34px;
-  border-radius: 6px;
-  width: 400px;
-  max-width: 100%;
-  position: relative;
-}
-.modal-content h2 {
-  color: white;
-  margin-bottom: 24px;
-  font-size: 1.5rem;
-  text-align: center;
-  font-family: var(--font-head);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.modal-content h2 span { color: var(--primary); }
-.form-group { margin-bottom: 14px; }
-.form-group input {
-  width: 100%;
-  padding: 12px 15px;
-  background: #000;
-  border: 1px solid var(--border-color);
-  color: white;
-  font-size: 13px;
-  border-radius: 4px;
-  outline: none;
-  font-family: var(--font-body);
-  transition: var(--transition);
-}
-.form-group input:focus { border-color: var(--primary); }
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  font-size: 22px;
-  color: var(--text-muted);
-  background: none;
-  border: none;
-  cursor: pointer;
-  line-height: 1;
-}
-.modal-close:hover { color: var(--primary); }
-.modal-link {
-  color: var(--primary);
-  display: block;
-  text-align: center;
-  margin-top: 14px;
-  font-size: 0.82rem;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.modal-link:hover { text-decoration: underline; }
-
-/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 992px) {
@@ -647,22 +729,29 @@ footer .footer-copy {
   .nav-brand { font-size: 1.15rem; }
   .nav-brand img { height: 32px; }
 
-  .search-wrap {
+  .search-container {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
     order: 4;
     flex: 1 1 100%;
-    max-width: 100%;
-    height: 42px;
     margin-bottom: 10px;
   }
+  .search-suggestions { left: 0; right: 0; }
   .nav-row-top { height: auto; padding-top: 10px; padding-bottom: 10px; }
-
   .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); }
+  .nav-spacer { display: none; }
 
   .section-title { font-size: 1.5rem; }
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
   }
+  .search-suggestions { max-height: 380px; }
 }
 
 @media (max-width: 768px) {
@@ -672,18 +761,24 @@ footer .footer-copy {
 
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 28px; }
-  .user-name { display: none; }
-  .user-avatar { width: 34px; height: 34px; font-size: 0.85rem; }
-  .btn { padding: 8px 12px; font-size: 0.72rem; gap: 4px; }
-  #btn-open-signin i { display: none; }
 
-  .search-wrap {
-    height: 40px;
-    margin-bottom: 0;
+  .search-container {
     min-width: 100%;
+    margin-bottom: 0;
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
   }
+  .search-wrap { height: 40px; }
   .search-wrap input { font-size: 13px; padding: 8px 12px; }
-  .search-wrap button { padding: 8px 16px; font-size: 13px; }
+  .search-wrap .search-icon-btn { padding: 8px 14px; font-size: 13px; }
+  .search-suggestions { max-height: 340px; }
+
+  .suggestion-item { padding: 9px 12px; gap: 10px; }
+  .suggestion-thumb { width: 42px; height: 42px; }
+  .suggestion-name { font-size: 0.8rem; }
+  .suggestion-meta { font-size: 0.65rem; gap: 6px; }
 
   .products-section { padding: 20px 8px 50px; }
   .section-header { padding: 0 8px; margin-bottom: 16px; }
@@ -745,6 +840,7 @@ footer .footer-copy {
      NAVBAR
      ============================================================ -->
 <div class="navbar-wrapper">
+  <!-- ROW 1: Logo + Search (Centered) -->
   <div class="nav-row-top">
     <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
       <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
@@ -754,22 +850,19 @@ footer .footer-copy {
       </a>
     </div>
 
-    <div class="search-wrap">
-      <input type="text" id="search-input" placeholder="Search sandstone...">
-      <button id="search-btn"><i class="fas fa-search"></i></button>
-    </div>
-
-    <div class="nav-actions">
-      <button id="btn-open-signin" class="btn btn-primary"><i class="fas fa-user"></i> Sign In</button>
-      <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
-
-      <div class="user-info">
-        <div class="user-avatar" id="user-avatar">G</div>
-        <span class="user-name" id="user-name">GUEST</span>
+    <div class="search-container">
+      <div class="search-wrap">
+        <input type="text" id="search-input" placeholder="Search all stones..." autocomplete="off">
+        <button class="search-clear" id="search-clear" aria-label="Clear"><i class="fas fa-times"></i></button>
+        <button class="search-icon-btn" id="search-btn"><i class="fas fa-search"></i></button>
       </div>
+      <div class="search-suggestions" id="search-suggestions"></div>
     </div>
+
+    <div class="nav-spacer"></div>
   </div>
 
+  <!-- ROW 2: Desktop Links -->
   <nav class="nav-row-bottom" id="nav-links">
     <a href="index.html">Home</a>
     <a href="sandstone.html" class="active">Sandstone</a>
@@ -809,7 +902,7 @@ footer .footer-copy {
      ============================================================ -->
 <section class="products-section">
   <div class="section-header">
-    <h2 class="section-title">PREMIUM <span>INVENTORY</span></h2>
+    <h1 class="section-title">SANDSTONE <span>COLLECTION</span></h1>
     <div class="result-count"><strong id="result-total">0</strong> Products</div>
   </div>
 
@@ -885,43 +978,20 @@ footer .footer-copy {
 </footer>
 
 <!-- ============================================================
-     MODALS
-     ============================================================ -->
-<div class="modal" id="signin-modal">
-  <div class="modal-content">
-    <button class="modal-close">&times;</button>
-    <h2>SIGN <span>IN</span></h2>
-    <div class="form-group"><input type="email" id="signin-email" placeholder="EMAIL ADDRESS"></div>
-    <div class="form-group"><input type="password" id="signin-password" placeholder="PASSWORD"></div>
-    <button id="signin-btn" class="btn btn-primary" style="width:100%; justify-content:center;">LOGIN</button>
-    <a href="#" class="modal-link" id="switch-to-signup">CREATE NEW ACCOUNT</a>
-  </div>
-</div>
-
-<div class="modal" id="signup-modal">
-  <div class="modal-content">
-    <button class="modal-close">&times;</button>
-    <h2>REGIS<span>TER</span></h2>
-    <div class="form-group"><input type="text" id="signup-name" placeholder="FULL NAME"></div>
-    <div class="form-group"><input type="email" id="signup-email" placeholder="EMAIL ADDRESS"></div>
-    <div class="form-group"><input type="text" id="signup-phone" placeholder="PHONE NUMBER"></div>
-    <div class="form-group"><input type="password" id="signup-password" placeholder="PASSWORD"></div>
-    <button id="signup-btn" class="btn btn-primary" style="width:100%; justify-content:center;">CREATE ACCOUNT</button>
-    <a href="#" class="modal-link" id="switch-to-signin">ALREADY REGISTERED? LOGIN</a>
-  </div>
-</div>
-
-<!-- ============================================================
      SCRIPT
      ============================================================ -->
 <script type="module">
-import { db, auth } from './firebase-config.js';
+import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 let allProducts = [];
+let globalProductCache = null;
+let searchDebounceTimer = null;
+let highlightedIndex = -1;
+let currentSuggestions = [];
 
 /* ==================================================
-   MOBILE SIDEBAR LOGIC
+   MOBILE SIDEBAR
    ================================================== */
 const mobileToggle = document.getElementById('mobile-toggle');
 const navLinksMobile = document.getElementById('nav-links-mobile');
@@ -938,7 +1008,6 @@ function closeSidebar() {
   overlay.classList.remove('active');
   document.body.style.overflow = '';
 }
-
 mobileToggle.addEventListener('click', (e) => {
   e.stopPropagation();
   navLinksMobile.classList.contains('active') ? closeSidebar() : openSidebar();
@@ -946,39 +1015,200 @@ mobileToggle.addEventListener('click', (e) => {
 overlay.addEventListener('click', closeSidebar);
 document.addEventListener('click', (e) => {
   if (navLinksMobile.classList.contains('active')) {
-    if (!navLinksMobile.contains(e.target) && !mobileToggle.contains(e.target)) {
-      closeSidebar();
-    }
+    if (!navLinksMobile.contains(e.target) && !mobileToggle.contains(e.target)) closeSidebar();
   }
 });
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && navLinksMobile.classList.contains('active')) closeSidebar();
 });
-navLinksMobile.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', closeSidebar);
-});
+navLinksMobile.querySelectorAll('a').forEach(l => l.addEventListener('click', closeSidebar));
 
 /* ==================================================
-   MODALS
+   AMAZON-STYLE SEARCH
    ================================================== */
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+const searchInput = document.getElementById('search-input');
+const searchBtn = document.getElementById('search-btn');
+const searchClear = document.getElementById('search-clear');
+const suggestionsBox = document.getElementById('search-suggestions');
 
-document.getElementById('btn-open-signin').onclick = () => openModal('signin-modal');
-document.querySelectorAll('.modal-close').forEach(btn => {
-  btn.onclick = function() { closeModal(this.closest('.modal').id); };
+const catPages = {
+  sandstone: 'sandstone.html',
+  'sand stone': 'sandstone.html',
+  kota: 'kota.html',
+  'kota stone': 'kota.html',
+  granite: 'granite.html',
+  marble: 'marble.html',
+  dholpur: 'dholpur.html',
+  tiles: 'tiles.html',
+  tile: 'tiles.html',
+  mandana: 'mandana.html',
+};
+
+async function getAllProductsForSearch() {
+  if (globalProductCache) return globalProductCache;
+  try {
+    const snap = await getDocs(collection(db, "products"));
+    const arr = [];
+    snap.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
+    globalProductCache = arr;
+    return arr;
+  } catch (e) {
+    console.error('Search fetch error:', e);
+    return [];
+  }
+}
+
+function filterProducts(products, q) {
+  const ql = q.toLowerCase().trim();
+  if (!ql) return [];
+  return products.filter(p =>
+    (p.stone_name || '').toLowerCase().includes(ql) ||
+    (p.category || '').toLowerCase().includes(ql) ||
+    (p.sub_category || '').toLowerCase().includes(ql) ||
+    (p.color || '').toLowerCase().includes(ql) ||
+    (p.type || '').toLowerCase().includes(ql)
+  );
+}
+
+function showSuggestions(html) {
+  suggestionsBox.innerHTML = html;
+  suggestionsBox.classList.add('active');
+}
+function hideSuggestions() {
+  suggestionsBox.classList.remove('active');
+  suggestionsBox.innerHTML = '';
+  highlightedIndex = -1;
+  currentSuggestions = [];
+}
+
+function renderSuggestionItem(p) {
+  const img = (p.images && p.images.length) ? p.images[0] : 'stone-placeholder.png';
+  const meta = [];
+  if (p.category) meta.push(`<span><i class="fas fa-layer-group"></i> ${p.category}</span>`);
+  if (p.sub_category) meta.push(`<span><i class="fas fa-cube"></i> ${p.sub_category}</span>`);
+  if (p.color) meta.push(`<span><i class="fas fa-fill-drip"></i> ${p.color}</span>`);
+  return `
+    <a class="suggestion-item" href="product-details.html?id=${encodeURIComponent(p.id)}">
+      <div class="suggestion-thumb"><img src="${img}" alt=""></div>
+      <div class="suggestion-body">
+        <div class="suggestion-name">${p.stone_name || 'Premium Stone'}</div>
+        <div class="suggestion-meta">${meta.join('<span class="dot">·</span>')}</div>
+      </div>
+      <i class="fas fa-arrow-right suggestion-arrow"></i>
+    </a>
+  `;
+}
+
+async function runLiveSearch() {
+  const q = searchInput.value.trim();
+  searchClear.classList.toggle('visible', q.length > 0);
+  if (!q) { hideSuggestions(); return; }
+
+  showSuggestions(`<div class="suggestion-state"><div class="spinner"></div>Searching all stones...</div>`);
+
+  const products = await getAllProductsForSearch();
+  const matches = filterProducts(products, q);
+
+  if (matches.length === 0) {
+    showSuggestions(`<div class="suggestion-state"><i class="fas fa-search"></i>No stones found for "<strong>${escapeHtml(q)}</strong>"</div>`);
+    return;
+  }
+
+  const cats = new Set();
+  matches.forEach(p => cats.add((p.category || '').toLowerCase().trim()));
+  let viewAllUrl;
+  if (cats.size === 1) {
+    const onlyCat = [...cats][0];
+    viewAllUrl = `${catPages[onlyCat] || 'index.html'}?q=${encodeURIComponent(q)}`;
+  } else {
+    viewAllUrl = `index.html?q=${encodeURIComponent(q)}`;
+  }
+
+  const top = matches.slice(0, 8);
+  let html = `<div class="suggestion-header">${matches.length} matching stone${matches.length > 1 ? 's' : ''}</div>`;
+  html += top.map(renderSuggestionItem).join('');
+  html += `<a class="suggestion-view-all" href="${viewAllUrl}">View all ${matches.length} result${matches.length > 1 ? 's' : ''} <i class="fas fa-arrow-right"></i></a>`;
+  showSuggestions(html);
+
+  currentSuggestions = top.map(p => ({
+    id: p.id,
+    url: `product-details.html?id=${encodeURIComponent(p.id)}`
+  }));
+  highlightedIndex = -1;
+}
+
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(runLiveSearch, 250);
 });
-document.getElementById('switch-to-signup').onclick = (e) => {
-  e.preventDefault(); closeModal('signin-modal'); openModal('signup-modal');
-};
-document.getElementById('switch-to-signin').onclick = (e) => {
-  e.preventDefault(); closeModal('signup-modal'); openModal('signin-modal');
-};
-document.querySelectorAll('.modal').forEach(m => {
-  m.addEventListener('click', (e) => {
-    if (e.target === m) m.classList.remove('active');
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  hideSuggestions();
+  searchInput.focus();
+});
+searchBtn.addEventListener('click', () => doFullSearch());
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (currentSuggestions.length === 0) return;
+    highlightedIndex = (highlightedIndex + 1) % currentSuggestions.length;
+    updateHighlight();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (currentSuggestions.length === 0) return;
+    highlightedIndex = (highlightedIndex - 1 + currentSuggestions.length) % currentSuggestions.length;
+    updateHighlight();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (highlightedIndex >= 0 && currentSuggestions[highlightedIndex]) {
+      window.location.href = currentSuggestions[highlightedIndex].url;
+    } else {
+      doFullSearch();
+    }
+  } else if (e.key === 'Escape') {
+    hideSuggestions();
+    searchInput.blur();
+  }
+});
+
+function updateHighlight() {
+  const items = suggestionsBox.querySelectorAll('.suggestion-item');
+  items.forEach((item, i) => {
+    item.classList.toggle('highlighted', i === highlightedIndex);
+    if (i === highlightedIndex) item.scrollIntoView({ block: 'nearest' });
   });
+}
+
+async function doFullSearch() {
+  const q = searchInput.value.trim();
+  if (!q) return;
+  hideSuggestions();
+  const products = await getAllProductsForSearch();
+  const matches = filterProducts(products, q);
+  if (matches.length === 0) {
+    window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+    return;
+  }
+  const cats = new Set();
+  matches.forEach(p => cats.add((p.category || '').toLowerCase().trim()));
+  if (cats.size === 1) {
+    const onlyCat = [...cats][0];
+    window.location.href = `${catPages[onlyCat] || 'index.html'}?q=${encodeURIComponent(q)}`;
+  } else {
+    window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-container')) hideSuggestions();
 });
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
 
 /* ==================================================
    RENDER PRODUCTS
@@ -1046,21 +1276,11 @@ setInterval(() => {
 }, 3500);
 
 /* ==================================================
-   SEARCH
+   URL QUERY — If arriving with ?q=, filter local products
    ================================================== */
-function doSearch() {
-  const q = document.getElementById('search-input').value.toLowerCase().trim();
-  if (!q) { renderProducts(allProducts); return; }
-  const filtered = allProducts.filter(p =>
-    (p.stone_name || '').toLowerCase().includes(q) ||
-    (p.category || '').toLowerCase().includes(q) ||
-    (p.color || '').toLowerCase().includes(q) ||
-    (p.sub_category || '').toLowerCase().includes(q)
-  );
-  renderProducts(filtered);
+function getQueryParam() {
+  return new URLSearchParams(window.location.search).get('q');
 }
-document.getElementById('search-input').addEventListener('input', doSearch);
-document.getElementById('search-btn').addEventListener('click', doSearch);
 
 /* ==================================================
    LOAD SANDSTONE PRODUCTS
@@ -1080,7 +1300,22 @@ async function loadProducts() {
       return tb - ta;
     });
 
-    renderProducts(allProducts);
+    const urlQ = getQueryParam();
+    if (urlQ) {
+      searchInput.value = urlQ;
+      searchClear.classList.add('visible');
+      const ql = urlQ.toLowerCase();
+      const filtered = allProducts.filter(p =>
+        (p.stone_name || '').toLowerCase().includes(ql) ||
+        (p.category || '').toLowerCase().includes(ql) ||
+        (p.sub_category || '').toLowerCase().includes(ql) ||
+        (p.color || '').toLowerCase().includes(ql) ||
+        (p.type || '').toLowerCase().includes(ql)
+      );
+      renderProducts(filtered);
+    } else {
+      renderProducts(allProducts);
+    }
   } catch (e) {
     console.error("Sandstone load error, using fallbacks.", e);
     allProducts = [
