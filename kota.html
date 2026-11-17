@@ -47,7 +47,7 @@ body {
 a { color: inherit; text-decoration: none; }
 
 /* ============================================================
-   NAVBAR (NO Sign In, NO Search)
+   NAVBAR (with SEARCH BAR)
    ============================================================ */
 .navbar-wrapper {
   position: sticky;
@@ -84,6 +84,41 @@ a { color: inherit; text-decoration: none; }
 }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 38px; }
+
+.search-wrap {
+  flex: 1;
+  max-width: 600px;
+  min-width: 150px;
+  display: flex;
+  border: 1px solid #333;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000;
+  height: 44px;
+}
+.search-wrap input {
+  flex: 1;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 14px;
+  font-family: var(--font-body);
+  min-width: 0;
+}
+.search-wrap input::placeholder { color: #666; }
+.search-wrap button {
+  padding: 10px 22px;
+  background: var(--primary);
+  border: none;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+}
+.search-wrap button:hover { background: var(--primary-dark); }
 
 .nav-row-bottom {
   display: flex;
@@ -463,12 +498,21 @@ footer .footer-copy {
     padding: 0 16px;
     height: 64px;
     gap: 12px;
+    flex-wrap: wrap;
   }
   .nav-row-bottom { display: none; }
   .mobile-toggle { display: block; }
   .nav-brand { font-size: 1.15rem; }
   .nav-brand img { height: 32px; }
-  .nav-links-sidebar { top: 64px; height: calc(100vh - 64px); }
+  .search-wrap {
+    order: 4;
+    flex: 1 1 100%;
+    max-width: 100%;
+    height: 42px;
+    margin-bottom: 10px;
+  }
+  .nav-row-top { height: auto; padding-top: 10px; padding-bottom: 10px; }
+  .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); }
 
   .section-title { font-size: 1.5rem; }
   .products-grid {
@@ -480,9 +524,12 @@ footer .footer-copy {
 @media (max-width: 768px) {
   body { padding-bottom: 75px; }
 
-  .nav-row-top { padding: 0 12px; height: 60px; gap: 10px; }
+  .nav-row-top { padding: 10px 12px; gap: 10px; }
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 28px; }
+  .search-wrap { height: 40px; margin-bottom: 0; min-width: 100%; }
+  .search-wrap input { font-size: 13px; padding: 8px 12px; }
+  .search-wrap button { padding: 8px 16px; font-size: 13px; }
 
   .products-section { padding: 20px 8px 50px; }
   .section-header { padding: 0 8px; margin-bottom: 16px; }
@@ -539,7 +586,7 @@ footer .footer-copy {
 <body>
 
 <!-- ============================================================
-     NAVBAR (NO Sign In)
+     NAVBAR (with SEARCH BAR)
      ============================================================ -->
 <div class="navbar-wrapper">
   <div class="nav-row-top">
@@ -549,6 +596,11 @@ footer .footer-copy {
         <img src="stone.png" alt="Logo">
         <span class="text">RAJASTHAN</span> <span>HUB</span>
       </a>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="Search all stones...">
+      <button id="search-btn"><i class="fas fa-search"></i></button>
     </div>
   </div>
 
@@ -693,7 +745,88 @@ document.addEventListener('keydown', (e) => {
 navLinksMobile.querySelectorAll('a').forEach(l => l.addEventListener('click', closeSidebar));
 
 /* ==================================================
-   RENDER PRODUCTS (same clean format)
+   GLOBAL SEARCH
+   Search across ALL products in Firestore.
+   Redirect to appropriate category page based on match.
+   ================================================== */
+async function doGlobalSearch() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  if (!q) return;
+
+  // Category → page mapping
+  const catPages = {
+    sandstone: 'sandstone.html',
+    'sand stone': 'sandstone.html',
+    kota: 'kota.html',
+    'kota stone': 'kota.html',
+    granite: 'granite.html',
+    marble: 'marble.html',
+    dholpur: 'dholpur.html',
+    tiles: 'tiles.html',
+    tile: 'tiles.html',
+    mandana: 'mandana.html',
+  };
+
+  try {
+    // Fetch all products from Firestore
+    const snap = await getDocs(collection(db, "products"));
+    const all = [];
+    snap.forEach(doc => all.push({ id: doc.id, ...doc.data() }));
+
+    // Match products
+    const matches = all.filter(p =>
+      (p.stone_name || '').toLowerCase().includes(q) ||
+      (p.category || '').toLowerCase().includes(q) ||
+      (p.sub_category || '').toLowerCase().includes(q) ||
+      (p.color || '').toLowerCase().includes(q) ||
+      (p.type || '').toLowerCase().includes(q)
+    );
+
+    if (matches.length === 0) {
+      // No match — go to index with query (will show no results)
+      window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+      return;
+    }
+
+    // Find which categories matched
+    const matchedCats = new Set();
+    matches.forEach(p => {
+      const cat = (p.category || '').toLowerCase().trim();
+      matchedCats.add(cat);
+    });
+
+    // If all matches are in one category, go to that category page
+    if (matchedCats.size === 1) {
+      const onlyCat = [...matchedCats][0];
+      const page = catPages[onlyCat] || 'index.html';
+      window.location.href = `${page}?q=${encodeURIComponent(q)}`;
+      return;
+    }
+
+    // Multiple categories matched — go to index with query (shows all)
+    window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+
+  } catch (e) {
+    console.error('Search error:', e);
+    // Fallback: go to index with query
+    window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+  }
+}
+
+document.getElementById('search-btn').addEventListener('click', doGlobalSearch);
+document.getElementById('search-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') doGlobalSearch();
+});
+
+/* ==================================================
+   URL QUERY — If arriving with ?q=, filter local products
+   ================================================== */
+function getQueryParam() {
+  return new URLSearchParams(window.location.search).get('q');
+}
+
+/* ==================================================
+   RENDER PRODUCTS
    ================================================== */
 window.renderProducts = function(list) {
   const grid = document.getElementById('product-grid');
@@ -758,7 +891,7 @@ setInterval(() => {
 }, 3500);
 
 /* ==================================================
-   LOAD KOTA STONE PRODUCTS FROM FIRESTORE
+   LOAD KOTA STONE PRODUCTS
    ================================================== */
 async function loadProducts() {
   try {
@@ -769,14 +902,29 @@ async function loadProducts() {
     const snap = await getDocs(q);
     snap.forEach(doc => allProducts.push({ id: doc.id, ...doc.data() }));
 
-    // Sort by created_at (newest first) if available
     allProducts.sort((a, b) => {
       const ta = a.created_at?.toDate ? a.created_at.toDate().getTime() : 0;
       const tb = b.created_at?.toDate ? b.created_at.toDate().getTime() : 0;
       return tb - ta;
     });
 
-    renderProducts(allProducts);
+    // If ?q= present, filter
+    const urlQ = getQueryParam();
+    if (urlQ) {
+      document.getElementById('search-input').value = urlQ;
+      const ql = urlQ.toLowerCase();
+      const filtered = allProducts.filter(p =>
+        (p.stone_name || '').toLowerCase().includes(ql) ||
+        (p.category || '').toLowerCase().includes(ql) ||
+        (p.sub_category || '').toLowerCase().includes(ql) ||
+        (p.color || '').toLowerCase().includes(ql) ||
+        (p.type || '').toLowerCase().includes(ql)
+      );
+      renderProducts(filtered);
+    } else {
+      renderProducts(allProducts);
+    }
+
   } catch (e) {
     console.error("Kota Stone load error, using fallbacks.", e);
     allProducts = [
