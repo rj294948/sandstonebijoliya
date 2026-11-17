@@ -1318,12 +1318,14 @@ window.renderProducts = function(list) {
     return;
   }
 
-  localStorage.setItem('stoneProducts', JSON.stringify(list));
+ localStorage.setItem('stoneProducts', JSON.stringify(list));
 
   list.forEach((product) => {
     const imgs = (product.images && product.images.length) ? product.images : ['stone-placeholder.png'];
+    
+    // Yahan loading="lazy" add kar diya hai taaki site fast chale (quality par koi asar nahi padega)
     const imagesHtml = imgs.map((img, i) =>
-      `<img src="${img}" class="card-img ${i === 0 ? 'active' : ''}" alt="stone">`
+      `<img src="${img}" class="card-img ${i === 0 ? 'active' : ''}" alt="stone" loading="lazy">`
     ).join('');
 
     const counterHtml = imgs.length > 1
@@ -1339,6 +1341,7 @@ window.renderProducts = function(list) {
         ${imagesHtml}
         ${counterHtml}
       </div>
+    `;
       <div class="product-info">
         <h3 class="product-title">${product.stone_name || 'PREMIUM STONE'}</h3>
         <div class="product-meta">
