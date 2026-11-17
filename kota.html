@@ -47,7 +47,7 @@ body {
 a { color: inherit; text-decoration: none; }
 
 /* ============================================================
-   NAVBAR (with SEARCH BAR)
+   NAVBAR (with Amazon-style search)
    ============================================================ */
 .navbar-wrapper {
   position: sticky;
@@ -85,16 +85,26 @@ a { color: inherit; text-decoration: none; }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 38px; }
 
-.search-wrap {
+/* Search container (relative for dropdown) */
+.search-container {
   flex: 1;
   max-width: 600px;
   min-width: 150px;
+  position: relative;
+}
+
+.search-wrap {
   display: flex;
   border: 1px solid #333;
   border-radius: 6px;
   overflow: hidden;
   background: #000;
   height: 44px;
+  transition: var(--transition);
+}
+.search-wrap:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(199,169,123,0.15);
 }
 .search-wrap input {
   flex: 1;
@@ -108,7 +118,19 @@ a { color: inherit; text-decoration: none; }
   min-width: 0;
 }
 .search-wrap input::placeholder { color: #666; }
-.search-wrap button {
+.search-wrap .search-clear {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 12px;
+  font-size: 14px;
+  display: none;
+  transition: var(--transition);
+}
+.search-wrap .search-clear.visible { display: block; }
+.search-wrap .search-clear:hover { color: var(--primary); }
+.search-wrap .search-icon-btn {
   padding: 10px 22px;
   background: var(--primary);
   border: none;
@@ -118,7 +140,177 @@ a { color: inherit; text-decoration: none; }
   transition: var(--transition);
   font-size: 14px;
 }
-.search-wrap button:hover { background: var(--primary-dark); }
+.search-wrap .search-icon-btn:hover { background: var(--primary-dark); }
+
+/* Suggestions dropdown */
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+  max-height: 460px;
+  overflow-y: auto;
+  z-index: 2000;
+  display: none;
+  animation: dropdownIn 0.2s ease;
+}
+.search-suggestions.active { display: block; }
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.search-suggestions::-webkit-scrollbar { width: 6px; }
+.search-suggestions::-webkit-scrollbar-track { background: #111; }
+.search-suggestions::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+.search-suggestions::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+.suggestion-header {
+  padding: 10px 16px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  background: #0d0d0d;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: var(--transition);
+  border-bottom: 1px solid rgba(34, 34, 34, 0.5);
+  text-decoration: none;
+  color: inherit;
+}
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover,
+.suggestion-item.highlighted {
+  background: rgba(199,169,123,0.08);
+  border-left: 3px solid var(--primary);
+  padding-left: 13px;
+}
+
+.suggestion-thumb {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: #f5f5f5;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.suggestion-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+
+.suggestion-body {
+  flex: 1;
+  min-width: 0;
+}
+.suggestion-name {
+  font-size: 0.88rem;
+  font-family: var(--font-head);
+  color: white;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.suggestion-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.suggestion-meta i {
+  color: var(--primary);
+  font-size: 0.65rem;
+}
+.suggestion-meta .dot { color: #444; }
+
+.suggestion-arrow {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+.suggestion-item:hover .suggestion-arrow,
+.suggestion-item.highlighted .suggestion-arrow {
+  color: var(--primary);
+  transform: translateX(3px);
+}
+
+/* Loading / no results / view-all states */
+.suggestion-state {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.suggestion-state i { color: var(--primary); }
+.suggestion-state .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #333;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.suggestion-view-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: #0d0d0d;
+  color: var(--primary);
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  border-top: 1px solid var(--border-color);
+  transition: var(--transition);
+  text-decoration: none;
+}
+.suggestion-view-all:hover {
+  background: rgba(199,169,123,0.08);
+}
+.suggestion-view-all i {
+  font-size: 0.7rem;
+  transition: var(--transition);
+}
+.suggestion-view-all:hover i { transform: translateX(3px); }
 
 .nav-row-bottom {
   display: flex;
@@ -264,7 +456,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ============================================================
-   PRODUCT CARD (no price, no badge, no buttons, whole card clickable)
+   PRODUCT CARD
    ============================================================ */
 .product-card {
   background: var(--bg-card);
@@ -357,7 +549,6 @@ a { color: inherit; text-decoration: none; }
 .product-meta span { display: flex; align-items: center; gap: 5px; }
 .product-meta i { color: var(--primary); font-size: 0.75rem; }
 
-/* Loading / empty state */
 .grid-msg {
   color: var(--text-muted);
   text-align: center;
@@ -504,13 +695,13 @@ footer .footer-copy {
   .mobile-toggle { display: block; }
   .nav-brand { font-size: 1.15rem; }
   .nav-brand img { height: 32px; }
-  .search-wrap {
+  .search-container {
     order: 4;
     flex: 1 1 100%;
     max-width: 100%;
-    height: 42px;
     margin-bottom: 10px;
   }
+  .search-wrap { height: 42px; }
   .nav-row-top { height: auto; padding-top: 10px; padding-bottom: 10px; }
   .nav-links-sidebar { top: 112px; height: calc(100vh - 112px); }
 
@@ -519,6 +710,7 @@ footer .footer-copy {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
   }
+  .search-suggestions { max-height: 380px; }
 }
 
 @media (max-width: 768px) {
@@ -527,9 +719,16 @@ footer .footer-copy {
   .nav-row-top { padding: 10px 12px; gap: 10px; }
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 28px; }
-  .search-wrap { height: 40px; margin-bottom: 0; min-width: 100%; }
+  .search-container { min-width: 100%; margin-bottom: 0; }
+  .search-wrap { height: 40px; }
   .search-wrap input { font-size: 13px; padding: 8px 12px; }
-  .search-wrap button { padding: 8px 16px; font-size: 13px; }
+  .search-wrap .search-icon-btn { padding: 8px 14px; font-size: 13px; }
+  .search-suggestions { max-height: 340px; }
+
+  .suggestion-item { padding: 9px 12px; gap: 10px; }
+  .suggestion-thumb { width: 42px; height: 42px; }
+  .suggestion-name { font-size: 0.8rem; }
+  .suggestion-meta { font-size: 0.65rem; gap: 6px; }
 
   .products-section { padding: 20px 8px 50px; }
   .section-header { padding: 0 8px; margin-bottom: 16px; }
@@ -580,13 +779,14 @@ footer .footer-copy {
   .products-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; }
   .product-image { height: 78px; }
   .product-title { font-size: 0.55rem; min-height: 24px; }
+  .suggestion-thumb { width: 38px; height: 38px; }
 }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     NAVBAR (with SEARCH BAR)
+     NAVBAR (with Amazon-style search)
      ============================================================ -->
 <div class="navbar-wrapper">
   <div class="nav-row-top">
@@ -598,9 +798,13 @@ footer .footer-copy {
       </a>
     </div>
 
-    <div class="search-wrap">
-      <input type="text" id="search-input" placeholder="Search all stones...">
-      <button id="search-btn"><i class="fas fa-search"></i></button>
+    <div class="search-container">
+      <div class="search-wrap">
+        <input type="text" id="search-input" placeholder="Search all stones..." autocomplete="off">
+        <button class="search-clear" id="search-clear" aria-label="Clear"><i class="fas fa-times"></i></button>
+        <button class="search-icon-btn" id="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="search-suggestions" id="search-suggestions"></div>
     </div>
   </div>
 
@@ -710,6 +914,10 @@ import { db } from './firebase-config.js';
 import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 let allProducts = [];
+let globalProductCache = null; // cached all products for search
+let searchDebounceTimer = null;
+let highlightedIndex = -1;
+let currentSuggestions = [];
 
 /* ==================================================
    MOBILE SIDEBAR
@@ -745,81 +953,245 @@ document.addEventListener('keydown', (e) => {
 navLinksMobile.querySelectorAll('a').forEach(l => l.addEventListener('click', closeSidebar));
 
 /* ==================================================
-   GLOBAL SEARCH
-   Search across ALL products in Firestore.
-   Redirect to appropriate category page based on match.
+   AMAZON-STYLE SEARCH
    ================================================== */
-async function doGlobalSearch() {
-  const q = document.getElementById('search-input').value.trim().toLowerCase();
+const searchInput = document.getElementById('search-input');
+const searchBtn = document.getElementById('search-btn');
+const searchClear = document.getElementById('search-clear');
+const suggestionsBox = document.getElementById('search-suggestions');
+
+/* Category → page mapping for "View all results" */
+const catPages = {
+  sandstone: 'sandstone.html',
+  'sand stone': 'sandstone.html',
+  kota: 'kota.html',
+  'kota stone': 'kota.html',
+  granite: 'granite.html',
+  marble: 'marble.html',
+  dholpur: 'dholpur.html',
+  tiles: 'tiles.html',
+  tile: 'tiles.html',
+  mandana: 'mandana.html',
+};
+
+/* Fetch all products once (cached) */
+async function getAllProducts() {
+  if (globalProductCache) return globalProductCache;
+  try {
+    const snap = await getDocs(collection(db, "products"));
+    const arr = [];
+    snap.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
+    globalProductCache = arr;
+    return arr;
+  } catch (e) {
+    console.error('Search fetch error:', e);
+    return [];
+  }
+}
+
+/* Filter products by query */
+function filterProducts(products, q) {
+  const ql = q.toLowerCase().trim();
+  if (!ql) return [];
+  return products.filter(p =>
+    (p.stone_name || '').toLowerCase().includes(ql) ||
+    (p.category || '').toLowerCase().includes(ql) ||
+    (p.sub_category || '').toLowerCase().includes(ql) ||
+    (p.color || '').toLowerCase().includes(ql) ||
+    (p.type || '').toLowerCase().includes(ql)
+  );
+}
+
+/* Show suggestions dropdown */
+function showSuggestions(html) {
+  suggestionsBox.innerHTML = html;
+  suggestionsBox.classList.add('active');
+}
+function hideSuggestions() {
+  suggestionsBox.classList.remove('active');
+  suggestionsBox.innerHTML = '';
+  highlightedIndex = -1;
+  currentSuggestions = [];
+}
+
+/* Render suggestion item */
+function renderSuggestionItem(p) {
+  const img = (p.images && p.images.length) ? p.images[0] : 'stone-placeholder.png';
+  const meta = [];
+  if (p.category) meta.push(`<span><i class="fas fa-layer-group"></i> ${p.category}</span>`);
+  if (p.sub_category) meta.push(`<span><i class="fas fa-cube"></i> ${p.sub_category}</span>`);
+  if (p.color) meta.push(`<span><i class="fas fa-fill-drip"></i> ${p.color}</span>`);
+
+  return `
+    <a class="suggestion-item" href="product-details.html?id=${encodeURIComponent(p.id)}" data-id="${p.id}">
+      <div class="suggestion-thumb"><img src="${img}" alt=""></div>
+      <div class="suggestion-body">
+        <div class="suggestion-name">${p.stone_name || 'Premium Stone'}</div>
+        <div class="suggestion-meta">${meta.join('<span class="dot">·</span>')}</div>
+      </div>
+      <i class="fas fa-arrow-right suggestion-arrow"></i>
+    </a>
+  `;
+}
+
+/* Run live search */
+async function runLiveSearch() {
+  const q = searchInput.value.trim();
+
+  // Show/hide clear button
+  searchClear.classList.toggle('visible', q.length > 0);
+
+  if (!q) {
+    hideSuggestions();
+    return;
+  }
+
+  // Show loading
+  showSuggestions(`
+    <div class="suggestion-state">
+      <div class="spinner"></div>
+      Searching all stones...
+    </div>
+  `);
+
+  const products = await getAllProducts();
+  const matches = filterProducts(products, q);
+
+  if (matches.length === 0) {
+    showSuggestions(`
+      <div class="suggestion-state">
+        <i class="fas fa-search"></i>
+        No stones found for "<strong>${escapeHtml(q)}</strong>"
+      </div>
+    `);
+    return;
+  }
+
+  // Determine if all matches are in same category
+  const cats = new Set();
+  matches.forEach(p => cats.add((p.category || '').toLowerCase().trim()));
+  let viewAllUrl;
+  if (cats.size === 1) {
+    const onlyCat = [...cats][0];
+    viewAllUrl = `${catPages[onlyCat] || 'index.html'}?q=${encodeURIComponent(q)}`;
+  } else {
+    viewAllUrl = `index.html?q=${encodeURIComponent(q)}`;
+  }
+
+  // Show top 8 matches
+  const top = matches.slice(0, 8);
+  let html = `<div class="suggestion-header">${matches.length} matching stone${matches.length > 1 ? 's' : ''}</div>`;
+  html += top.map(renderSuggestionItem).join('');
+  html += `
+    <a class="suggestion-view-all" href="${viewAllUrl}">
+      View all ${matches.length} result${matches.length > 1 ? 's' : ''} <i class="fas fa-arrow-right"></i>
+    </a>
+  `;
+  showSuggestions(html);
+
+  // Store current suggestions for keyboard nav
+  currentSuggestions = top.map(p => ({
+    id: p.id,
+    url: `product-details.html?id=${encodeURIComponent(p.id)}`
+  }));
+  highlightedIndex = -1;
+}
+
+/* Debounce live search */
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(runLiveSearch, 250);
+});
+
+/* Clear button */
+searchClear.addEventListener('click', () => {
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  hideSuggestions();
+  searchInput.focus();
+});
+
+/* Search button (Enter) — go to results page */
+searchBtn.addEventListener('click', () => doFullSearch());
+searchInput.addEventListener('keydown', (e) => {
+  // Arrow navigation
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (currentSuggestions.length === 0) return;
+    highlightedIndex = (highlightedIndex + 1) % currentSuggestions.length;
+    updateHighlight();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (currentSuggestions.length === 0) return;
+    highlightedIndex = (highlightedIndex - 1 + currentSuggestions.length) % currentSuggestions.length;
+    updateHighlight();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (highlightedIndex >= 0 && currentSuggestions[highlightedIndex]) {
+      // Navigate to highlighted suggestion
+      window.location.href = currentSuggestions[highlightedIndex].url;
+    } else {
+      doFullSearch();
+    }
+  } else if (e.key === 'Escape') {
+    hideSuggestions();
+    searchInput.blur();
+  }
+});
+
+/* Highlight suggestion on keyboard nav */
+function updateHighlight() {
+  const items = suggestionsBox.querySelectorAll('.suggestion-item');
+  items.forEach((item, i) => {
+    item.classList.toggle('highlighted', i === highlightedIndex);
+    if (i === highlightedIndex) {
+      item.scrollIntoView({ block: 'nearest' });
+    }
+  });
+}
+
+/* Full search — redirect to results page */
+async function doFullSearch() {
+  const q = searchInput.value.trim();
   if (!q) return;
 
-  // Category → page mapping
-  const catPages = {
-    sandstone: 'sandstone.html',
-    'sand stone': 'sandstone.html',
-    kota: 'kota.html',
-    'kota stone': 'kota.html',
-    granite: 'granite.html',
-    marble: 'marble.html',
-    dholpur: 'dholpur.html',
-    tiles: 'tiles.html',
-    tile: 'tiles.html',
-    mandana: 'mandana.html',
-  };
+  hideSuggestions();
 
-  try {
-    // Fetch all products from Firestore
-    const snap = await getDocs(collection(db, "products"));
-    const all = [];
-    snap.forEach(doc => all.push({ id: doc.id, ...doc.data() }));
+  const products = await getAllProducts();
+  const matches = filterProducts(products, q);
 
-    // Match products
-    const matches = all.filter(p =>
-      (p.stone_name || '').toLowerCase().includes(q) ||
-      (p.category || '').toLowerCase().includes(q) ||
-      (p.sub_category || '').toLowerCase().includes(q) ||
-      (p.color || '').toLowerCase().includes(q) ||
-      (p.type || '').toLowerCase().includes(q)
-    );
-
-    if (matches.length === 0) {
-      // No match — go to index with query (will show no results)
-      window.location.href = `index.html?q=${encodeURIComponent(q)}`;
-      return;
-    }
-
-    // Find which categories matched
-    const matchedCats = new Set();
-    matches.forEach(p => {
-      const cat = (p.category || '').toLowerCase().trim();
-      matchedCats.add(cat);
-    });
-
-    // If all matches are in one category, go to that category page
-    if (matchedCats.size === 1) {
-      const onlyCat = [...matchedCats][0];
-      const page = catPages[onlyCat] || 'index.html';
-      window.location.href = `${page}?q=${encodeURIComponent(q)}`;
-      return;
-    }
-
-    // Multiple categories matched — go to index with query (shows all)
+  if (matches.length === 0) {
     window.location.href = `index.html?q=${encodeURIComponent(q)}`;
+    return;
+  }
 
-  } catch (e) {
-    console.error('Search error:', e);
-    // Fallback: go to index with query
+  const cats = new Set();
+  matches.forEach(p => cats.add((p.category || '').toLowerCase().trim()));
+
+  if (cats.size === 1) {
+    const onlyCat = [...cats][0];
+    window.location.href = `${catPages[onlyCat] || 'index.html'}?q=${encodeURIComponent(q)}`;
+  } else {
     window.location.href = `index.html?q=${encodeURIComponent(q)}`;
   }
 }
 
-document.getElementById('search-btn').addEventListener('click', doGlobalSearch);
-document.getElementById('search-input').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') doGlobalSearch();
+/* Close suggestions on outside click */
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-container')) {
+    hideSuggestions();
+  }
 });
 
+/* Helper */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
 /* ==================================================
-   URL QUERY — If arriving with ?q=, filter local products
+   URL QUERY support
    ================================================== */
 function getQueryParam() {
   return new URLSearchParams(window.location.search).get('q');
@@ -850,11 +1222,9 @@ window.renderProducts = function(list) {
     const counterHtml = imgs.length > 1
       ? `<div class="image-counter">1 / ${imgs.length}</div>` : '';
 
-    const detailUrl = `product-details.html?id=${product.id}`;
-
     const card = document.createElement('a');
     card.className = 'product-card';
-    card.href = detailUrl;
+    card.href = `product-details.html?id=${product.id}`;
     card.innerHTML = `
       <div class="product-image">
         ${imagesHtml}
@@ -874,7 +1244,7 @@ window.renderProducts = function(list) {
 };
 
 /* ==================================================
-   IMAGE CAROUSEL (3.5s)
+   IMAGE CAROUSEL
    ================================================== */
 setInterval(() => {
   document.querySelectorAll('.product-image').forEach(wrap => {
@@ -908,10 +1278,11 @@ async function loadProducts() {
       return tb - ta;
     });
 
-    // If ?q= present, filter
+    // If ?q= present in URL, filter and show
     const urlQ = getQueryParam();
     if (urlQ) {
-      document.getElementById('search-input').value = urlQ;
+      searchInput.value = urlQ;
+      searchClear.classList.add('visible');
       const ql = urlQ.toLowerCase();
       const filtered = allProducts.filter(p =>
         (p.stone_name || '').toLowerCase().includes(ql) ||
