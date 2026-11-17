@@ -994,14 +994,10 @@ footer .footer-copy {
 <!-- ============================================================
      PRODUCTS SECTION
      ============================================================ -->
-<section class="products-section">
-  <div class="section-header">
-    <h2 class="section-title">PREMIUM <span>INVENTORY</span></h2>
-    <div class="result-count"><strong id="result-total">0</strong> Products</div>
-  </div>
-
-  <div class="products-grid" id="product-grid">
-    <div class="grid-msg">LOADING...</div>
+<section class="hero-section">
+  <div class="highlight-marquee" id="heroMarqueeContainer">
+    <!-- Firebase se images yahan automatic load hongi -->
+    <div class="grid-msg" style="color: var(--primary); padding: 20px;">Loading Banners...</div>
   </div>
 </section>
 
@@ -1421,6 +1417,45 @@ async function loadProducts() {
   }
 }
 loadProducts();
+</script>
+<script type="module">
+  import { db, collection, getDocs } from "./firebase-config.js";
+
+  async function loadDynamicHeroBanners() {
+    const marqueeContainer = document.getElementById("heroMarqueeContainer");
+    
+    try {
+      const querySnapshot = await getDocs(collection(db, "hero_images"));
+      let imagesList = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.imageUrl) {
+          imagesList.push(data.imageUrl);
+        }
+      });
+
+      if (imagesList.length > 0) {
+        // Marquee ko smooth chalane ke liye list ko double kar dete hain taaki infinite loop bane
+        const doubleImages = [...imagesList, ...imagesList];
+        
+        let htmlContent = "";
+        doubleImages.forEach((url) => {
+          htmlContent += `<div class="highlight-item"><img src="${url}" alt="Sandstone Showcase"></div>`;
+        });
+
+        marqueeContainer.innerHTML = htmlContent;
+      } else {
+        marqueeContainer.innerHTML = `<div class="grid-msg" style="color: #888;">No banner images found. Upload from Admin panel.</div>`;
+      }
+    } catch (error) {
+      console.error("Error loading hero banners:", error);
+      marqueeContainer.innerHTML = `<div class="grid-msg" style="color: red;">Failed to load banners.</div>`;
+    }
+  }
+
+  // Page load hote hi banners fetch ho jayenge
+  loadDynamicHeroBanners();
 </script>
 
 </body>
