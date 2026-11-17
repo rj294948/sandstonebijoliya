@@ -47,7 +47,7 @@ body {
 a { color: inherit; text-decoration: none; }
 
 /* ============================================================
-   NAVBAR (no search bar)
+   NAVBAR (no search bar, no sign in)
    ============================================================ */
 .navbar-wrapper {
   position: sticky;
@@ -85,49 +85,11 @@ a { color: inherit; text-decoration: none; }
 .nav-brand span { color: var(--primary); }
 .nav-brand img { height: 38px; }
 
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* Spacer for symmetry */
+.nav-spacer {
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
-  margin-left: auto;
-}
-.btn {
-  padding: 10px 18px;
-  border-radius: 4px;
-  font-family: var(--font-head);
-  font-size: 0.82rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: var(--transition);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.btn-primary { background: var(--primary); color: #000; }
-.btn-primary:hover { background: transparent; border-color: var(--primary); color: var(--primary); }
-.btn-outline { background: transparent; border: 1px solid #333; color: var(--text-light); }
-.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-
-.user-info { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.user-avatar {
-  width: 38px; height: 38px;
-  background: var(--primary); color: #000;
-  display: flex; justify-content: center; align-items: center;
-  font-family: var(--font-head); font-weight: 700; border-radius: 50%;
-  font-size: 0.95rem;
-}
-.user-name {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .nav-row-bottom {
@@ -593,90 +555,6 @@ footer .footer-copy {
 }
 
 /* ============================================================
-   MODAL
-   ============================================================ */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(6px);
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  padding: 20px;
-}
-.modal.active { display: flex; }
-.modal-content {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 38px 34px;
-  border-radius: 6px;
-  width: 400px;
-  max-width: 100%;
-  position: relative;
-}
-.modal-content h2 {
-  color: white;
-  margin-bottom: 24px;
-  font-size: 1.5rem;
-  text-align: center;
-  font-family: var(--font-head);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.modal-content h2 span { color: var(--primary); }
-.modal-content .form-group { margin-bottom: 14px; }
-.modal-content .form-group input {
-  width: 100%;
-  padding: 12px 15px;
-  background: #000;
-  border: 1px solid var(--border-color);
-  color: white;
-  font-size: 13px;
-  border-radius: 4px;
-  outline: none;
-  font-family: var(--font-body);
-  transition: var(--transition);
-}
-.modal-content .form-group input:focus { border-color: var(--primary); }
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  font-size: 22px;
-  color: var(--text-muted);
-  background: none;
-  border: none;
-  cursor: pointer;
-  line-height: 1;
-}
-.modal-close:hover { color: var(--primary); }
-.modal-link {
-  color: var(--primary);
-  display: block;
-  text-align: center;
-  margin-top: 14px;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.modal-link:hover { text-decoration: underline; }
-.modal-content .btn {
-  width: 100%;
-  justify-content: center;
-  font-family: var(--font-head);
-}
-.feedback {
-  text-align: center;
-  margin-top: 12px;
-  font-weight: 600;
-  font-size: 0.78rem;
-  min-height: 18px;
-  letter-spacing: 0.3px;
-}
-
-/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 992px) {
@@ -690,6 +568,7 @@ footer .footer-copy {
   .nav-brand { font-size: 1.15rem; }
   .nav-brand img { height: 32px; }
   .nav-links-sidebar { top: 64px; height: calc(100vh - 64px); }
+  .nav-spacer { display: none; }
 
   .contact-section { padding: 36px 20px 45px; }
   .cta-grid { grid-template-columns: 1fr; gap: 18px; }
@@ -705,10 +584,6 @@ footer .footer-copy {
   .nav-row-top { padding: 0 12px; height: 60px; gap: 10px; }
   .nav-brand { font-size: 1rem; gap: 6px; }
   .nav-brand img { height: 28px; }
-  .user-name { display: none; }
-  .user-avatar { width: 34px; height: 34px; font-size: 0.85rem; }
-  .btn { padding: 8px 12px; font-size: 0.72rem; gap: 4px; }
-  #btn-open-signin i { display: none; }
 
   .contact-section { padding: 24px 12px 40px; }
   .section-title { font-size: 1.3rem; letter-spacing: 1.5px; }
@@ -750,7 +625,7 @@ footer .footer-copy {
 <body>
 
 <!-- ============================================================
-     NAVBAR (no search bar)
+     NAVBAR (no search, no sign in)
      ============================================================ -->
 <div class="navbar-wrapper">
   <div class="nav-row-top">
@@ -762,14 +637,7 @@ footer .footer-copy {
       </a>
     </div>
 
-    <div class="nav-actions">
-      <button id="btn-open-signin" class="btn btn-primary"><i class="fas fa-user"></i> Sign In</button>
-      <button id="btn-signout" style="display:none;" class="btn btn-outline">Sign Out</button>
-      <div class="user-info">
-        <div class="user-avatar" id="user-avatar">G</div>
-        <span class="user-name" id="user-name">GUEST</span>
-      </div>
-    </div>
+    <div class="nav-spacer"></div>
   </div>
 
   <nav class="nav-row-bottom" id="nav-links">
@@ -932,41 +800,9 @@ footer .footer-copy {
 </footer>
 
 <!-- ============================================================
-     MODALS
-     ============================================================ -->
-<div class="modal" id="signin-modal">
-  <div class="modal-content">
-    <button class="modal-close">&times;</button>
-    <h2>SIGN <span>IN</span></h2>
-    <div class="form-group"><input type="email" id="signin-email" placeholder="EMAIL ADDRESS"></div>
-    <div class="form-group"><input type="password" id="signin-password" placeholder="PASSWORD"></div>
-    <button id="signin-btn" class="btn btn-primary">LOGIN</button>
-    <div class="feedback" id="signin-feedback"></div>
-    <a href="#" class="modal-link" id="switch-to-signup">CREATE NEW ACCOUNT</a>
-  </div>
-</div>
-
-<div class="modal" id="signup-modal">
-  <div class="modal-content">
-    <button class="modal-close">&times;</button>
-    <h2>REGIS<span>TER</span></h2>
-    <div class="form-group"><input type="text" id="signup-name" placeholder="FULL NAME"></div>
-    <div class="form-group"><input type="email" id="signup-email" placeholder="EMAIL ADDRESS"></div>
-    <div class="form-group"><input type="text" id="signup-phone" placeholder="PHONE NUMBER"></div>
-    <div class="form-group"><input type="password" id="signup-password" placeholder="PASSWORD"></div>
-    <button id="signup-btn" class="btn btn-primary">CREATE ACCOUNT</button>
-    <div class="feedback" id="signup-feedback"></div>
-    <a href="#" class="modal-link" id="switch-to-signin">ALREADY REGISTERED? LOGIN</a>
-  </div>
-</div>
-
-<!-- ============================================================
      SCRIPT
      ============================================================ -->
-<script type="module">
-import { auth } from './firebase-config.js';
-import { signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
+<script>
 /* ==================================================
    MOBILE SIDEBAR
    ================================================== */
@@ -999,110 +835,6 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && navLinksMobile.classList.contains('active')) closeSidebar();
 });
 navLinksMobile.querySelectorAll('a').forEach(l => l.addEventListener('click', closeSidebar));
-
-/* ==================================================
-   MODALS
-   ================================================== */
-function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
-
-document.getElementById('btn-open-signin').onclick = () => openModal('signin-modal');
-document.querySelectorAll('.modal-close').forEach(btn => {
-  btn.onclick = function() { closeModal(this.closest('.modal').id); };
-});
-document.getElementById('switch-to-signup').onclick = (e) => {
-  e.preventDefault(); closeModal('signin-modal'); openModal('signup-modal');
-};
-document.getElementById('switch-to-signin').onclick = (e) => {
-  e.preventDefault(); closeModal('signup-modal'); openModal('signin-modal');
-};
-document.querySelectorAll('.modal').forEach(m => {
-  m.addEventListener('click', (e) => { if (e.target === m) closeModal(m.id); });
-});
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-    document.body.style.overflow = '';
-  }
-});
-
-/* ==================================================
-   AUTH
-   ================================================== */
-const btnOpenSignin = document.getElementById('btn-open-signin');
-const btnSignOut = document.getElementById('btn-signout');
-const userAvatar = document.getElementById('user-avatar');
-const userName = document.getElementById('user-name');
-const signinFeedback = document.getElementById('signin-feedback');
-const signupFeedback = document.getElementById('signup-feedback');
-
-document.getElementById('signin-btn').addEventListener('click', async () => {
-  const email = document.getElementById('signin-email').value.trim();
-  const password = document.getElementById('signin-password').value.trim();
-  signinFeedback.textContent = '';
-  if (!email || !password) {
-    signinFeedback.style.color = '#e74c3c';
-    signinFeedback.textContent = 'Please fill in all fields';
-    return;
-  }
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    signinFeedback.style.color = '#28a745';
-    signinFeedback.textContent = '✅ Signed in successfully!';
-    setTimeout(() => closeModal('signin-modal'), 1200);
-  } catch (err) {
-    signinFeedback.style.color = '#e74c3c';
-    signinFeedback.textContent = '❌ ' + err.message;
-  }
-});
-
-document.getElementById('signup-btn').addEventListener('click', async () => {
-  const name = document.getElementById('signup-name').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
-  const phone = document.getElementById('signup-phone').value.trim();
-  const password = document.getElementById('signup-password').value.trim();
-  signupFeedback.textContent = '';
-  if (!name || !email || !password) {
-    signupFeedback.style.color = '#e74c3c';
-    signupFeedback.textContent = 'Please fill all required fields';
-    return;
-  }
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(cred.user, { displayName: name });
-    signupFeedback.style.color = '#28a745';
-    signupFeedback.textContent = '✅ Account created successfully!';
-    setTimeout(() => {
-      closeModal('signup-modal');
-      document.getElementById('signup-name').value = '';
-      document.getElementById('signup-email').value = '';
-      document.getElementById('signup-phone').value = '';
-      document.getElementById('signup-password').value = '';
-    }, 1200);
-  } catch (err) {
-    signupFeedback.style.color = '#e74c3c';
-    signupFeedback.textContent = '❌ ' + err.message;
-  }
-});
-
-btnSignOut.addEventListener('click', async () => {
-  await signOut(auth);
-});
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    btnOpenSignin.style.display = 'none';
-    btnSignOut.style.display = 'inline-flex';
-    const displayName = user.displayName || 'USER';
-    userName.textContent = displayName;
-    userAvatar.textContent = displayName.charAt(0).toUpperCase();
-  } else {
-    btnOpenSignin.style.display = 'inline-flex';
-    btnSignOut.style.display = 'none';
-    userName.textContent = 'GUEST';
-    userAvatar.textContent = 'G';
-  }
-});
 </script>
 </body>
 </html>
